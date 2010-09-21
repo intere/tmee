@@ -35,7 +35,7 @@ namespace mjpeg
 /**
  * The purpose of this class is to extend the ostream object.
  */
-class MJpegStream : public ostream, Observable<MjpegEvent>
+class MJpegStream : public ostream, public Observable
 {
 public:
 
@@ -57,14 +57,14 @@ public:
 		CrLf
 	};
 
-	/** Overloaded put function.  */
-	virtual ostream& put(char c);
-
 	/** Default Constructor */
 	MJpegStream(void);
 
 	/** Destructor.  */
-	~MJpegStream(void);
+	virtual ~MJpegStream(void);
+
+	/** Overloaded put function.  */
+	virtual ostream& put(char c);
 
 protected:
 

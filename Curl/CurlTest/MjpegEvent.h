@@ -8,39 +8,22 @@ using namespace std;
  * This class is an event type that is used to notify Observers
  * of an Event.
  */
-class MjpegEvent
+class MJpegEvent
 {
 public:
 
-	/**
-	 * Constructor that sets the Bytes and Filename.
-	 */
-	inline MjpegEvent(long bytes, string filename)
-	{
-		this->bytes = bytes;
-		this->filename = filename;
-	}
+	/** Constructor that sets the Bytes and Filename. */
+	MJpegEvent(long bytes, string filename);
 
-	inline virtual ~MjpegEvent(void)
-	{
-	}
-
-	/**
-	 * Getter for the number of bytes in the file.
-	 */
-	inline public long getBytes() const
-	{
-		return bytes;
-	}
-
-	/**
-	 * Getter for the Filename.
-	 */
-	inline public string getFilename() const
-	{
-		return filename;
-	}
-
+	/** Destructor.  */
+	~MJpegEvent(void);
+	
+	/** Getter for the number of bytes in the file. */
+	long getBytes(void) const;
+	
+	/** Getter for the Filename. */
+	string getFilename() const;
+	
 private:
 	long bytes;
 	string filename;
