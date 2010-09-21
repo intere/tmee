@@ -1,0 +1,74 @@
+<html>
+<head>
+<META HTTP-EQUIV="Content-Type" content="text/html; charset=Windows-1252">
+</head>
+<body>
+<pre>
+<table width=100% bgcolor=#CFCFE5><tr> <td> <font face=arial size=+3>
+Build Log
+</font></table><table width=* cellspacing=0 cellpadding=0><tr><td width=0 bgcolor=#EDEDF5>&nbsp;</td><td width=0 bgcolor=#FFFFFF>&nbsp;</td><td width=*><pre>
+<h3>------- Build started: Project: curlsrc, Configuration: using libcurl DLL Release|Win32 -------
+</h3>
+</pre></table><table width=100% bgcolor=#DFDFE5><tr><td><font face=arial size=+2>
+Command Lines
+</font></table><table width=* cellspacing=0 cellpadding=0><tr><td width=0 bgcolor=#EDEDF5>&nbsp;</td><td width=0 bgcolor=#FFFFFF>&nbsp;</td><td width=*><pre>Creating temporary file "c:\Projects\Curl\Curl\curl-7.21.1\src\DLL-Release\RSP000055.rsp" with contents
+[
+/O2 /I "..\lib" /I "..\include" /I "." /D "WIN32" /D "NDEBUG" /D "_CONSOLE" /D "_MBCS" /FD /EHsc /MD /Fp".\DLL-Release/vc6curlsrc.pch" /Fo".\DLL-Release/" /Fd".\DLL-Release/" /W3 /c
+".\writeout.c"
+".\writeenv.c"
+".\urlglob.c"
+"\Projects\Curl\Curl\curl-7.21.1\lib\strtoofft.c"
+"\Projects\Curl\Curl\curl-7.21.1\lib\rawstr.c"
+".\os-specific.c"
+"\Projects\Curl\Curl\curl-7.21.1\lib\nonblock.c"
+".\main.c"
+".\hugehelp.c"
+".\homedir.c"
+".\getpass.c"
+".\curlutil.c"
+]
+Creating command line "cl.exe @"c:\Projects\Curl\Curl\curl-7.21.1\src\DLL-Release\RSP000055.rsp" /nologo"
+Creating command line "rc.exe /d "NDEBUG" /l 0x409 /I "..\include" /fo".\DLL-Release/curl.res" ".\curl.rc""
+Creating temporary file "c:\Projects\Curl\Curl\curl-7.21.1\src\DLL-Release\RSP000056.rsp" with contents
+[
+/OUT:"DLL-Release/curl.exe" /INCREMENTAL:NO /NOLOGO /LIBPATH:"..\lib\DLL-Release" /SUBSYSTEM:CONSOLE /MACHINE:X86 libcurl_imp.lib ws2_32.lib wldap32.lib kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib
+".\dll-release\curlutil.obj"
+".\dll-release\getpass.obj"
+".\dll-release\homedir.obj"
+".\dll-release\hugehelp.obj"
+".\dll-release\main.obj"
+".\dll-release\nonblock.obj"
+".\dll-release\os-specific.obj"
+".\dll-release\rawstr.obj"
+".\dll-release\strtoofft.obj"
+".\dll-release\urlglob.obj"
+".\dll-release\writeenv.obj"
+".\dll-release\writeout.obj"
+".\dll-release\curl.res"
+]
+Creating command line "link.exe @"c:\Projects\Curl\Curl\curl-7.21.1\src\DLL-Release\RSP000056.rsp""
+</pre></table><table width=100% bgcolor=#DFDFE5><tr><td><font face=arial size=+2>
+Output Window
+</font></table><table width=* cellspacing=0 cellpadding=0><tr><td width=0 bgcolor=#EDEDF5>&nbsp;</td><td width=0 bgcolor=#FFFFFF>&nbsp;</td><td width=*><pre>Compiling...
+writeout.c
+writeenv.c
+urlglob.c
+strtoofft.c
+rawstr.c
+os-specific.c
+nonblock.c
+main.c
+hugehelp.c
+homedir.c
+getpass.c
+curlutil.c
+Generating Code...
+Compiling resources...
+Linking...
+LINK : fatal error LNK1181: cannot open input file 'libcurl_imp.lib'
+</pre></table><table width=100% bgcolor=#DFDFE5><tr><td><font face=arial size=+2>
+Results
+</font></table><table width=* cellspacing=0 cellpadding=0><tr><td width=0 bgcolor=#EDEDF5>&nbsp;</td><td width=0 bgcolor=#FFFFFF>&nbsp;</td><td width=*><pre>
+Build log was saved at "file://c:\Projects\Curl\Curl\curl-7.21.1\src\DLL-Release\BuildLog.htm"
+curlsrc - 1 error(s), 0 warning(s)</pre></table><table   width=100% height=20 bgcolor=#CFCFE5><tr><td><font face=arial size=+2>
+</font></table></body></html>
