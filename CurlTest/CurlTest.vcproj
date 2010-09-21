@@ -21,8 +21,8 @@
 			<Tool
 				Name="VCCLCompilerTool"
 				Optimization="0"
-				AdditionalIncludeDirectories="&quot;C:\Projects\Curl\Curl\curl-7.21.1\include&quot;"
-				AdditionalUsingDirectories="&quot;C:\Projects\Curl\Curl\curl-7.21.1\lib\DLL-Debug&quot;"
+				AdditionalIncludeDirectories="&quot;C:\Projects\Curl\curl-7.21.1\include&quot;"
+				AdditionalUsingDirectories="&quot;C:\Projects\Curl\curl-7.21.1\lib\DLL-Debug&quot;"
 				PreprocessorDefinitions="WIN32;_DEBUG"
 				MinimalRebuild="FALSE"
 				BasicRuntimeChecks="0"
@@ -125,6 +125,9 @@
 				RelativePath=".\CurlTest.cpp">
 			</File>
 			<File
+				RelativePath=".\MJpegEvent.cpp">
+			</File>
+			<File
 				RelativePath=".\MJpegStream.cpp">
 			</File>
 			<File
@@ -154,7 +157,7 @@
 				RelativePath=".\Listener.h">
 			</File>
 			<File
-				RelativePath=".\MjpegEvent.h">
+				RelativePath=".\MJpegEvent.h">
 			</File>
 			<File
 				RelativePath=".\MJpegStream.h">

@@ -1,19 +1,29 @@
 
 #include "StdAfx.h"
-#include ".\observable.h"
-
+#include "Observable.h"
 #using <mscorlib.dll>
 
-template <class E>
-Observable<E>::Observable(void)
+Observable::Observable(void)
 {
 	/* noop.  */
 }
 
-
-template <class E>
-Observable<E>::~Observable(void)
+Observable::~Observable(void)
 {
-	/* noop.  */
+
 }
 
+void Observable::addListener(const Listener<MJpegEvent> &listener)
+{
+	// TODO
+}
+
+void Observable::removeListener(const Listener<MJpegEvent> &listener)
+{
+	// TODO
+}
+
+void Observable::alertListeners(const MJpegEvent &event)
+{
+	// TODO
+}

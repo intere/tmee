@@ -1,10 +1,11 @@
 #include "StdAfx.h"
-#include "mjpegstream.h"
+#include "MJpegStream.h"
+#include "Observable.h"
+#include "MJpegEvent.h"
 #using <mscorlib.dll>
 
-// This is the "boundary" string; it tells you when you're beginning a new boundary.
 
-MJpegStream::MJpegStream(void) : ostream(_Noinit)
+MJpegStream::MJpegStream(void) : ostream(_Noinit), Observable()
 {
 	contentLength = 0;
 	bytesRead = 0;
@@ -21,7 +22,7 @@ MJpegStream::MJpegStream(void) : ostream(_Noinit)
 
 MJpegStream::~MJpegStream(void)
 {
-
+	// TODO
 }
 
 /**
@@ -32,29 +33,32 @@ ostream& MJpegStream::put(char c)
 {
 	switch(state)
 	{
+
+	// Reads the Header
 	case ReadingHeader:
 		{
 			parseHeaderField(c);
 			break;
 		}
 
+	// Creates the JPEG File
 	case CreatingFile:
 		{
 			state = ReadingContent;
 			return put(c);
 		}
 
+	// Reads the conent
 	case ReadingContent:
 		{
 			readContent(c);
 			break;
 		}
 
+	// Reads the Post Content: \r\n
 	case PostContent:
 		{
 			++headerStringIndex;
-			//cout << "post content; read character: " << (int)c << endl;
-
 			if(headerStringIndex==2)
 			{
 				setState(ReadingHeader);
