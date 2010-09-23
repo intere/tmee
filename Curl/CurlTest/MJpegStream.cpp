@@ -2,10 +2,8 @@
 #include "MJpegStream.h"
 #include "Observable.h"
 #include "MJpegEvent.h"
-#using <mscorlib.dll>
 
-
-MJpegStream::MJpegStream(void) : ostream(_Noinit), Observable()
+MJpegStream::MJpegStream(void) : ostream(_Noinit), Observable<MJpegEvent*>()
 {
 	contentLength = 0;
 	bytesRead = 0;
@@ -194,10 +192,10 @@ void MJpegStream::helpParseHeaderField(char &c)
 		}
 	}
 
-	if(c=='\r')
+	if(c==mjpeg::stream::CR)
 	{
 		lastIsCr = true;
-	} else if(lastIsCr && c=='\n')
+	} else if(lastIsCr && c==mjpeg::stream::LF)
 	{
 		lastIsCr = false;
 		switch(hState)
@@ -260,9 +258,7 @@ void MJpegStream::createNewFile(char &c)
  */
 void MJpegStream::readContent(char &c)
 {
-	// jpegstream << c;
 	jpegstream.put(c);
-
 	++bytesRead;
 
 	if(bytesRead==contentLength)
@@ -276,6 +272,9 @@ void MJpegStream::readContent(char &c)
 		cout << "Read " << bytesRead << " bytes" << endl;
 #endif
 
+		MJpegEvent *evt = new MJpegEvent(bytesRead, filename);
+        alertListeners(evt);
+		delete evt;
 	}
 }
 

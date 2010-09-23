@@ -11,26 +11,53 @@ using namespace std;
  * is that listeners register with this class (via the addListener 
  * function) and are notified of some sort of event via a 
  */
+template <class T>
 class Observable
 {
 public:
-	/** Default constructor.  */
-	Observable(void);
 
 	/** Destructor.  */
-	virtual ~Observable(void);
+	virtual ~Observable(void)
+	{
+		vector<Listener<T> >::iterator i;		
+		for(i=listeners.begin(); i!=listeners.end(); ++i)
+		{
+			delete &(*i);
+		}
+	}
 
 	/** Adds the listener to the list.  */
-	void addListener(const Listener<MJpegEvent> &listener);
+	void addListener(Listener<T> *listener)
+	{
+		listeners.push_back(listener);
+	}
 
 	/** Removes a listener from the list.  */
-	void removeListener(const Listener<MJpegEvent> &listener);
+	void removeListener(Listener<T> *listener)
+	{
+		for(vector<Listener<T> >::iterator i=listeners.begin();
+			i!=listeners.end(); ++i)
+		{
+			if((*i)==listener)
+			{
+				listeners.erase(i);
+				return;
+			}
+		}
+	}
 
 	/** Notifies all of the listeners of an event. */
-	void alertListeners(const MJpegEvent &event);
+	void alertListeners(T event)
+	{
+		for(vector<Listener<T> >::iterator i=listeners.begin();
+			i!=listeners.end(); ++i)
+		{
+			i->eventOccurred(event);
+		}
+	}
 
 protected:
 
 	/** Private vector of Listeners.  */
-	vector< Listener< MJpegEvent > > listeners;
+	vector< Listener< T > > listeners;
 };

@@ -17,7 +17,7 @@
 			IntermediateDirectory="$(ConfigurationName)"
 			ConfigurationType="1"
 			CharacterSet="2"
-			ManagedExtensions="TRUE">
+			ManagedExtensions="FALSE">
 			<Tool
 				Name="VCCLCompilerTool"
 				Optimization="0"
@@ -106,21 +106,12 @@
 		</Configuration>
 	</Configurations>
 	<References>
-		<AssemblyReference
-			RelativePath="mscorlib.dll"/>
-		<AssemblyReference
-			RelativePath="System.dll"/>
-		<AssemblyReference
-			RelativePath="System.Data.dll"/>
 	</References>
 	<Files>
 		<Filter
 			Name="Source Files"
 			Filter="cpp;c;cxx;def;odl;idl;hpj;bat;asm;asmx"
 			UniqueIdentifier="{4FC737F1-C7A5-4376-A066-2A32D752A2FF}">
-			<File
-				RelativePath=".\AssemblyInfo.cpp">
-			</File>
 			<File
 				RelativePath=".\CurlTest.cpp">
 			</File>
@@ -129,9 +120,6 @@
 			</File>
 			<File
 				RelativePath=".\MJpegStream.cpp">
-			</File>
-			<File
-				RelativePath=".\Observable.cpp">
 			</File>
 			<File
 				RelativePath=".\stdafx.cpp">
