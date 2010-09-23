@@ -10,7 +10,7 @@
 #include "curl/curl.h"
 #include "mjpegtojpeg.h"
 #include "MJpegStream.h"
-#using <mscorlib.dll>
+//#using <mscorlib.dll>
 
 using namespace std;
 

@@ -1,7 +1,7 @@
 
 #include "stdafx.h"
 #include "MJpegEvent.h"
-#using <mscorlib.dll>
+//#using <mscorlib.dll>
 
 MJpegEvent::MJpegEvent(long bytes, string filename)
 {
@@ -9,10 +9,10 @@ MJpegEvent::MJpegEvent(long bytes, string filename)
 	this->filename = filename;
 }
 
-MJpegEvent::~MJpegEvent(void)
+/*MJpegEvent::~MJpegEvent(void)
 {
 
-}
+}*/
 
 
 long MJpegEvent::getBytes(void) const

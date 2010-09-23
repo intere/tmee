@@ -21,6 +21,8 @@ namespace mjpeg
 		static const string CONTENT_TYPE = "Content-Type: ";
 		static const string CONTENT_LEN = "Content-Length: ";
 		static const string CR_LF = "\r\n";
+		static const char CR = '\r';
+		static const char LF = '\n';
 	}
 
 	namespace file
@@ -35,7 +37,7 @@ namespace mjpeg
 /**
  * The purpose of this class is to extend the ostream object.
  */
-class MJpegStream : public ostream, public Observable
+class MJpegStream : public ostream, public Observable<MJpegEvent*>
 {
 public:
 
@@ -61,7 +63,7 @@ public:
 	MJpegStream(void);
 
 	/** Destructor.  */
-	virtual ~MJpegStream(void);
+	~MJpegStream(void);
 
 	/** Overloaded put function.  */
 	virtual ostream& put(char c);

@@ -1,6 +1,12 @@
-#include "stdafx.h"
+namespace eric
+{
 
-#using <mscorlib.dll>
+};
+
+/*
+//#include "stdafx.h"
+
+//#using <mscorlib.dll>
 
 using namespace System::Reflection;
 using namespace System::Runtime::CompilerServices;
@@ -58,3 +64,4 @@ using namespace System::Runtime::CompilerServices;
 [assembly:AssemblyKeyFileAttribute("")];
 [assembly:AssemblyKeyNameAttribute("")];
 
+*/

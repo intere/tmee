@@ -15,8 +15,8 @@ public:
 	/** Constructor that sets the Bytes and Filename. */
 	MJpegEvent(long bytes, string filename);
 
-	/** Destructor.  */
-	~MJpegEvent(void);
+	/** Destructor.  
+	virtual ~MJpegEvent(void);*/
 	
 	/** Getter for the number of bytes in the file. */
 	long getBytes(void) const;
