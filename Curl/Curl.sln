@@ -13,6 +13,10 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "libcurl", "curl-7.21.1\lib\
 	ProjectSection(ProjectDependencies) = postProject
 	EndProjectSection
 EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "TalkMasterConsole", "TMOC\TalkMasterConsole.vcproj", "{426C9BB1-6C37-4E71-86C6-91680857BB48}"
+	ProjectSection(ProjectDependencies) = postProject
+	EndProjectSection
+EndProject
 Global
 	GlobalSection(SolutionConfiguration) = preSolution
 		Debug = Debug
@@ -20,6 +24,7 @@ Global
 		DLL Release = DLL Release
 		LIB Debug = LIB Debug
 		LIB Release = LIB Release
+		Primex Release = Primex Release
 		Release = Release
 		using libcurl DLL Debug = using libcurl DLL Debug
 		using libcurl DLL Release = using libcurl DLL Release
@@ -37,6 +42,8 @@ Global
 		{DB7CBBBD-7534-422F-98CD-29B21BEC0432}.LIB Debug.Build.0 = Debug|Win32
 		{DB7CBBBD-7534-422F-98CD-29B21BEC0432}.LIB Release.ActiveCfg = Release|Win32
 		{DB7CBBBD-7534-422F-98CD-29B21BEC0432}.LIB Release.Build.0 = Release|Win32
+		{DB7CBBBD-7534-422F-98CD-29B21BEC0432}.Primex Release.ActiveCfg = Release|Win32
+		{DB7CBBBD-7534-422F-98CD-29B21BEC0432}.Primex Release.Build.0 = Release|Win32
 		{DB7CBBBD-7534-422F-98CD-29B21BEC0432}.Release.ActiveCfg = Release|Win32
 		{DB7CBBBD-7534-422F-98CD-29B21BEC0432}.Release.Build.0 = Release|Win32
 		{DB7CBBBD-7534-422F-98CD-29B21BEC0432}.using libcurl DLL Debug.ActiveCfg = Debug|Win32
@@ -57,6 +64,8 @@ Global
 		{F7B5C5D9-C7FD-4B8C-8BE2-880134181BC7}.LIB Debug.Build.0 = using libcurl LIB Debug|Win32
 		{F7B5C5D9-C7FD-4B8C-8BE2-880134181BC7}.LIB Release.ActiveCfg = using libcurl LIB Release|Win32
 		{F7B5C5D9-C7FD-4B8C-8BE2-880134181BC7}.LIB Release.Build.0 = using libcurl LIB Release|Win32
+		{F7B5C5D9-C7FD-4B8C-8BE2-880134181BC7}.Primex Release.ActiveCfg = using libcurl DLL Debug|Win32
+		{F7B5C5D9-C7FD-4B8C-8BE2-880134181BC7}.Primex Release.Build.0 = using libcurl DLL Debug|Win32
 		{F7B5C5D9-C7FD-4B8C-8BE2-880134181BC7}.Release.ActiveCfg = using libcurl LIB Release|Win32
 		{F7B5C5D9-C7FD-4B8C-8BE2-880134181BC7}.Release.Build.0 = using libcurl LIB Release|Win32
 		{F7B5C5D9-C7FD-4B8C-8BE2-880134181BC7}.using libcurl DLL Debug.ActiveCfg = using libcurl DLL Debug|Win32
@@ -77,6 +86,8 @@ Global
 		{9829453D-D8C4-4007-9868-707CD3E79480}.LIB Debug.Build.0 = LIB Debug|Win32
 		{9829453D-D8C4-4007-9868-707CD3E79480}.LIB Release.ActiveCfg = LIB Release|Win32
 		{9829453D-D8C4-4007-9868-707CD3E79480}.LIB Release.Build.0 = LIB Release|Win32
+		{9829453D-D8C4-4007-9868-707CD3E79480}.Primex Release.ActiveCfg = LIB Release|Win32
+		{9829453D-D8C4-4007-9868-707CD3E79480}.Primex Release.Build.0 = LIB Release|Win32
 		{9829453D-D8C4-4007-9868-707CD3E79480}.Release.ActiveCfg = LIB Release|Win32
 		{9829453D-D8C4-4007-9868-707CD3E79480}.Release.Build.0 = LIB Release|Win32
 		{9829453D-D8C4-4007-9868-707CD3E79480}.using libcurl DLL Debug.ActiveCfg = DLL Debug|Win32
@@ -87,6 +98,28 @@ Global
 		{9829453D-D8C4-4007-9868-707CD3E79480}.using libcurl LIB Debug.Build.0 = LIB Debug|Win32
 		{9829453D-D8C4-4007-9868-707CD3E79480}.using libcurl LIB Release.ActiveCfg = LIB Release|Win32
 		{9829453D-D8C4-4007-9868-707CD3E79480}.using libcurl LIB Release.Build.0 = LIB Release|Win32
+		{426C9BB1-6C37-4E71-86C6-91680857BB48}.Debug.ActiveCfg = Debug|Win32
+		{426C9BB1-6C37-4E71-86C6-91680857BB48}.Debug.Build.0 = Debug|Win32
+		{426C9BB1-6C37-4E71-86C6-91680857BB48}.DLL Debug.ActiveCfg = Debug|Win32
+		{426C9BB1-6C37-4E71-86C6-91680857BB48}.DLL Debug.Build.0 = Debug|Win32
+		{426C9BB1-6C37-4E71-86C6-91680857BB48}.DLL Release.ActiveCfg = Release|Win32
+		{426C9BB1-6C37-4E71-86C6-91680857BB48}.DLL Release.Build.0 = Release|Win32
+		{426C9BB1-6C37-4E71-86C6-91680857BB48}.LIB Debug.ActiveCfg = Debug|Win32
+		{426C9BB1-6C37-4E71-86C6-91680857BB48}.LIB Debug.Build.0 = Debug|Win32
+		{426C9BB1-6C37-4E71-86C6-91680857BB48}.LIB Release.ActiveCfg = Release|Win32
+		{426C9BB1-6C37-4E71-86C6-91680857BB48}.LIB Release.Build.0 = Release|Win32
+		{426C9BB1-6C37-4E71-86C6-91680857BB48}.Primex Release.ActiveCfg = Primex Release|Win32
+		{426C9BB1-6C37-4E71-86C6-91680857BB48}.Primex Release.Build.0 = Primex Release|Win32
+		{426C9BB1-6C37-4E71-86C6-91680857BB48}.Release.ActiveCfg = Release|Win32
+		{426C9BB1-6C37-4E71-86C6-91680857BB48}.Release.Build.0 = Release|Win32
+		{426C9BB1-6C37-4E71-86C6-91680857BB48}.using libcurl DLL Debug.ActiveCfg = Debug|Win32
+		{426C9BB1-6C37-4E71-86C6-91680857BB48}.using libcurl DLL Debug.Build.0 = Debug|Win32
+		{426C9BB1-6C37-4E71-86C6-91680857BB48}.using libcurl DLL Release.ActiveCfg = Release|Win32
+		{426C9BB1-6C37-4E71-86C6-91680857BB48}.using libcurl DLL Release.Build.0 = Release|Win32
+		{426C9BB1-6C37-4E71-86C6-91680857BB48}.using libcurl LIB Debug.ActiveCfg = Debug|Win32
+		{426C9BB1-6C37-4E71-86C6-91680857BB48}.using libcurl LIB Debug.Build.0 = Debug|Win32
+		{426C9BB1-6C37-4E71-86C6-91680857BB48}.using libcurl LIB Release.ActiveCfg = Release|Win32
+		{426C9BB1-6C37-4E71-86C6-91680857BB48}.using libcurl LIB Release.Build.0 = Release|Win32
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 	EndGlobalSection

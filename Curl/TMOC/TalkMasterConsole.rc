@@ -1,0 +1,881 @@
+// Microsoft Visual C++ generated resource script.
+//
+#include "resource.h"
+
+#define APSTUDIO_READONLY_SYMBOLS
+/////////////////////////////////////////////////////////////////////////////
+//
+// Generated from the TEXTINCLUDE 2 resource.
+//
+#include "afxres.h"
+
+/////////////////////////////////////////////////////////////////////////////
+#undef APSTUDIO_READONLY_SYMBOLS
+
+/////////////////////////////////////////////////////////////////////////////
+// English (U.S.) resources
+
+#if !defined(AFX_RESOURCE_DLL) || defined(AFX_TARG_ENU)
+#ifdef _WIN32
+LANGUAGE LANG_ENGLISH, SUBLANG_ENGLISH_US
+#pragma code_page(1252)
+#endif //_WIN32
+
+#ifdef APSTUDIO_INVOKED
+/////////////////////////////////////////////////////////////////////////////
+//
+// TEXTINCLUDE
+//
+
+1 TEXTINCLUDE 
+BEGIN
+    "resource.h\0"
+END
+
+2 TEXTINCLUDE 
+BEGIN
+    "#include ""afxres.h""\r\n"
+    "\0"
+END
+
+3 TEXTINCLUDE 
+BEGIN
+    "#define _AFX_NO_SPLITTER_RESOURCES\r\n"
+    "#define _AFX_NO_OLE_RESOURCES\r\n"
+    "#define _AFX_NO_TRACKER_RESOURCES\r\n"
+    "#define _AFX_NO_PROPERTY_RESOURCES\r\n"
+    "\r\n"
+    "#if !defined(AFX_RESOURCE_DLL) || defined(AFX_TARG_ENU)\r\n"
+    "LANGUAGE 9, 1\r\n"
+    "#pragma code_page(1252)\r\n"
+    "#include ""res\\DAPassThruTest.rc2""  // non-Microsoft Visual C++ edited resources\r\n"
+    "#include ""afxres.rc""         // Standard components\r\n"
+    "#endif\r\n"
+    "\0"
+END
+
+#endif    // APSTUDIO_INVOKED
+
+
+/////////////////////////////////////////////////////////////////////////////
+//
+// Icon
+//
+
+// Icon with lowest ID value placed first to ensure application icon
+// remains consistent on all systems.
+#if defined(APSTUDIO_INVOKED) || !defined(PRIMEX_BUILD)
+IDR_MAINFRAME           ICON                    "res\\idr_main.ico"
+#endif
+IDR_MAINFRAME2          ICON                    "res\\ico00002.ico"
+IDI_ICON_TASK_BAR       ICON                    "res\\TalkMasterTaskBar.ico"
+IDR_MAINFRAME_NEW       ICON                    "res\\icon2.ico"
+IDI_ICON_PRIMEX         ICON                    "res\\Primex.ico"
+#if defined(APSTUDIO_INVOKED) || defined(PRIMEX_BUILD)
+#if defined(APSTUDIO_INVOKED)
+IDR_MAINFRAME$(PRIMEX_BUILD) ICON                    "res\\primexred.ico"
+#else
+IDR_MAINFRAME           ICON                    "res\\primexred.ico"
+#endif
+#endif
+
+/////////////////////////////////////////////////////////////////////////////
+//
+// Dialog
+//
+
+IDD_ABOUTBOX DIALOGEX 0, 0, 266, 84
+STYLE DS_SETFONT | DS_MODALFRAME | DS_FIXEDSYS | WS_POPUP | WS_CAPTION | 
+    WS_SYSMENU
+CAPTION "About TalkMaster Console"
+FONT 8, "MS Shell Dlg", 0, 0, 0x1
+BEGIN
+    ICON            IDR_MAINFRAME,IDC_STATIC_ABOUT_PICTURE,11,10,20,20
+    LTEXT           "Copyright (C) 2005-2008 Digital Acoustics, LLC  Patents Pending",
+                    IDC_STATIC,40,13,165,18
+    DEFPUSHBUTTON   "OK",IDOK,209,12,50,16,WS_GROUP
+    LISTBOX         IDC_LIST_ABOUT_COMPONENTS,7,37,252,40,LBS_SORT | 
+                    LBS_NOINTEGRALHEIGHT | WS_VSCROLL | WS_TABSTOP
+END
+
+IDD_TALKMASTERCONSOLE_DIALOG DIALOGEX 0, 0, 372, 250
+STYLE DS_SETFONT | DS_FIXEDSYS | WS_MINIMIZEBOX | WS_MAXIMIZEBOX | WS_POPUP | 
+    WS_VISIBLE | WS_CAPTION | WS_SYSMENU | WS_THICKFRAME
+EXSTYLE WS_EX_APPWINDOW
+CAPTION "TalkMaster Console"
+MENU IDR_MENU_MAIN
+FONT 8, "MS Shell Dlg", 0, 0, 0x1
+BEGIN
+    CONTROL         "",IDC_LIST_ICOMS,"SysListView32",LVS_REPORT | 
+                    LVS_SHOWSELALWAYS | LVS_ALIGNLEFT | WS_BORDER | 
+                    WS_TABSTOP,7,34,134,87
+    PUSHBUTTON      "Talk",IDC_BUTTON_TALK,312,204,50,24,BS_BITMAP
+    PUSHBUTTON      "Listen",IDC_BUTTON_LISTEN,256,204,50,24,BS_BITMAP
+    PUSHBUTTON      "Chime",IDC_BUTTON_CHIME,312,186,50,14
+    PUSHBUTTON      "Play File",IDC_BUTTON_PLAY_FILE,312,168,50,14
+    GROUPBOX        "Talk Mode",IDC_GROUP_TALK_MODE,309,129,56,115
+    CONTROL         "Selected",IDC_RADIO_SELECTED,"Button",
+                    BS_AUTORADIOBUTTON | WS_GROUP,314,134,43,10
+    CONTROL         "Group",IDC_RADIO_GROUP,"Button",BS_AUTORADIOBUTTON,314,
+                    144,35,10
+    CONTROL         "All Active",IDC_RADIO_ALL_ACTIVE,"Button",
+                    BS_AUTORADIOBUTTON,314,154,45,10
+    GROUPBOX        "Listen Mode",IDC_GROUP_LISTEN_MODE,254,177,54,67
+    CONTROL         "Automatic",IDC_RADIO_AUTOMATIC,"Button",
+                    BS_AUTORADIOBUTTON | WS_GROUP,258,181,48,10
+    CONTROL         "Manual",IDC_RADIO_MANUAL,"Button",BS_AUTORADIOBUTTON,
+                    258,192,39,10
+    CONTROL         "",IDC_LIST_CALLS_WAITING,"SysListView32",LVS_REPORT | 
+                    LVS_SHOWSELALWAYS | LVS_ALIGNLEFT | LVS_NOSORTHEADER | 
+                    WS_BORDER | WS_TABSTOP,7,125,236,48
+    PUSHBUTTON      "Play",IDC_BUTTON_PLAY_PAUSE,15,183,15,15,BS_BITMAP | 
+                    WS_DISABLED
+    PUSHBUTTON      "Play",IDC_BUTTON_STOP,41,186,11,11,BS_BITMAP | 
+                    WS_DISABLED
+    PUSHBUTTON      "Play",IDC_BUTTON_MUTE,73,186,11,11,BS_BITMAP | 
+                    WS_DISABLED
+    CONTROL         "",IDC_SLIDER_CQ_PLAYER,"msctls_trackbar32",TBS_BOTH | 
+                    TBS_NOTICKS | WS_DISABLED | WS_TABSTOP,96,186,140,11
+    GROUPBOX        "",IDC_GROUP_PLAYER,7,175,236,28
+    PUSHBUTTON      "Hold",IDC_BUTTON_HOLD,254,130,50,14,WS_DISABLED
+    PUSHBUTTON      "End",IDC_BUTTON_END,254,151,50,14,WS_DISABLED
+    CONTROL         "",IDC_STATIC_LOGO,"Static",SS_BITMAP | WS_BORDER,228,7,
+                    16,14
+    CONTROL         "",IDC_STATIC_VU_METER_MICROPHONE,"Static",SS_BITMAP | 
+                    WS_BORDER,313,230,16,14
+    CONTROL         "",IDC_STATIC_VU_METER_SPEAKER,"Static",SS_BITMAP | 
+                    WS_BORDER,256,230,16,14
+    LTEXT           "Intercoms connected to console 0 / 0",
+                    IDC_STATIC_STATUS_CONNECTED,168,25,32,8,SS_SUNKEN
+    CTEXT           "PTT",IDC_STATIC_STATUS_PTT,217,26,13,8,SS_SUNKEN
+    CTEXT           "uLaw",IDC_STATIC_CODEC,235,26,18,8,SS_SUNKEN
+    CONTROL         "Test Mode",IDC_CHECK_TEST,"Button",BS_AUTOCHECKBOX | 
+                    NOT WS_VISIBLE | WS_TABSTOP,12,15,49,10
+    CONTROL         "",IDC_SLIDER_MAX_MSEC,"msctls_trackbar32",TBS_BOTH | 
+                    TBS_NOTICKS | NOT WS_VISIBLE | WS_TABSTOP,64,13,100,15
+    LTEXT           "3000ms",IDC_STATIC_MAX_MSEC,190,15,26,8,NOT WS_VISIBLE
+    LTEXT           "100 to",IDC_STATIC_MIN_MSEC_TEXT,167,15,22,8,NOT 
+                    WS_VISIBLE
+    CONTROL         "",IDC_PROGRESS_SETUP_VOLUME,"msctls_progress32",NOT 
+                    WS_VISIBLE | WS_BORDER,254,0,80,14
+    CONTROL         "",IDC_SLIDER_SETUP_VOLUME,"msctls_trackbar32",TBS_BOTH | 
+                    TBS_NOTICKS | NOT WS_VISIBLE | WS_TABSTOP,261,9,100,15
+    PUSHBUTTON      "Get Volume",IDC_BUTTON_GET_VOLUME,312,21,50,14,NOT 
+                    WS_VISIBLE | WS_DISABLED
+    PUSHBUTTON      "Set Volume",IDC_BUTTON_SET_VOLUME,257,21,50,14,NOT 
+                    WS_VISIBLE | WS_DISABLED
+    PUSHBUTTON      "Test Volume",IDC_BUTTON_TEST_VOLUME,283,20,50,14,NOT 
+                    WS_VISIBLE | WS_DISABLED
+    PUSHBUTTON      "Talk",IDC_BUTTON_FDX_START,79,202,50,24,BS_BITMAP
+    PUSHBUTTON      "Talk",IDC_BUTTON_FDX_MUTE,41,202,50,24,BS_BITMAP
+    PUSHBUTTON      "Talk",IDC_BUTTON_NO_LISTEN,7,202,50,24,BS_BITMAP
+    PUSHBUTTON      "Test Audio",IDC_BUTTON_TEST_AUDIO,98,12,50,14,NOT 
+                    WS_VISIBLE | WS_DISABLED
+    CONTROL         "",IDC_TAB_MAIN,"SysTabControl32",0x0,7,23,50,30
+    CONTROL         "",IDC_LIST_GROUPS,"SysListView32",LVS_REPORT | 
+                    LVS_SHOWSELALWAYS | LVS_ALIGNLEFT | WS_BORDER | 
+                    WS_TABSTOP,177,45,60,50
+    CONTROL         "",IDC_LIST_MESSAGES,"SysListView32",LVS_REPORT | 
+                    LVS_SINGLESEL | LVS_SHOWSELALWAYS | LVS_ALIGNLEFT | 
+                    WS_BORDER | WS_TABSTOP,250,44,60,50
+    PUSHBUTTON      "",IDC_BUTTON_SESSION_START,172,204,50,24,BS_BITMAP
+    PUSHBUTTON      "",IDC_BUTTON_SESSION_END,125,204,50,24,BS_BITMAP | NOT 
+                    WS_VISIBLE
+END
+
+IDD_DIALOG_PREFERENCES DIALOGEX 0, 0, 224, 303
+STYLE DS_SETFONT | DS_MODALFRAME | DS_FIXEDSYS | WS_POPUP | WS_CAPTION | 
+    WS_SYSMENU
+CAPTION "Preferences"
+FONT 8, "MS Shell Dlg", 400, 0, 0x1
+BEGIN
+    DEFPUSHBUTTON   "OK",IDOK,167,282,50,14
+    DEFPUSHBUTTON   "Help",IDHELP,109,282,50,14
+    GROUPBOX        "Ping Interval",IDC_STATIC_PREFERENCES_PING_GROUP,15,10,
+                    55,28
+    GROUPBOX        "Startup Audio",IDC_STATIC_PREF_STARTUP_AUDIO,79,10,129,
+                    28
+    CONTROL         "",IDC_SPIN_PING_INTERVAL,"msctls_updown32",
+                    UDS_ARROWKEYS,57,20,11,14
+    EDITTEXT        IDC_EDIT_PING_INTERVAL,20,21,22,12,ES_AUTOHSCROLL
+    LTEXT           "Secs",IDC_STATIC_PREF_PING_SECS,41,23,16,8
+    COMBOBOX        IDC_COMBO_STARTUP_TYPE,83,20,44,51,CBS_DROPDOWN | 
+                    CBS_SORT | WS_VSCROLL | WS_TABSTOP
+    COMBOBOX        IDC_COMBO_STARTUP_LANGUAGE,140,20,62,49,CBS_DROPDOWN | 
+                    CBS_SORT | WS_VSCROLL | WS_TABSTOP
+    CONTROL         "Use beep tones at start and end of incoming calls",
+                    IDC_CHECK_BEEPS,"Button",BS_AUTOCHECKBOX | WS_TABSTOP,18,
+                    41,173,10
+    CONTROL         "Minimize to System Tray on Close (X)",IDC_CHECK_HIDE,
+                    "Button",BS_AUTOCHECKBOX | WS_TABSTOP,18,52,133,10
+    CONTROL         "Hold down Talk button while speaking (PTT)",
+                    IDC_CHECK_PTT,"Button",BS_AUTOCHECKBOX | WS_TABSTOP,18,
+                    64,155,10
+    CONTROL         "Activate Call Announcement",IDC_CHECK_CALL_ANNOUNCE,
+                    "Button",BS_AUTOCHECKBOX | WS_TABSTOP,18,76,106,10
+    GROUPBOX        "Call Announcement Notification",
+                    IDC_STATIC_PREF_CALL_ANNOUNCE_GROUP,17,90,191,34
+    COMBOBOX        IDC_COMBO_ANNOUNCEMENT_AUDIBLE_SOUND,115,106,88,58,
+                    CBS_DROPDOWNLIST | CBS_SORT | WS_VSCROLL | WS_TABSTOP
+    CONTROL         "Record Audio in Call Waiting Queue",
+                    IDC_CHECK_RECORD_CALL_WAITING,"Button",BS_AUTOCHECKBOX | 
+                    WS_TABSTOP,18,129,129,10
+    CONTROL         "Visual Notification",IDC_CHECK_VISUAL_NOTIFICATION,
+                    "Button",BS_AUTOCHECKBOX | WS_TABSTOP,28,100,72,10
+    CONTROL         "Audible Notification",IDC_CHECK_AUDIBLE_NOTIFICATION,
+                    "Button",BS_AUTOCHECKBOX | WS_TABSTOP,28,112,77,10
+    GROUPBOX        "Wave Output Device",IDC_STATIC_PREF_WAVE_OUT_GROUP,17,
+                    143,190,27
+    GROUPBOX        "Wave Input Device",IDC_STATIC_PREF_WAVE_IN_GROUP,17,174,
+                    190,27
+    COMBOBOX        IDC_COMBO_WAVE_OUTPUT_DEVICE,24,152,176,60,
+                    CBS_DROPDOWNLIST | CBS_SORT | WS_VSCROLL | WS_TABSTOP
+    COMBOBOX        IDC_COMBO_WAVE_INPUT_DEVICE,24,183,176,60,
+                    CBS_DROPDOWNLIST | CBS_SORT | WS_VSCROLL | WS_TABSTOP
+    CONTROL         "",IDC_TAB_PREFERENCES,"SysTabControl32",0x0,177,61,28,
+                    23
+    GROUPBOX        "Call Announcement Rules",
+                    IDC_STATIC_PREF_ANNOUNCE_RULES_GROUP,15,202,30,16
+    RTEXT           "Queue Age >=",IDC_STATIC_PREF_QUEUE_AGE,7,220,50,8
+    RTEXT           "Queue Size >=",IDC_STATIC_PREF_QUEUE_SIZE,9,288,50,8
+    EDITTEXT        IDC_EDIT_PREF_QUEUE_AGE,57,204,40,14,ES_AUTOHSCROLL
+    EDITTEXT        IDC_EDIT_PREF_QUEUE_SIZE,57,220,40,14,ES_AUTOHSCROLL
+    COMBOBOX        IDC_COMBO_PREF_QUEUE_AGE_TYPE,97,203,48,46,
+                    CBS_DROPDOWNLIST | WS_VSCROLL | WS_TABSTOP
+    LTEXT           "Entries",IDC_STATIC_PREF_ENTRIES,93,219,23,8
+    CONTROL         "Use uLaw",IDC_CHECK_MICROPHONE_ULAW,"Button",
+                    BS_AUTOCHECKBOX | WS_TABSTOP,159,206,47,10
+    CONTROL         "Repeat Play",IDC_CHECK_PLAY_AGAIN,"Button",
+                    BS_AUTOCHECKBOX | WS_TABSTOP,159,216,55,10
+    CONTROL         "Show Debug",IDC_CHECK_SHOW_DEBUG,"Button",
+                    BS_AUTOCHECKBOX | WS_TABSTOP,159,227,56,10
+    CONTROL         "Setup Volume",IDC_CHECK_SETUP_VOLUME,"Button",
+                    BS_AUTOCHECKBOX | WS_TABSTOP,106,225,59,10
+    EDITTEXT        IDC_EDIT_TEST_VOLUME_FILE,21,244,129,14,ES_AUTOHSCROLL
+    PUSHBUTTON      "Browse",IDC_BUTTON_BROWSE_TEST_VOLUME_FILE,159,244,50,
+                    14
+    GROUPBOX        "Audio Test File",IDC_STATIC_TEST_VOLUME_FILE,16,237,198,
+                    27
+    CONTROL         "Force Hdx",IDC_CHECK_FORCE_HDX,"Button",BS_AUTOCHECKBOX | 
+                    WS_TABSTOP,19,268,49,10
+    CONTROL         "Filter Playback Noise",IDC_CHECK_VAD,"Button",
+                    BS_AUTOCHECKBOX | WS_TABSTOP,78,269,81,10
+END
+
+IDD_DIALOG_UNATTENDED DIALOGEX 0, 0, 186, 90
+STYLE DS_SETFONT | DS_MODALFRAME | DS_FIXEDSYS | WS_POPUP | WS_CAPTION
+CAPTION "TalkMaster Currently Unattended"
+FONT 8, "MS Shell Dlg", 400, 0, 0x1
+BEGIN
+    PUSHBUTTON      "Cancel",IDCANCEL,68,69,50,14
+    LTEXT           "Unattended Mode is Enabled",IDC_STATIC,47,12,92,8
+    LTEXT           "Press ""Cancel"" to return TalkMaster to normal",
+                    IDC_STATIC,19,38,146,8
+    LTEXT           "operation status.",IDC_STATIC,64,48,56,8
+END
+
+IDD_DIALOG_LOGON DIALOGEX 0, 0, 186, 116
+STYLE DS_SETFONT | DS_MODALFRAME | DS_FIXEDSYS | WS_POPUP | WS_CAPTION | 
+    WS_SYSMENU
+CAPTION "Logon Required"
+FONT 8, "MS Shell Dlg", 400, 0, 0x1
+BEGIN
+    DEFPUSHBUTTON   "Login",IDOK,11,57,46,14
+    PUSHBUTTON      "Cancel",IDCANCEL,67,57,46,14
+    LTEXT           "Logon ID",IDC_STATIC,21,15,50,8
+    LTEXT           "Password",IDC_STATIC,21,31,43,11
+    EDITTEXT        IDC_EDIT_LOGIN_NAME,67,12,103,14,ES_AUTOHSCROLL
+    EDITTEXT        IDC_EDIT_LOGIN_PASSWORD,67,29,103,14,ES_PASSWORD | 
+                    ES_AUTOHSCROLL
+    LTEXT           "Address",IDC_STATIC,21,87,27,8
+    EDITTEXT        IDC_EDIT_LOGON_IP_ADDRESS,67,84,65,14,ES_AUTOHSCROLL
+    EDITTEXT        IDC_EDIT_LOGON_PORT,141,84,29,14,ES_AUTOHSCROLL | 
+                    ES_NUMBER
+    PUSHBUTTON      "Options >>",IDC_BUTTON_LOGON_OPTIONS,123,57,46,14
+    LTEXT           " :",IDC_STATIC,133,87,8,8,NOT WS_GROUP
+END
+
+IDD_DIALOG_ANNOUNCE DIALOGEX 0, 0, 186, 88
+STYLE DS_SETFONT | DS_MODALFRAME | DS_FIXEDSYS | WS_POPUP | WS_CAPTION
+CAPTION "TalkMaster EE - Incoming Call"
+FONT 8, "MS Shell Dlg", 400, 0, 0x1
+BEGIN
+    DEFPUSHBUTTON   "Answer Now",IDOK,21,16,55,55
+    PUSHBUTTON      "Answer Later",IDCANCEL,101,16,55,55
+END
+
+IDD_DIALOG_SEND_MESSAGE DIALOGEX 0, 0, 186, 76
+STYLE DS_SETFONT | DS_MODALFRAME | DS_FIXEDSYS | WS_POPUP | WS_CAPTION | 
+    WS_SYSMENU
+CAPTION "Send Text Message"
+FONT 8, "MS Shell Dlg", 400, 0, 0x1
+BEGIN
+    PUSHBUTTON      "Cancel",IDCANCEL,99,55,50,14
+    EDITTEXT        IDC_EDIT_TEXT_MESSAGE,7,24,172,14,ES_AUTOHSCROLL
+    PUSHBUTTON      "Send",IDC_BUTTON_SEND_TEXT,29,55,50,14
+END
+
+IDD_DIALOG_PLEASE_WAIT DIALOGEX 0, 0, 186, 83
+STYLE DS_SETFONT | DS_FIXEDSYS | DS_CENTER | WS_POPUP | WS_BORDER | 
+    WS_SYSMENU
+FONT 8, "MS Shell Dlg", 400, 0, 0x1
+BEGIN
+    LTEXT           "Please Wait",IDC_STATIC,38,26,38,8
+    LTEXT           "Updating settings from server",IDC_STATIC,38,46,129,8
+END
+
+IDD_DIALOG_TEST_LOGON DIALOGEX 0, 0, 186, 82
+STYLE DS_SETFONT | DS_MODALFRAME | DS_FIXEDSYS | WS_POPUP | WS_CAPTION | 
+    WS_SYSMENU
+CAPTION "Test Logon"
+FONT 8, "MS Shell Dlg", 400, 0, 0x1
+BEGIN
+    PUSHBUTTON      "Done",IDCANCEL,129,61,50,14
+    PUSHBUTTON      "Test",IDC_BUTTON_TEST,62,61,50,14
+    LTEXT           "Logon Name",IDC_STATIC,7,17,40,8
+    LTEXT           "Password",IDC_STATIC,7,32,32,8
+    EDITTEXT        IDC_EDIT_TEST_LOGON_NAME,61,16,118,12,ES_AUTOHSCROLL
+    EDITTEXT        IDC_EDIT_TEST_LOGON_PASSWORD,61,31,118,12,ES_AUTOHSCROLL
+END
+
+
+/////////////////////////////////////////////////////////////////////////////
+//
+// Version
+//
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+VS_VERSION_INFO VERSIONINFO
+FILEVERSION 2,0,0,6
+PRODUCTVERSION 2,0,0,6
+FILEFLAGSMASK 0x3FL
+FILEFLAGS 0x00L
+FILEOS 0x40004L
+FILETYPE 0x1L
+FILESUBTYPE 0x0L
+BEGIN
+    BLOCK "StringFileInfo"
+    BEGIN
+         BLOCK "040904E4"
+         BEGIN
+              VALUE "CompanyName", "Digital Acoustics, LLC\0"
+              VALUE "FileDescription", "TalkMaster EE\0"
+              VALUE "FileVersion", "2.0.0.6\0"
+              VALUE "InternalName", "TalkMaster.exe\0"
+              VALUE "LegalCopyright", "(c) Digital Acoustics, LLC 2004-2009.  All rights reserved.\0"
+              VALUE "OriginalFilename", "TalkMaster.exe\0"
+              VALUE "ProductName", "TalkMaster EE\0"
+              VALUE "ProductVersion", "1.0.0.1\0"
+         END
+    END
+    BLOCK "VarFileInfo"
+    BEGIN
+         VALUE "Translation", 0x0409, 1252
+    END
+END
+
+
+/////////////////////////////////////////////////////////////////////////////
+//
+// DESIGNINFO
+//
+
+#ifdef APSTUDIO_INVOKED
+GUIDELINES DESIGNINFO 
+BEGIN
+    IDD_ABOUTBOX, DIALOG
+    BEGIN
+        LEFTMARGIN, 7
+        RIGHTMARGIN, 259
+        TOPMARGIN, 7
+        BOTTOMMARGIN, 77
+    END
+
+    IDD_TALKMASTERCONSOLE_DIALOG, DIALOG
+    BEGIN
+        LEFTMARGIN, 7
+        RIGHTMARGIN, 365
+        TOPMARGIN, 7
+        BOTTOMMARGIN, 244
+    END
+
+    IDD_DIALOG_PREFERENCES, DIALOG
+    BEGIN
+        LEFTMARGIN, 7
+        RIGHTMARGIN, 217
+        TOPMARGIN, 7
+        BOTTOMMARGIN, 296
+    END
+
+    IDD_DIALOG_UNATTENDED, DIALOG
+    BEGIN
+        LEFTMARGIN, 7
+        RIGHTMARGIN, 179
+        TOPMARGIN, 7
+        BOTTOMMARGIN, 83
+    END
+
+    IDD_DIALOG_LOGON, DIALOG
+    BEGIN
+        LEFTMARGIN, 7
+        RIGHTMARGIN, 179
+        TOPMARGIN, 7
+        BOTTOMMARGIN, 109
+    END
+
+    IDD_DIALOG_ANNOUNCE, DIALOG
+    BEGIN
+        LEFTMARGIN, 7
+        RIGHTMARGIN, 179
+        TOPMARGIN, 7
+        BOTTOMMARGIN, 81
+    END
+
+    IDD_DIALOG_SEND_MESSAGE, DIALOG
+    BEGIN
+        LEFTMARGIN, 7
+        RIGHTMARGIN, 179
+        TOPMARGIN, 7
+        BOTTOMMARGIN, 69
+    END
+
+    IDD_DIALOG_PLEASE_WAIT, DIALOG
+    BEGIN
+        LEFTMARGIN, 7
+        RIGHTMARGIN, 179
+        TOPMARGIN, 7
+        BOTTOMMARGIN, 76
+    END
+
+    IDD_DIALOG_TEST_LOGON, DIALOG
+    BEGIN
+        LEFTMARGIN, 7
+        RIGHTMARGIN, 179
+        TOPMARGIN, 7
+        BOTTOMMARGIN, 75
+    END
+END
+#endif    // APSTUDIO_INVOKED
+
+
+/////////////////////////////////////////////////////////////////////////////
+//
+// Menu
+//
+
+IDR_MENU_MAIN MENU 
+BEGIN
+    POPUP "&File"
+    BEGIN
+        MENUITEM "Capture Archive Audio",       ID_FILE_CAPTUREARCHIVEAUDIO
+        MENUITEM "Play Audio Archives",         ID_FILE_PLAYAUDIOARCHIVES
+        MENUITEM SEPARATOR
+        MENUITEM "L&ogoff",                     ID_FILE_LOGOFF
+        MENUITEM SEPARATOR
+        MENUITEM "E&xit",                       ID_FILE_EXIT
+    END
+    POPUP "View"
+    BEGIN
+        POPUP "Screen Position"
+        BEGIN
+            MENUITEM "Save Current View",           ID_SCREENPOSITION_SAVECURRENTVIEW
+
+            MENUITEM "Reset to default",            ID_SCREENPOSITION_RESETTODEFAULT
+
+        END
+        MENUITEM "Preferences",                 ID_VIEW_PREFERENCES
+    END
+    POPUP "Tools"
+    BEGIN
+        MENUITEM "Record program events to file", 
+                                                ID_TOOLS_RECORDPROGRAMEVENTSTOFILE
+
+        MENUITEM SEPARATOR
+        MENUITEM "&Open Support Folder",        ID_TOOLS_OPENSUPPORTFOLDER
+        MENUITEM SEPARATOR
+        MENUITEM "Send Text &Message",          ID_TOOLS_SENDTEXTMESSAGE
+        MENUITEM "Test Console DLL",            ID_TOOLS_TESTCONSOLEDLL
+        MENUITEM SEPARATOR
+        MENUITEM "Configure Intercoms",         ID_TOOLS_CONFIGUREINTERCOMS
+        MENUITEM "Reset All Connections",       ID_TOOLS_RESETALLCONNECTIONS
+        MENUITEM SEPARATOR
+        MENUITEM "ii3 Intercom OS update",      ID_TOOLS_II3INTERCOMOSUPDATE
+    END
+    POPUP "Console"
+    BEGIN
+        MENUITEM "Forward Intercoms",           ID_CONSOLE_FORWARDINTERCOMS
+        MENUITEM "Retrieve Intercoms",          ID_CONSOLE_RETRIEVEINTERCOMS
+        MENUITEM SEPARATOR
+        MENUITEM "Unattended Console",          ID_CONSOLE_UNATTENDEDCONSOLE
+    END
+    POPUP "Help"
+    BEGIN
+        MENUITEM "Help on using TalkMaster",    ID_HELP_HELPONUSINGTALKMASTER
+
+        MENUITEM "Online Documentation",        ID_HELP_ONLINEDOCUMENTATION
+        MENUITEM SEPARATOR
+        MENUITEM "Digital Acoustics Web Site",  ID_HELP_DIGITALACOUSTICSWEBSITE
+
+        MENUITEM SEPARATOR
+        MENUITEM "Check for new versions online", 
+                                                ID_HELP_CHECKFORNEWVERSIONSONLINE
+
+        MENUITEM SEPARATOR
+        MENUITEM "About",                       ID_HELP_ABOUT
+    END
+END
+
+IDR_MENU_RCLICCK MENU 
+BEGIN
+    POPUP "Invisible"
+    BEGIN
+        MENUITEM "Intercom Name",               ID_INVISIBLE_INTERCOMNAME
+        MENUITEM SEPARATOR
+        MENUITEM "Intercom ID",                 ID_INVISIBLE_INTERCOMID
+        MENUITEM "Nic Version",                 ID_INVISIBLE_NICVERSION
+        MENUITEM "Os Version",                  ID_INVISIBLE_OSVERSION
+        MENUITEM "Options",                     ID_INVISIBLE_OPTIONS
+        MENUITEM SEPARATOR
+        MENUITEM "Reset Intercom Connection",   ID_INVISIBLE_RESETINTERCOMCONNECTION
+
+    END
+END
+
+IDR_MENU_GROUP_RCLICK MENU 
+BEGIN
+    POPUP "Invisible Group Menu"
+    BEGIN
+        MENUITEM "Intercoms in Group",          ID_INVISIBLEGROUPMENU_INTERCOMSINGROUP
+
+        MENUITEM SEPARATOR
+    END
+END
+
+
+/////////////////////////////////////////////////////////////////////////////
+//
+// Bitmap
+//
+
+IDB_BITMAP_LISTEN_OFF   BITMAP                  "res\\bitmapListenOff.bmp"
+IDB_BITMAP_TALK_OFF     BITMAP                  "res\\bitmapTalkOff.bmp"
+IDB_BITMAP_LISTEN_ON    BITMAP                  "res\\bitmapListenOn.bmp"
+IDB_BITMAP_TALK_ON      BITMAP                  "res\\bitmapTalkOn.bmp"
+IDB_BITMAP_PLAY         BITMAP                  "res\\bitmapPlay.bmp"
+IDB_BITMAP_PAUSE        BITMAP                  "res\\bitmapPause.bmp"
+IDB_BITMAP_STOP         BITMAP                  "res\\bitmapStop.bmp"
+IDB_BITMAP_MUTE_OFF     BITMAP                  "res\\bitmapMuteOff.bmp"
+IDB_BITMAP_MUTE_ON      BITMAP                  "res\\bitmapMuteOn.bmp"
+IDB_BITMAP_DOOR_CLOSED  BITMAP                  "res\\DoorClosed.bmp"
+IDB_BITMAP_DOOR_OPEN    BITMAP                  "res\\DoorOpen.bmp"
+IDB_BITMAP_CQ_OVERFLOW  BITMAP                  "res\\bitmapOverflow.bmp"
+IDB_BITMAP_CQ_PRIORITY  BITMAP                  "res\\bitmapPriority.bmp"
+IDB_BITMAP_CQ_LOCAL     BITMAP                  "res\\bitmapLocal.bmp"
+IDB_BITMAP_CQ_HOLD      BITMAP                  "res\\bitmapHold.bmp"
+IDB_BITMAP_CQ_NORMAL    BITMAP                  "res\\bitmapNormal.bmp"
+#if defined(APSTUDIO_INVOKED) || !defined(PRIMEX_BUILD)
+IDB_BITMAP_LOGO         BITMAP                  "res\\talkmaster.bmp"
+#endif
+IDB_BITMAP_VU_RED       BITMAP                  "res\\bitmapRed.bmp"
+IDB_BITMAP_VU_YELLOW    BITMAP                  "res\\bitmapYellow.bmp"
+IDB_BITMAP_VU_GREEN     BITMAP                  "res\\bitmapGreen.bmp"
+IDB_BITMAP_VU_BLANK     BITMAP                  "res\\bitmapBlank.bmp"
+IDB_BITMAP_TALK_DISABLE BITMAP                  "res\\bitmap4.bmp"
+IDB_BITMAP_LISTEN_DISABLE BITMAP                  "res\\bitmap5.bmp"
+#if defined(APSTUDIO_INVOKED) || defined(PRIMEX_BUILD)
+#if defined(APSTUDIO_INVOKED)
+IDB_BITMAP_LOGO$(PRIMEX_BUILD) BITMAP                  "res\\bitmap_l.bmp"
+#else
+IDB_BITMAP_LOGO         BITMAP                  "res\\bitmap_l.bmp"
+#endif
+#endif
+IDB_BITMAP_DOOR_LOCKED_CLOSED BITMAP                  "res\\DoorClosedLocked.bmp"
+IDB_BITMAP_DOOR_UNLOCKED_CLOSED BITMAP                  "res\\DoorClosedUnlocked.bmp"
+IDB_BITMAP_DOOR_LOCKED_OPEN BITMAP                  "res\\DoorOpenLocked.bmp"
+IDB_BITMAP_DOOR_UNLOCKED_OPEN BITMAP                  "res\\DoorOpenUnlocked.bmp"
+IDB_BITMAP_FDX_MUTE     BITMAP                  "res\\bitmapFdxMute.bmp"
+IDB_BITMAP_FDX_MUTED    BITMAP                  "res\\bitmapFdxMuted.bmp"
+IDB_BITMAP_FDX_MUTE_DISABLED BITMAP                  "res\\bitmapFdxMuteDisable.bmp"
+IDB_BITMAP_FDX_TALK_DISABLED BITMAP                  "res\\bitmapFdxTalkDisable.bmp"
+IDB_BITMAP_FDX_TALK_OFF BITMAP                  "res\\bitmapFdxTalkOff.bmp"
+IDB_BITMAP_FDX_TALK_ON  BITMAP                  "res\\bitmapFdxTalkOn.bmp"
+IDB_BITMAP_NO_LISTEN_OFF BITMAP                  "res\\bmp00001.bmp"
+IDB_BITMAP_NO_LISTEN_ON BITMAP                  "res\\bitmap7.bmp"
+IDB_BITMAP_DOOR_NONE    BITMAP                  "res\\bmp00002.bmp"
+IDB_BITMAP_PRIORITY_LOW BITMAP                  "res\\LowPriority.bmp"
+IDB_BITMAP_PRIORITY_MEDIUM BITMAP                  "res\\PriorityMedium.bmp"
+IDB_BITMAP_PRIORITY_HIGH BITMAP                  "res\\PriorityHigh.bmp"
+IDB_BITMAP_GROUP_FULL   BITMAP                  "res\\bmpGroupFull.bmp"
+IDB_BITMAP_GROUP_PARTIAL BITMAP                  "res\\groupPartial.bmp"
+IDB_BITMAP_GROUP_EMPTY  BITMAP                  "res\\groupEmpty.bmp"
+IDB_BITMAP_SESSION_START BITMAP                  "res\\SessionStart.bmp"
+IDB_BITMAP_SESSION_STOP BITMAP                  "res\\sessionStop.bmp"
+
+/////////////////////////////////////////////////////////////////////////////
+//
+// HTML
+//
+
+IDR_HTML_DAPREFERENCESDLG HTML                    "res\\DAPreferencesDlg.htm"
+
+/////////////////////////////////////////////////////////////////////////////
+//
+// Dialog Info
+//
+
+IDD_DIALOG_PREFERENCES DLGINIT
+BEGIN
+    IDC_COMBO_STARTUP_TYPE, 0x403, 5, 0
+0x6542, 0x7065, "\000" 
+    IDC_COMBO_STARTUP_TYPE, 0x403, 7, 0
+0x7053, 0x6565, 0x6863, "\000" 
+    IDC_COMBO_STARTUP_LANGUAGE, 0x403, 13, 0
+0x6e45, 0x6c67, 0x7369, 0x2068, 0x202d, 0x5355, "\000" 
+    IDC_COMBO_STARTUP_LANGUAGE, 0x403, 13, 0
+0x6e45, 0x6c67, 0x7369, 0x2068, 0x202d, 0x5541, "\000" 
+    IDC_COMBO_STARTUP_LANGUAGE, 0x403, 13, 0
+0x6e45, 0x6c67, 0x7369, 0x2068, 0x202d, 0x4b55, "\000" 
+    IDC_COMBO_STARTUP_LANGUAGE, 0x403, 8, 0
+0x7053, 0x6e61, 0x7369, 0x0068, 
+    IDC_COMBO_STARTUP_LANGUAGE, 0x403, 7, 0
+0x7246, 0x6e65, 0x6863, "\000" 
+    IDC_COMBO_STARTUP_LANGUAGE, 0x403, 11, 0
+0x7550, 0x7472, 0x6775, 0x6575, 0x6573, "\000" 
+    IDC_COMBO_STARTUP_LANGUAGE, 0x403, 13, 0
+0x7355, 0x7265, 0x4420, 0x6665, 0x6e69, 0x6465, "\000" 
+    IDC_COMBO_ANNOUNCEMENT_AUDIBLE_SOUND, 0x403, 7, 0
+0x7543, 0x7473, 0x6d6f, "\000" 
+    IDC_COMBO_ANNOUNCEMENT_AUDIBLE_SOUND, 0x403, 10, 0
+0x6f44, 0x726f, 0x4220, 0x6c65, 0x006c, 
+    IDC_COMBO_PREF_QUEUE_AGE_TYPE, 0x403, 8, 0
+0x6553, 0x6f63, 0x646e, 0x0073, 
+    IDC_COMBO_PREF_QUEUE_AGE_TYPE, 0x403, 8, 0
+0x694d, 0x756e, 0x6574, 0x0073, 
+    0
+END
+
+
+/////////////////////////////////////////////////////////////////////////////
+//
+// String Table
+//
+
+STRINGTABLE 
+BEGIN
+    IDS_ABOUTBOX            "&About DAPassThruTest..."
+    IDS_STRING_ULAW_NOT_AVAIL "uLaw is not available on this PC - using PCM"
+    IDS_STRING_MIC_CODEC_NOT_AVAIL "Warning: Microphone Codec Unavailable"
+    IDS_STRING104           "Can not open Microphone\n\rOpen failed with '%s'"
+    IDS_STRING105           "Audio Device Error"
+    IDS_STRING106           "no messages waiting"
+    IDS_STRING_SERVER_GROUP_EMPTY_OR_UNAVAILABLE 
+                            "Server Group is Empty or Unavailable"
+    IDS_STRING_INFORMATION  "Information"
+    IDS_STRING109           "Can not Listen to a group of intercoms"
+    IDS_STRING_ERROR        "Error"
+    IDS_STRING111           "Can not Listen to a paging intercom"
+END
+
+STRINGTABLE 
+BEGIN
+    IDS_STRING112           "Intercom Currently Playing Audio"
+    IDS_STRING113           "You must select a connected intercom"
+    IDS_STRING114           "Intercom Not Connected"
+    IDS_STRING115           "You must select an idle intercom to Listen"
+    IDS_STRING116           "Intercom Busy"
+    IDS_STRING117           "Could not get intercom session"
+    IDS_STRING_SELECT_ICOM  "You must select an intercom first"
+    IDS_STRING119           "You must select an idle intercom to Talk"
+    IDS_STRING120           "No intercoms are currently selected in a group"
+    IDS_STRING121           "Intercoms not selected"
+    IDS_STRING122           "Intercom Currently Playing Audio"
+    IDS_STRING_STATUS_TALKING_TO "Talking (TO)"
+    IDS_STRING_STATUS_DISCONNECTED "Disconnected"
+    IDS_STRING_STATUS_CONNECTED "Connected"
+    IDS_STRING_STATUS_TALKING "Talking"
+    IDS_STRING_STATUS_LISTENING "Listening"
+END
+
+STRINGTABLE 
+BEGIN
+    IDS_STRING_STATUS_COMMAND "Command"
+    IDS_STRING_STATUS_IN_USE "In Use"
+    IDS_STRING_STATUS_UNKNOWN "Unknown"
+    IDS_STRING131           "Connection Attempt Timed Out"
+    IDS_STRING132           "Logon Name and/or Password invalid or already logged in"
+    IDS_STRING133           "Incompatible Version with Server"
+    IDS_STRING134           "server not found at"
+    IDS_STRING135           "Logon Name and/or Password invalid"
+    IDS_STRING136           "Logon Name already logged in"
+    IDS_STRING137           "Server is out of console licenses"
+    IDS_STRING138           "Server is not licensed for this product"
+    IDS_STRING139           "occurred connecting to communications server, please report"
+    IDS_STRING_LOGIN_RETRY  "Waiting for Login Retry"
+    IDS_STRING_LOGIN_REQUIRED "Logon Required"
+    IDS_STRING142           "Main"
+    IDS_STRING143           "Audio and Volume"
+END
+
+STRINGTABLE 
+BEGIN
+    IDS_STRING144           "Console"
+    IDS_STRING145           "Local"
+    IDS_STRING146           "Default"
+    IDS_STRING147           "Console RESTART required for changes to take affect"
+    IDS_STRING148           "RESTART Required"
+    IDS_STRING_WAV_FILE_FILTER "Wave Sound Files (*.wav)|*.wav||"
+    IDS_STRING_WAV          "wav"
+    IDS_STRING_ULAW         "uLaw"
+    IDS_STRING_PCM          "PCM"
+    IDS_STRING153           "Unable to write to temporary directory\n'%s'"
+    IDS_STRING154           "Call Queue Error"
+    IDS_STRING155           "About IPI Operator Console"
+    IDS_STRING156           "IPI Operator Console Version %s"
+    IDS_STRING157           "TalkMaster Console Version %s"
+    IDS_STRING158           "Digital Acoustics PassThru Interface Version %d.%d.%d"
+    IDS_STRING159           "TalkMaster PassThru Interface Version %d.%d.%d"
+END
+
+STRINGTABLE 
+BEGIN
+    IDS_STRING160           "Digital Acoustics PassThru DLL Version %s"
+    IDS_STRING161           "TalkMaster PassThru DLL Version %s"
+    IDS_STRING_COL_GRP      "Grp"
+    IDS_STRING_COL_LOCATION "Location"
+    IDS_STRING_COL_QUEUE    "Queue"
+    IDS_STRING_COL_STATUS   "Status"
+    IDS_STRING_COL_DOOR_GATE "Door/Gate"
+    IDS_STRING_COL_IP_ADDRESS "IP Address"
+    IDS_STRING168           "Sts"
+    IDS_STRING169           "Calls Waiting"
+    IDS_STRING170           "Details"
+    IDS_STRING171           "Length"
+    IDS_STRING172           "IPI Operator Console"
+    IDS_STRING_OPERATOR_CONSOLE "Operator Console"
+    IDS_STRING174           "3000ms"
+    IDS_STRING_STOP_FILE    "Stop File"
+END
+
+STRINGTABLE 
+BEGIN
+    IDS_STRING_PLAY_FILE    "Play File"
+    IDS_STRING_CURRENTLY_PLAYING_AUDIO "Currently playing audio"
+    IDS_STRING178           "Waiting for Connections"
+    IDS_STRING179           "<Please Wait>"
+    IDS_STRING_PREFERENCES  "Preferences"
+    IDS_STRING181           "Help on using IPI Console"
+    IDS_STRING182           "Stop Test"
+    IDS_STRING183           "Test Volume"
+    IDS_STRING184           "IPI Operator Console"
+    IDS_STRING185           "TalkMaster Console"
+    IDS_STRING_MUST_SELECT_ICOMS "Intercoms must be selected"
+    IDS_STRING_NO_ICOM_SELECTED "No Icom Selected"
+    IDS_STRING_TEST_AUDIO   "Test Audio"
+    IDS_STRING_WAITING_FOR_LOGIN_RETRY "Waiting for Login Retry %d"
+    IDS_STRING_GROUP_NAME   "Group Name"
+    IDS_STRING_GLOBAL_GROUP "Global"
+END
+
+STRINGTABLE 
+BEGIN
+    IDS_STRING_COL_MSG_PRIORITY "Priority"
+    IDS_STRING_COL_MSG_TITLE "Message Title"
+    IDS_STRING_NO_MESSAGES_SELECTED "No Messages Selected To Play"
+    IDS_STRING_SELECT_MESSAGE "Select a Message"
+    IDS_STRING_SERVER_FILE_NOT_FOUND 
+                            "File not found - please notifiy administrator"
+    IDS_STRING_STATUS_FDX   "Full Duplex"
+    IDS_STRING_GROUP_NO_GROUP_SELECTED "<-- No Group Selected"
+    IDS_STRING_GROUP_NO_INTERCOMS_IN_GROUP "No Intercoms In Group"
+    IDS_STRING_GROUP_NO_COMMON_MESSAGES_FOUND "No Common Messages Found"
+    IDS_STRING_LOGON_OPTIONS_LESS "<< Options"
+    IDS_STRING_LOGON_OPTIONS_MORE "Options >>"
+    IDS_STRING_NO_MESSAGES_WAITING "no messages waiting"
+    IDS_STRING_INTERCOM_ALREADY_IN_USE 
+                            "Intercom already in use or not available"
+    IDS_STRING_INTERCOMS    "Intercoms"
+    IDS_STRING_GROUPS       "Groups"
+    IDS_STRING_NAME_NOT_SET "Name not set"
+END
+
+STRINGTABLE 
+BEGIN
+    IDS_STRING_INTERCOM_NAME_S "Intercom Name: %s"
+    IDS_STRING_INTERCOM_ID_02X_02X_02X "Intercom ID: %02X%02X%02X"
+    IDS_STRING_NIC_VERSION_D_D_D "NIC Version: %d.%d.%d"
+    IDS_STRING_OS_VERSION_D_D_D_D_D "OS Version: %d.%d.%d.%d.%d"
+    IDS_STRING_OS_VERSION_D_D_D_D_C "OS Version: %d.%d.%d.%d.%c"
+    IDS_STRING_NIC_OPTIONS_02X_02X_02X_02X "NIC Options: %02x.%02x.%02x.%02x"
+    IDS_STRING_INTERCOMS_CONNECTED_D_D 
+                            " Intercoms Connected to Console %d / %d"
+    IDS_STRING_OPERATOR_CONSOLE_LOGON_ID "Operator Console - Logon ID %s"
+    IDS_STRING_GROUP_INTERCOMS_IN_GROUP "Intercoms In %sGroup"
+    IDS_STRING_GROUP_STATUS "Sts"
+    IDS_STRING_STATUS_RINGING "Ringing"
+    IDS_STRING_STATUS_ONHOOK "On Hook"
+END
+
+#endif    // English (U.S.) resources
+/////////////////////////////////////////////////////////////////////////////
+
+
+
+#ifndef APSTUDIO_INVOKED
+/////////////////////////////////////////////////////////////////////////////
+//
+// Generated from the TEXTINCLUDE 3 resource.
+//
+#define _AFX_NO_SPLITTER_RESOURCES
+#define _AFX_NO_OLE_RESOURCES
+#define _AFX_NO_TRACKER_RESOURCES
+#define _AFX_NO_PROPERTY_RESOURCES
+
+#if !defined(AFX_RESOURCE_DLL) || defined(AFX_TARG_ENU)
+LANGUAGE 9, 1
+#pragma code_page(1252)
+#include "res\DAPassThruTest.rc2"  // non-Microsoft Visual C++ edited resources
+#include "afxres.rc"         // Standard components
+#endif
+
+/////////////////////////////////////////////////////////////////////////////
+#endif    // not APSTUDIO_INVOKED
+

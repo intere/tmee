@@ -1,0 +1,33 @@
+:Base HelpFile.hlp
+1 Welcome To TalkMaster EE Console
+2 Welcome=1010
+2 Release Notes=1020
+2 System Requirements=1030
+1 Using TalkMaster EE Console
+2 TalkMaster Console Overview=2010
+2 Sample Inbound Session=2016
+2 Sample Outbound Session=2017
+2 Logon=2200
+2 Screen Layout=2020
+2 Intercom List=2030
+2 Calls Waiting List=2040
+2 Audio Player=2045
+2 Listen Mode=2050
+2 Listen button=2055
+2 TalkMode=2060
+2 Talk button=2065
+2 Preferences=3035
+2 Incoming Call=2070
+2 Keyboard Shortcuts=2099
+1 Menu Options
+2 File Menu=3010
+2 View Menu=3020
+2 Tools Menu=3030
+2 Help Menu=3040
+1 Glossary of Terms
+2 Queues=9010
+2 Intercom=9020
+2 Operator=9030
+2 Overflow=9040
+2 Underflow=9050
+1 Digital Acoustics
