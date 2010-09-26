@@ -21,8 +21,8 @@
 			<Tool
 				Name="VCCLCompilerTool"
 				Optimization="0"
-				AdditionalIncludeDirectories="&quot;C:\Projects\Curl\curl-7.21.1\include&quot;"
-				AdditionalUsingDirectories="&quot;C:\Projects\Curl\curl-7.21.1\lib\DLL-Debug&quot;"
+				AdditionalIncludeDirectories="&quot;$(SolutionDir)\curl-7.21.1\include&quot;"
+				AdditionalUsingDirectories="&quot;$(SolutionDir)\curl-7.21.1\lib\DLL-Debug&quot;"
 				PreprocessorDefinitions="WIN32;_DEBUG"
 				MinimalRebuild="FALSE"
 				BasicRuntimeChecks="0"

@@ -282,6 +282,10 @@ CTalkMasterConsoleDlg::CTalkMasterConsoleDlg(CWnd* pParent /*=NULL*/)
 	m_bHeldSessionSocket	= FALSE;		// Nothing held
 
 	m_min = FALSE;
+
+	// Initialize GDI+.
+	// GDI+ is used to show the thumbnail previews.
+	GdiplusStartup(&gdiplusToken, &gdiplusStartupInput, NULL);
 }
 
 CTalkMasterConsoleDlg::~CTalkMasterConsoleDlg(/*=NULL*/)
@@ -342,6 +346,8 @@ CTalkMasterConsoleDlg::~CTalkMasterConsoleDlg(/*=NULL*/)
 	DeleteCriticalSection(&CriticalSectionDebug);
 	DeleteCriticalSection(&CriticalSectionWork);
 
+	GdiplusShutdown(gdiplusToken);
+
 	OutputDebugString(_T("~CTalkMasterConsoleDlg\n"));
 }
 
@@ -397,6 +403,8 @@ void CTalkMasterConsoleDlg::DoDataExchange(CDataExchange* pDX)
 	DDX_Control(pDX, IDC_LIST_MESSAGES, m_listMessages);
 	DDX_Control(pDX, IDC_BUTTON_SESSION_START, m_btnTalkSessionStart);
 	DDX_Control(pDX, IDC_BUTTON_SESSION_END, m_btnTalkSessionEnd);
+
+	DDX_Control(pDX, IDC_CAMERA, m_cameraPreview);
 }
 
 BEGIN_MESSAGE_MAP(CTalkMasterConsoleDlg, CDialog)
@@ -690,6 +698,7 @@ BOOL CTalkMasterConsoleDlg::OnInitDialog()
 
 	mBitMapLogo.LoadBitmap(IDB_BITMAP_LOGO);
 
+	// LOGO Image:
 //	m_staticLogo.SetBitmap(HBITMAP(mBitMapLogo));
 	mBitMapLogo.GetBitmap(&bm);
 	m_staticLogo.SetWindowPos(NULL, 0, 0, bm.bmWidth, bm.bmHeight+5,
@@ -875,6 +884,9 @@ BOOL CTalkMasterConsoleDlg::OnInitDialog()
 		theApp.UserOptions.startSize.right - theApp.UserOptions.startSize.left,
 		theApp.UserOptions.startSize.bottom - theApp.UserOptions.startSize.top,
 		SWP_NOOWNERZORDER | SWP_SHOWWINDOW | SWP_NOZORDER );
+
+	
+
 
 	doSize();
 
@@ -1174,7 +1186,6 @@ void CTalkMasterConsoleDlg::OnPaint()
 
 		drawBitmaps();
 		doLogon();
-
 	}
 }
 
@@ -1479,7 +1490,7 @@ void CTalkMasterConsoleDlg::doSize()
 
 	this->GetClientRect(&view);
 
-	cx = view.right - view.left;
+	cx = view.right - view.left - 500;
 	cy = view.bottom - view.top;
 
 	leftover = cx - 26 - 283 - 14;
@@ -1713,6 +1724,10 @@ void CTalkMasterConsoleDlg::doSize()
 
 		}
 
+// Move the Camera Preview:
+		m_cameraPreview.SetWindowPos(NULL, cx, 0, 480, 320,
+			SWP_SHOWWINDOW | SWP_FRAMECHANGED | SWP_NOZORDER );			
+
 // Move and size the status bar(s)
 		m_staticStatusConnected.SetWindowPos(NULL, view.left + 10, cy-18, cx - 205, 15,
 			SWP_SHOWWINDOW | SWP_FRAMECHANGED | SWP_NOZORDER );
@@ -1723,8 +1738,11 @@ void CTalkMasterConsoleDlg::doSize()
 		m_staticCodec.SetWindowPos(NULL, cx-93, cy-18, 30, 15,
 			SWP_SHOWWINDOW | SWP_FRAMECHANGED | SWP_NOZORDER );
 
+
 // Redraw all of the controls now to not end up with _T("dirt") on the dialog
 		RedrawWindow();
+
+		drawPreview();
 
 //		DrawTransparent(&mBitMapLogo, m_staticLogo.GetDC(), 0, 0, m_crWhite);
 	}
@@ -4667,4 +4685,142 @@ void CTalkMasterConsoleDlg::OnToolsTestconsoledll()
 	CTestLogonDlg dlg;
 
 	dlg.DoModal();
+}
+
+void CTalkMasterConsoleDlg::drawPreview()
+{
+	USES_CONVERSION;
+
+	CString cstrWidth, cstrHeight, cstrType;
+	UINT uiWidth, uiHeight;
+	UINT thumbWidth, thumbHeight;
+	int iAdjTop, iAdjLeft;
+	int iCount = 0;
+	double dRatio;
+	CDC* pDC;
+	RECT rect;
+	CWnd* pWndTemp = NULL;
+	BOOL bExists = TRUE;
+
+	// Initialize the Graphics class in GDI+.
+	pDC = m_cameraPreview.GetWindowDC();
+	Graphics graphics(pDC->m_hDC);
+
+	// Fill the preview ara with a WHITE background.
+	m_cameraPreview.GetClientRect(&rect);
+	rect.left += 1;
+	rect.top += 1;
+	rect.right -= 1;
+	rect.bottom -= 1;
+	pDC->FillSolidRect(&rect, RGB(255,255,255));
+
+	// TODO - render the correct image - not some dummy image:
+	std::string old = "C:\\tmp\\mjpeg_file1.jpg";
+	std::basic_string<TCHAR> buff = old.c_str();
+
+	
+	// Make sure the image exists
+	CFile file;
+	if (file.Open(buff.c_str(), CFile::modeRead))
+		file.Close();				
+	else
+		bExists = FALSE;
+
+	if (bExists)
+	{
+		// Use the Image class to display a thumbnail of the image.
+		Image image(T2CW(buff.c_str()));
+
+		// Determine the appropriate size of the thumbnail preview
+		// given the image size ratio and the preview window size ratio.
+		uiWidth = image.GetWidth();
+		uiHeight = image.GetHeight();
+		dRatio = ((double)uiWidth)/((double)uiHeight);
+
+
+		// If the width is larger than the height of the image, 
+		// set the width of the thumbnail to the width of the preview area
+		// and calculate the thumbnail height by using the ratios.
+		// If the height is larger than the width of the image, 
+		// set the height of the thumbnail to the height of the preview area
+		// and calculate the thumbnail width by using the ratios.
+		if (uiWidth > uiHeight)
+		{
+			thumbWidth = rect.right - rect.left;
+			thumbHeight = (UINT)(thumbWidth/dRatio);
+
+			if (thumbHeight == 0) thumbHeight = 1;
+			if (thumbHeight > (UINT)(rect.bottom - rect.top)) thumbHeight = rect.bottom - rect.top;
+
+			// Adjust things to make the preview not paint over the control border.
+			iAdjTop = 1 + ((rect.bottom - rect.top)/2) - (thumbHeight/2);
+			iAdjLeft = 1;
+		}
+		else
+		{
+			thumbHeight = rect.bottom - rect.top;
+			thumbWidth = (UINT)(uiWidth*thumbHeight/uiHeight);
+
+			if (thumbWidth == 0) thumbWidth = 1;
+			if (thumbWidth > (UINT)(rect.right - rect.left)) thumbWidth = rect.right - rect.left;
+
+			// Adjust things to make the preview not paint over the control border.
+			iAdjTop = 1;
+			iAdjLeft = 1 + ((rect.right - rect.left)/2) - (thumbWidth/2);
+		}
+
+		// Get the thumbnail and display it in the preview control.
+		Image* pThumbnail = image.GetThumbnailImage(thumbWidth, thumbHeight, NULL, NULL);
+		graphics.DrawImage(pThumbnail, iAdjLeft, iAdjTop, pThumbnail->GetWidth(), pThumbnail->GetHeight());
+
+		/*
+		// Display the image width and height.
+		cstrWidth.Format("Width: %d", uiWidth);
+		m_stWidth.SetWindowText(cstrWidth);
+		cstrHeight.Format("Height: %d", uiHeight);
+		m_stHeight.SetWindowText(cstrHeight);
+		*/
+
+		// Display the image bits per pixel (color depth).
+		switch (image.GetPixelFormat())
+		{
+		case PixelFormat1bppIndexed:
+			cstrType = "Type: 1bpp";
+			break;
+		case PixelFormat4bppIndexed:
+			cstrType = "Type: 4bpp";
+			break;
+		case PixelFormat8bppIndexed:
+			cstrType = "Type: 8bpp";
+			break;
+		case PixelFormat16bppARGB1555: 
+		case PixelFormat16bppGrayScale: 
+		case PixelFormat16bppRGB555: 
+		case PixelFormat16bppRGB565:
+			cstrType = "Type: 16bpp";
+			break;
+		case PixelFormat24bppRGB:
+			cstrType = "Type: 24bpp";
+			break;
+		case PixelFormat32bppARGB: 
+		case PixelFormat32bppPARGB: 
+		case PixelFormat32bppRGB: 
+			cstrType = "Type: 32bpp";
+			break;
+		case PixelFormat48bppRGB:
+			cstrType = "Type: 48bpp";
+			break;
+		case PixelFormat64bppARGB: 
+		case PixelFormat64bppPARGB:
+			cstrType = "Type: 64bpp";
+			break;
+		default:
+			cstrType = "Type: Unknown";
+			break;
+		}
+
+		//m_stType.SetWindowText(cstrType);
+	}
+
+	if (pDC) ReleaseDC(pDC);  // Release the device context retrieved earlier.
 }

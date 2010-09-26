@@ -98,7 +98,7 @@ BEGIN
                     LBS_NOINTEGRALHEIGHT | WS_VSCROLL | WS_TABSTOP
 END
 
-IDD_TALKMASTERCONSOLE_DIALOG DIALOGEX 0, 0, 372, 250
+IDD_TALKMASTERCONSOLE_DIALOG DIALOGEX 0, 0, 730, 242
 STYLE DS_SETFONT | DS_FIXEDSYS | WS_MINIMIZEBOX | WS_MAXIMIZEBOX | WS_POPUP | 
     WS_VISIBLE | WS_CAPTION | WS_SYSMENU | WS_THICKFRAME
 EXSTYLE WS_EX_APPWINDOW
@@ -113,14 +113,14 @@ BEGIN
     PUSHBUTTON      "Listen",IDC_BUTTON_LISTEN,256,204,50,24,BS_BITMAP
     PUSHBUTTON      "Chime",IDC_BUTTON_CHIME,312,186,50,14
     PUSHBUTTON      "Play File",IDC_BUTTON_PLAY_FILE,312,168,50,14
-    GROUPBOX        "Talk Mode",IDC_GROUP_TALK_MODE,309,129,56,115
+    GROUPBOX        "Talk Mode",IDC_GROUP_TALK_MODE,667,125,56,115
     CONTROL         "Selected",IDC_RADIO_SELECTED,"Button",
                     BS_AUTORADIOBUTTON | WS_GROUP,314,134,43,10
     CONTROL         "Group",IDC_RADIO_GROUP,"Button",BS_AUTORADIOBUTTON,314,
                     144,35,10
     CONTROL         "All Active",IDC_RADIO_ALL_ACTIVE,"Button",
                     BS_AUTORADIOBUTTON,314,154,45,10
-    GROUPBOX        "Listen Mode",IDC_GROUP_LISTEN_MODE,254,177,54,67
+    GROUPBOX        "Listen Mode",IDC_GROUP_LISTEN_MODE,254,175,54,67
     CONTROL         "Automatic",IDC_RADIO_AUTOMATIC,"Button",
                     BS_AUTORADIOBUTTON | WS_GROUP,258,181,48,10
     CONTROL         "Manual",IDC_RADIO_MANUAL,"Button",BS_AUTORADIOBUTTON,
@@ -142,9 +142,9 @@ BEGIN
     CONTROL         "",IDC_STATIC_LOGO,"Static",SS_BITMAP | WS_BORDER,228,7,
                     16,14
     CONTROL         "",IDC_STATIC_VU_METER_MICROPHONE,"Static",SS_BITMAP | 
-                    WS_BORDER,313,230,16,14
+                    WS_BORDER,313,228,16,14
     CONTROL         "",IDC_STATIC_VU_METER_SPEAKER,"Static",SS_BITMAP | 
-                    WS_BORDER,256,230,16,14
+                    WS_BORDER,256,228,16,14
     LTEXT           "Intercoms connected to console 0 / 0",
                     IDC_STATIC_STATUS_CONNECTED,168,25,32,8,SS_SUNKEN
     CTEXT           "PTT",IDC_STATIC_STATUS_PTT,217,26,13,8,SS_SUNKEN
@@ -181,6 +181,8 @@ BEGIN
     PUSHBUTTON      "",IDC_BUTTON_SESSION_START,172,204,50,24,BS_BITMAP
     PUSHBUTTON      "",IDC_BUTTON_SESSION_END,125,204,50,24,BS_BITMAP | NOT 
                     WS_VISIBLE
+    CONTROL         "",IDC_CAMERA,"Static",SS_ENHMETAFILE | WS_BORDER,385,20,
+                    16,16
 END
 
 IDD_DIALOG_PREFERENCES DIALOGEX 0, 0, 224, 303
@@ -301,7 +303,7 @@ CAPTION "TalkMaster EE - Incoming Call"
 FONT 8, "MS Shell Dlg", 400, 0, 0x1
 BEGIN
     DEFPUSHBUTTON   "Answer Now",IDOK,21,16,55,55
-    PUSHBUTTON      "Answer Later",IDCANCEL,101,16,55,55
+    PUSHBUTTON      "Answer Later",IDCANCEL,101,16,55,55,WS_DISABLED
 END
 
 IDD_DIALOG_SEND_MESSAGE DIALOGEX 0, 0, 186, 76
@@ -344,72 +346,36 @@ END
 // Version
 //
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 VS_VERSION_INFO VERSIONINFO
-FILEVERSION 2,0,0,6
-PRODUCTVERSION 2,0,0,6
-FILEFLAGSMASK 0x3FL
-FILEFLAGS 0x00L
-FILEOS 0x40004L
-FILETYPE 0x1L
-FILESUBTYPE 0x0L
+ FILEVERSION 2,0,0,6
+ PRODUCTVERSION 2,0,0,6
+ FILEFLAGSMASK 0x3fL
+#ifdef _DEBUG
+ FILEFLAGS 0x1L
+#else
+ FILEFLAGS 0x0L
+#endif
+ FILEOS 0x40004L
+ FILETYPE 0x1L
+ FILESUBTYPE 0x0L
 BEGIN
     BLOCK "StringFileInfo"
     BEGIN
-         BLOCK "040904E4"
-         BEGIN
-              VALUE "CompanyName", "Digital Acoustics, LLC\0"
-              VALUE "FileDescription", "TalkMaster EE\0"
-              VALUE "FileVersion", "2.0.0.6\0"
-              VALUE "InternalName", "TalkMaster.exe\0"
-              VALUE "LegalCopyright", "(c) Digital Acoustics, LLC 2004-2009.  All rights reserved.\0"
-              VALUE "OriginalFilename", "TalkMaster.exe\0"
-              VALUE "ProductName", "TalkMaster EE\0"
-              VALUE "ProductVersion", "1.0.0.1\0"
-         END
+        BLOCK "040904E4"
+        BEGIN
+            VALUE "CompanyName", "Digital Acoustics, LLC"
+            VALUE "FileDescription", "TalkMaster EE"
+            VALUE "FileVersion", "2.0.0.6"
+            VALUE "InternalName", "TalkMaster.exe"
+            VALUE "LegalCopyright", "(c) Digital Acoustics, LLC 2004-2009.  All rights reserved."
+            VALUE "OriginalFilename", "TalkMaster.exe"
+            VALUE "ProductName", "TalkMaster EE"
+            VALUE "ProductVersion", "1.0.0.1"
+        END
     END
     BLOCK "VarFileInfo"
     BEGIN
-         VALUE "Translation", 0x0409, 1252
+        VALUE "Translation", 0x409, 1252
     END
 END
 
@@ -433,9 +399,8 @@ BEGIN
     IDD_TALKMASTERCONSOLE_DIALOG, DIALOG
     BEGIN
         LEFTMARGIN, 7
-        RIGHTMARGIN, 365
+        RIGHTMARGIN, 723
         TOPMARGIN, 7
-        BOTTOMMARGIN, 244
     END
 
     IDD_DIALOG_PREFERENCES, DIALOG
@@ -655,7 +620,7 @@ IDB_BITMAP_SESSION_STOP BITMAP                  "res\\sessionStop.bmp"
 // HTML
 //
 
-IDR_HTML_DAPREFERENCESDLG HTML                    "res\\DAPreferencesDlg.htm"
+IDR_HTML_DAPREFERENCESDLG HTML                    "DAPreferencesDlg.htm"
 
 /////////////////////////////////////////////////////////////////////////////
 //
