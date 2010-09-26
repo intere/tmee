@@ -33,7 +33,7 @@
 				Name="VCCustomBuildTool"/>
 			<Tool
 				Name="VCLinkerTool"
-				AdditionalDependencies="winmm.lib version.lib htmlhelp.lib"
+				AdditionalDependencies="winmm.lib version.lib htmlhelp.lib gdiplus.lib shell32.lib"
 				LinkIncremental="2"
 				GenerateDebugInformation="TRUE"
 				SubSystem="2"
@@ -512,10 +512,6 @@
 		</Filter>
 		<File
 			RelativePath=".\DAPreferencesDlg.htm"
-			DeploymentContent="TRUE">
-		</File>
-		<File
-			RelativePath=".\res\DAPreferencesDlg.htm"
 			DeploymentContent="TRUE">
 		</File>
 		<File

@@ -34,6 +34,14 @@
 #include "SendTextMessage.h"
 #include <sys/stat.h>
 
+#include <objidl.h>
+#include <gdiplus.h>
+#include <string>
+using namespace Gdiplus;
+#pragma comment (lib,"Gdiplus.lib")
+
+
+
 #define	USE_GLOBAL_MEMORY 0
 
 #ifndef	APP_MAJOR						// Compiler overrides possible
@@ -192,6 +200,8 @@ protected:
 	void forceForegroundWindow();
 
 	void showMinimized(BOOL minimized);
+
+	void drawPreview();
 
 public:
 	void CTalkMasterConsoleDlg::OnHelp();
@@ -832,6 +842,7 @@ public:
 	afx_msg void OnTcnSelchangeTabMain(NMHDR *pNMHDR, LRESULT *pResult);
 	CListCtrl m_listGroups;
 	afx_msg void OnNMClickListGroups(NMHDR *pNMHDR, LRESULT *pResult);
+	CWnd m_cameraPreview;			/* Preview window. */
 
 	int CTalkMasterConsoleDlg::getCheckedGroupsCount();
 	int CTalkMasterConsoleDlg::getFirstCheckedGroupIndex();
@@ -867,6 +878,10 @@ public:
 	afx_msg void OnBnClickedButtonSessionEnd();
 	void doRing(BOOL bStart);
 	afx_msg void OnToolsTestconsoledll();
+
+	// for GDI
+	GdiplusStartupInput gdiplusStartupInput;
+	ULONG_PTR gdiplusToken;
 };
 
 LRESULT CALLBACK KeyboardProc(int nCode, WPARAM wParam, LPARAM lParam);
