@@ -201,7 +201,12 @@ protected:
 
 	void showMinimized(BOOL minimized);
 
+	/** Loads the JPEG Image.  */
+	void loadImage(const std::string &jpeg);
+
+	/** Draws the Preview Image.  */
 	void drawPreview();
+
 
 public:
 	void CTalkMasterConsoleDlg::OnHelp();
@@ -350,6 +355,9 @@ protected:
 	CString getAlternateHelpName();
 	CString testAlternateHelpName( LANGID );
 
+	CWnd m_cameraPreview;			/* Preview window. */
+	Image* m_Thumbnail;				/* Thumbnail Image.  */
+	
 	void updateAdminMenus(UINT flag);
 	void updateMenus(UINT flag);
 
@@ -842,8 +850,7 @@ public:
 	afx_msg void OnTcnSelchangeTabMain(NMHDR *pNMHDR, LRESULT *pResult);
 	CListCtrl m_listGroups;
 	afx_msg void OnNMClickListGroups(NMHDR *pNMHDR, LRESULT *pResult);
-	CWnd m_cameraPreview;			/* Preview window. */
-
+	
 	int CTalkMasterConsoleDlg::getCheckedGroupsCount();
 	int CTalkMasterConsoleDlg::getFirstCheckedGroupIndex();
 	int CTalkMasterConsoleDlg::getNextCheckedGroupIndex(int lastIndex);

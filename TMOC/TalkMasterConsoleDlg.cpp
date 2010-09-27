@@ -30,6 +30,8 @@
 #include "windows.h"
 #include "ControlThread.h"
 
+#include <iostream>
+
 #ifdef _DEBUG
 #define new DEBUG_NEW
 #endif
@@ -172,6 +174,7 @@ CTalkMasterConsoleDlg::CTalkMasterConsoleDlg(CWnd* pParent /*=NULL*/)
 	m_DAStop = NULL;
 	m_DADllVersion = NULL;
 	m_DASetDebug = NULL;
+	m_Thumbnail = NULL;
 
 	m_selectedRow = -1;				// None of the list is selected
 	m_selectedCQRow = -1;			// None of the call queue list is selected (yet)
@@ -286,6 +289,8 @@ CTalkMasterConsoleDlg::CTalkMasterConsoleDlg(CWnd* pParent /*=NULL*/)
 	// Initialize GDI+.
 	// GDI+ is used to show the thumbnail previews.
 	GdiplusStartup(&gdiplusToken, &gdiplusStartupInput, NULL);
+
+	// loadImage("C:\\tmp\\mjpeg_file1.jpg");
 }
 
 CTalkMasterConsoleDlg::~CTalkMasterConsoleDlg(/*=NULL*/)
@@ -1185,6 +1190,7 @@ void CTalkMasterConsoleDlg::OnPaint()
 		}
 
 		drawBitmaps();
+		drawPreview();			
 		doLogon();
 	}
 }
@@ -4687,56 +4693,47 @@ void CTalkMasterConsoleDlg::OnToolsTestconsoledll()
 	dlg.DoModal();
 }
 
-void CTalkMasterConsoleDlg::drawPreview()
+void CTalkMasterConsoleDlg::loadImage(const std::string &jpeg)
 {
 	USES_CONVERSION;
 
 	CString cstrWidth, cstrHeight, cstrType;
 	UINT uiWidth, uiHeight;
 	UINT thumbWidth, thumbHeight;
-	int iAdjTop, iAdjLeft;
 	int iCount = 0;
 	double dRatio;
-	CDC* pDC;
+
 	RECT rect;
-	CWnd* pWndTemp = NULL;
 	BOOL bExists = TRUE;
 
-	// Initialize the Graphics class in GDI+.
-	pDC = m_cameraPreview.GetWindowDC();
-	Graphics graphics(pDC->m_hDC);
+	std::basic_string<TCHAR> buff = jpeg.c_str();
 
-	// Fill the preview ara with a WHITE background.
+	// Make sure the image exists
+	CFile file;
+	if (file.Open(buff.c_str(), CFile::modeRead))
+	{
+		file.Close();				
+	} else
+	{
+		bExists = FALSE;
+	}
+
 	m_cameraPreview.GetClientRect(&rect);
 	rect.left += 1;
 	rect.top += 1;
 	rect.right -= 1;
 	rect.bottom -= 1;
-	pDC->FillSolidRect(&rect, RGB(255,255,255));
-
-	// TODO - render the correct image - not some dummy image:
-	std::string old = "C:\\tmp\\mjpeg_file1.jpg";
-	std::basic_string<TCHAR> buff = old.c_str();
-
-	
-	// Make sure the image exists
-	CFile file;
-	if (file.Open(buff.c_str(), CFile::modeRead))
-		file.Close();				
-	else
-		bExists = FALSE;
 
 	if (bExists)
 	{
 		// Use the Image class to display a thumbnail of the image.
-		Image image(T2CW(buff.c_str()));
+	    Image image(T2CW(buff.c_str()));
 
 		// Determine the appropriate size of the thumbnail preview
 		// given the image size ratio and the preview window size ratio.
 		uiWidth = image.GetWidth();
 		uiHeight = image.GetHeight();
 		dRatio = ((double)uiWidth)/((double)uiHeight);
-
 
 		// If the width is larger than the height of the image, 
 		// set the width of the thumbnail to the width of the preview area
@@ -4751,10 +4748,6 @@ void CTalkMasterConsoleDlg::drawPreview()
 
 			if (thumbHeight == 0) thumbHeight = 1;
 			if (thumbHeight > (UINT)(rect.bottom - rect.top)) thumbHeight = rect.bottom - rect.top;
-
-			// Adjust things to make the preview not paint over the control border.
-			iAdjTop = 1 + ((rect.bottom - rect.top)/2) - (thumbHeight/2);
-			iAdjLeft = 1;
 		}
 		else
 		{
@@ -4763,23 +4756,11 @@ void CTalkMasterConsoleDlg::drawPreview()
 
 			if (thumbWidth == 0) thumbWidth = 1;
 			if (thumbWidth > (UINT)(rect.right - rect.left)) thumbWidth = rect.right - rect.left;
-
-			// Adjust things to make the preview not paint over the control border.
-			iAdjTop = 1;
-			iAdjLeft = 1 + ((rect.right - rect.left)/2) - (thumbWidth/2);
 		}
+		
 
 		// Get the thumbnail and display it in the preview control.
-		Image* pThumbnail = image.GetThumbnailImage(thumbWidth, thumbHeight, NULL, NULL);
-		graphics.DrawImage(pThumbnail, iAdjLeft, iAdjTop, pThumbnail->GetWidth(), pThumbnail->GetHeight());
-
-		/*
-		// Display the image width and height.
-		cstrWidth.Format("Width: %d", uiWidth);
-		m_stWidth.SetWindowText(cstrWidth);
-		cstrHeight.Format("Height: %d", uiHeight);
-		m_stHeight.SetWindowText(cstrHeight);
-		*/
+		m_Thumbnail = image.GetThumbnailImage(thumbWidth, thumbHeight, NULL, NULL);
 
 		// Display the image bits per pixel (color depth).
 		switch (image.GetPixelFormat())
@@ -4787,40 +4768,84 @@ void CTalkMasterConsoleDlg::drawPreview()
 		case PixelFormat1bppIndexed:
 			cstrType = "Type: 1bpp";
 			break;
+
 		case PixelFormat4bppIndexed:
 			cstrType = "Type: 4bpp";
 			break;
+
 		case PixelFormat8bppIndexed:
 			cstrType = "Type: 8bpp";
 			break;
+
 		case PixelFormat16bppARGB1555: 
 		case PixelFormat16bppGrayScale: 
 		case PixelFormat16bppRGB555: 
 		case PixelFormat16bppRGB565:
 			cstrType = "Type: 16bpp";
 			break;
+
 		case PixelFormat24bppRGB:
 			cstrType = "Type: 24bpp";
 			break;
+
 		case PixelFormat32bppARGB: 
 		case PixelFormat32bppPARGB: 
 		case PixelFormat32bppRGB: 
 			cstrType = "Type: 32bpp";
 			break;
+
 		case PixelFormat48bppRGB:
 			cstrType = "Type: 48bpp";
 			break;
+
 		case PixelFormat64bppARGB: 
 		case PixelFormat64bppPARGB:
 			cstrType = "Type: 64bpp";
 			break;
+
 		default:
 			cstrType = "Type: Unknown";
 			break;
 		}
-
 		//m_stType.SetWindowText(cstrType);
 	}
+}
+
+void CTalkMasterConsoleDlg::drawPreview()
+{
+	USES_CONVERSION;
+
+	CDC dcMemory, *pDC;
+	RECT rect;
+	BITMAP bm;
+
+	mBitMapBlank.GetBitmap(&bm);
+
+	// Initialize the Graphics class in GDI+.
+	pDC = m_cameraPreview.GetWindowDC();
+
+	// Fill the preview ara with a WHITE background.
+	m_cameraPreview.GetClientRect(&rect);
+	rect.left += 1;
+	rect.top += 1;
+	rect.right -= 1;
+	rect.bottom -= 1;
+	pDC->FillSolidRect(&rect, RGB(255,255,255));
+
+	if(m_Thumbnail)
+	{
+		Graphics graphics(pDC->m_hDC);
+
+		if(m_Thumbnail!=NULL)
+		{
+			graphics.DrawImage(m_Thumbnail, 1, 1, m_Thumbnail->GetWidth(), m_Thumbnail->GetHeight());
+		}
+	} else
+	{
+		// TODO - not this
+		loadImage("C:\\tmp\\mjpeg_file1.jpg");		
+	}
+
 
 	if (pDC) ReleaseDC(pDC);  // Release the device context retrieved earlier.
 }
