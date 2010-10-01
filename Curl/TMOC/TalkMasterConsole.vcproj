@@ -20,6 +20,8 @@
 			<Tool
 				Name="VCCLCompilerTool"
 				Optimization="0"
+				AdditionalIncludeDirectories="&quot;$(SolutionDir)\curl-7.21.1\include&quot;"
+				AdditionalUsingDirectories="&quot;$(SolutionDir)\curl-7.21.1\lib\DLL-Debug&quot;"
 				PreprocessorDefinitions="WIN32;_WINDOWS;_DEBUG"
 				MinimalRebuild="TRUE"
 				BasicRuntimeChecks="3"
@@ -33,8 +35,9 @@
 				Name="VCCustomBuildTool"/>
 			<Tool
 				Name="VCLinkerTool"
-				AdditionalDependencies="winmm.lib version.lib htmlhelp.lib gdiplus.lib shell32.lib"
+				AdditionalDependencies="winmm.lib version.lib htmlhelp.lib gdiplus.lib shell32.lib libcurld_imp.lib"
 				LinkIncremental="2"
+				AdditionalLibraryDirectories="&quot;$(SolutionDir)\curl-7.21.1\lib\dll-debug&quot;"
 				GenerateDebugInformation="TRUE"
 				SubSystem="2"
 				ResourceOnlyDLL="FALSE"
@@ -230,6 +233,12 @@
 				RelativePath=".\Localization.cpp">
 			</File>
 			<File
+				RelativePath=".\MJpegEvent.cpp">
+			</File>
+			<File
+				RelativePath=".\MJpegStream.cpp">
+			</File>
+			<File
 				RelativePath=".\PleaseWaitDlg.cpp">
 			</File>
 			<File
@@ -267,6 +276,9 @@
 			</File>
 			<File
 				RelativePath=".\utility.cpp">
+			</File>
+			<File
+				RelativePath=".\VideoFeedThread.cpp">
 			</File>
 		</Filter>
 		<Filter
@@ -307,6 +319,18 @@
 				RelativePath=".\DAUnattendedDlg.h">
 			</File>
 			<File
+				RelativePath=".\Listener.h">
+			</File>
+			<File
+				RelativePath=".\MJpegEvent.h">
+			</File>
+			<File
+				RelativePath=".\MJpegStream.h">
+			</File>
+			<File
+				RelativePath=".\Observable.h">
+			</File>
+			<File
 				RelativePath=".\PleaseWaitDlg.h">
 			</File>
 			<File
@@ -329,6 +353,9 @@
 			</File>
 			<File
 				RelativePath=".\utility.h">
+			</File>
+			<File
+				RelativePath=".\VideoFeedThread.h">
 			</File>
 		</Filter>
 		<Filter

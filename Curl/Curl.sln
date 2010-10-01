@@ -1,10 +1,4 @@
 Microsoft Visual Studio Solution File, Format Version 8.00
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "CurlTest", "CurlTest\CurlTest.vcproj", "{DB7CBBBD-7534-422F-98CD-29B21BEC0432}"
-	ProjectSection(ProjectDependencies) = postProject
-		{9829453D-D8C4-4007-9868-707CD3E79480} = {9829453D-D8C4-4007-9868-707CD3E79480}
-		{F7B5C5D9-C7FD-4B8C-8BE2-880134181BC7} = {F7B5C5D9-C7FD-4B8C-8BE2-880134181BC7}
-	EndProjectSection
-EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "curlsrc", "curl-7.21.1\src\vc6curlsrc.vcproj", "{F7B5C5D9-C7FD-4B8C-8BE2-880134181BC7}"
 	ProjectSection(ProjectDependencies) = postProject
 	EndProjectSection
@@ -32,28 +26,6 @@ Global
 		using libcurl LIB Release = using libcurl LIB Release
 	EndGlobalSection
 	GlobalSection(ProjectConfiguration) = postSolution
-		{DB7CBBBD-7534-422F-98CD-29B21BEC0432}.Debug.ActiveCfg = Debug|Win32
-		{DB7CBBBD-7534-422F-98CD-29B21BEC0432}.Debug.Build.0 = Debug|Win32
-		{DB7CBBBD-7534-422F-98CD-29B21BEC0432}.DLL Debug.ActiveCfg = Debug|Win32
-		{DB7CBBBD-7534-422F-98CD-29B21BEC0432}.DLL Debug.Build.0 = Debug|Win32
-		{DB7CBBBD-7534-422F-98CD-29B21BEC0432}.DLL Release.ActiveCfg = Release|Win32
-		{DB7CBBBD-7534-422F-98CD-29B21BEC0432}.DLL Release.Build.0 = Release|Win32
-		{DB7CBBBD-7534-422F-98CD-29B21BEC0432}.LIB Debug.ActiveCfg = Debug|Win32
-		{DB7CBBBD-7534-422F-98CD-29B21BEC0432}.LIB Debug.Build.0 = Debug|Win32
-		{DB7CBBBD-7534-422F-98CD-29B21BEC0432}.LIB Release.ActiveCfg = Release|Win32
-		{DB7CBBBD-7534-422F-98CD-29B21BEC0432}.LIB Release.Build.0 = Release|Win32
-		{DB7CBBBD-7534-422F-98CD-29B21BEC0432}.Primex Release.ActiveCfg = Release|Win32
-		{DB7CBBBD-7534-422F-98CD-29B21BEC0432}.Primex Release.Build.0 = Release|Win32
-		{DB7CBBBD-7534-422F-98CD-29B21BEC0432}.Release.ActiveCfg = Release|Win32
-		{DB7CBBBD-7534-422F-98CD-29B21BEC0432}.Release.Build.0 = Release|Win32
-		{DB7CBBBD-7534-422F-98CD-29B21BEC0432}.using libcurl DLL Debug.ActiveCfg = Debug|Win32
-		{DB7CBBBD-7534-422F-98CD-29B21BEC0432}.using libcurl DLL Debug.Build.0 = Debug|Win32
-		{DB7CBBBD-7534-422F-98CD-29B21BEC0432}.using libcurl DLL Release.ActiveCfg = Release|Win32
-		{DB7CBBBD-7534-422F-98CD-29B21BEC0432}.using libcurl DLL Release.Build.0 = Release|Win32
-		{DB7CBBBD-7534-422F-98CD-29B21BEC0432}.using libcurl LIB Debug.ActiveCfg = Debug|Win32
-		{DB7CBBBD-7534-422F-98CD-29B21BEC0432}.using libcurl LIB Debug.Build.0 = Debug|Win32
-		{DB7CBBBD-7534-422F-98CD-29B21BEC0432}.using libcurl LIB Release.ActiveCfg = Release|Win32
-		{DB7CBBBD-7534-422F-98CD-29B21BEC0432}.using libcurl LIB Release.Build.0 = Release|Win32
 		{F7B5C5D9-C7FD-4B8C-8BE2-880134181BC7}.Debug.ActiveCfg = using libcurl DLL Debug|Win32
 		{F7B5C5D9-C7FD-4B8C-8BE2-880134181BC7}.Debug.Build.0 = using libcurl DLL Debug|Win32
 		{F7B5C5D9-C7FD-4B8C-8BE2-880134181BC7}.DLL Debug.ActiveCfg = using libcurl DLL Debug|Win32
