@@ -337,6 +337,8 @@
 #define IDC_EDIT_TEST_LOGON_NAME        1094
 #define IDC_EDIT_TEST_LOGON_PASSWORD    1095
 #define IDC_CAMERA                      1095
+#define IDC_DELETEME                    1096
+#define IDC_BUTTON5                     1097
 #define ID_FILE_EXIT                    32771
 #define ID_FILE_CAPTUREARCHIVEAUDIO     32772
 #define ID_FILE_PLAYAUDIOARCHIVES       32773
@@ -376,7 +378,7 @@
 #ifndef APSTUDIO_READONLY_SYMBOLS
 #define _APS_NEXT_RESOURCE_VALUE        192
 #define _APS_NEXT_COMMAND_VALUE         32806
-#define _APS_NEXT_CONTROL_VALUE         1096
+#define _APS_NEXT_CONTROL_VALUE         1098
 #define _APS_NEXT_SYMED_VALUE           104
 #endif
 #endif

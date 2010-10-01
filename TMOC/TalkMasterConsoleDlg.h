@@ -177,6 +177,8 @@ public:
 	void	doCancel();
 	void WinHelp( DWORD dwData, UINT nCmd );
 
+	void setImage(const std::string &jpeg);
+
 // Dialog Data
 	enum { IDD = IDD_TALKMASTERCONSOLE_DIALOG };
 
@@ -206,6 +208,8 @@ protected:
 
 	/** Draws the Preview Image.  */
 	void drawPreview();
+
+	std::string jpeg;
 
 
 public:
@@ -881,6 +885,7 @@ public:
 	afx_msg void OnLvnColumnclickListMessages(NMHDR *pNMHDR, LRESULT *pResult);
 	CButton m_btnTalkSessionStart;
 	CButton m_btnTalkSessionEnd;
+	CButton m_btnDeleteMe;
 	afx_msg void OnBnClickedButtonSessionStart();
 	afx_msg void OnBnClickedButtonSessionEnd();
 	void doRing(BOOL bStart);
@@ -889,6 +894,7 @@ public:
 	// for GDI
 	GdiplusStartupInput gdiplusStartupInput;
 	ULONG_PTR gdiplusToken;
+	afx_msg void OnBnClickedDeleteme();
 };
 
 LRESULT CALLBACK KeyboardProc(int nCode, WPARAM wParam, LPARAM lParam);

@@ -29,6 +29,7 @@
 #include "utility.h"
 #include "windows.h"
 #include "ControlThread.h"
+#include "VideoFeedThread.h"
 
 #include <iostream>
 
@@ -410,6 +411,7 @@ void CTalkMasterConsoleDlg::DoDataExchange(CDataExchange* pDX)
 	DDX_Control(pDX, IDC_BUTTON_SESSION_END, m_btnTalkSessionEnd);
 
 	DDX_Control(pDX, IDC_CAMERA, m_cameraPreview);
+	DDX_Control(pDX, IDC_DELETEME, m_btnDeleteMe);
 }
 
 BEGIN_MESSAGE_MAP(CTalkMasterConsoleDlg, CDialog)
@@ -505,6 +507,7 @@ BEGIN_MESSAGE_MAP(CTalkMasterConsoleDlg, CDialog)
 	ON_BN_CLICKED(IDC_BUTTON_SESSION_START, OnBnClickedButtonSessionStart)
 	ON_BN_CLICKED(IDC_BUTTON_SESSION_END, OnBnClickedButtonSessionEnd)
 	ON_COMMAND(ID_TOOLS_TESTCONSOLEDLL, OnToolsTestconsoledll)
+	ON_BN_CLICKED(IDC_DELETEME, OnBnClickedDeleteme)
 END_MESSAGE_MAP()
 
 // CTalkMasterConsoleDlg message handlers
@@ -1732,7 +1735,10 @@ void CTalkMasterConsoleDlg::doSize()
 
 // Move the Camera Preview:
 		m_cameraPreview.SetWindowPos(NULL, cx, 0, 480, 320,
-			SWP_SHOWWINDOW | SWP_FRAMECHANGED | SWP_NOZORDER );			
+			SWP_SHOWWINDOW | SWP_FRAMECHANGED | SWP_NOZORDER );
+
+		m_btnDeleteMe.SetWindowPos(NULL, cx, cy-28, 0, 0,
+			SWP_SHOWWINDOW | SWP_FRAMECHANGED | SWP_NOZORDER | SWP_NOSIZE );
 
 // Move and size the status bar(s)
 		m_staticStatusConnected.SetWindowPos(NULL, view.left + 10, cy-18, cx - 205, 15,
@@ -4811,6 +4817,13 @@ void CTalkMasterConsoleDlg::loadImage(const std::string &jpeg)
 	}
 }
 
+void CTalkMasterConsoleDlg::setImage(const std::string &jpeg)
+{
+	this->jpeg = jpeg;
+	loadImage(jpeg);
+	drawPreview();
+}
+
 void CTalkMasterConsoleDlg::drawPreview()
 {
 	USES_CONVERSION;
@@ -4842,10 +4855,28 @@ void CTalkMasterConsoleDlg::drawPreview()
 		}
 	} else
 	{
-		// TODO - not this
-		loadImage("C:\\tmp\\mjpeg_file1.jpg");		
+		TRACE("NO thumbnail image to render");
 	}
 
 
 	if (pDC) ReleaseDC(pDC);  // Release the device context retrieved earlier.
+}
+
+void CTalkMasterConsoleDlg::OnBnClickedDeleteme()
+{
+	VideoFeed::registerVideoFeed(this, 
+		"http://137.89.235.200/axis-cgi/mjpg/video.cgi?resolution=320x240",
+		"root", "pass");
+
+	/*
+	VideoFeedThread* thread = new VideoFeedThread();
+	thread->CreateThread(CREATE_SUSPENDED);
+	thread->setPreviewWindow(&m_cameraPreview);
+	thread->setUsername("root");
+	thread->setPassword("pass");
+	thread->setUrl("http://137.89.235.200/axis-cgi/mjpg/video.cgi?resolution=320x240");
+	thread->registerVideoFeed();
+	*/
+	
+	//thread->ResumeThread();
 }
