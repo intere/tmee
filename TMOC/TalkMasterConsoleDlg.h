@@ -33,6 +33,7 @@
 #include "announceDlg.h"
 #include "SendTextMessage.h"
 #include <sys/stat.h>
+#include "CameraDataManager.h"
 
 #include <objidl.h>
 #include <gdiplus.h>
@@ -177,7 +178,7 @@ public:
 	void	doCancel();
 	void WinHelp( DWORD dwData, UINT nCmd );
 
-	void setImage(const std::string &jpeg);
+	
 
 // Dialog Data
 	enum { IDD = IDD_TALKMASTERCONSOLE_DIALOG };
@@ -203,11 +204,16 @@ protected:
 
 	void showMinimized(BOOL minimized);
 
+	/** Draws the Preview Image.  */
+	void drawPreview();
+
 	/** Loads the JPEG Image.  */
 	void loadImage(const std::string &jpeg);
 
-	/** Draws the Preview Image.  */
-	void drawPreview();
+	/** */
+	void setImage(const std::string &jpeg);
+
+	friend class VideoFeedThread;
 
 	std::string jpeg;
 
@@ -361,6 +367,9 @@ protected:
 
 	CWnd m_cameraPreview;			/* Preview window. */
 	Image* m_Thumbnail;				/* Thumbnail Image.  */
+	int m_ThumbWidth;	// width of the thumbnail image
+	int m_ThumbHeight;	// height of the thumbnail image.
+
 	
 	void updateAdminMenus(UINT flag);
 	void updateMenus(UINT flag);
@@ -471,8 +480,10 @@ public:
 
 	int m_serverTimeDelta;				// Now many seconds are we off from the server time?
 
+	struct _itemData *m_lastSelectedItem;
 	struct _itemData *m_pSelectedItem;
 	struct _itemData *m_pReleasedItem;
+	VideoFeedThread* thread;
 
 	struct _messageData *m_pCurrentMessage;
 
@@ -517,7 +528,7 @@ public:
 	DAResendSettings	m_DAResendSettings;
 	DARingIntercom		m_DARingIntercom;
 
-	HANDLE m_hDA;
+	HANDLE m_hDA;		// Handle to the Logon Dialog.
 	UINT m_uFlags;
 
 	CString m_csLoginName, m_csLoginPassword;
@@ -831,6 +842,7 @@ public:
 	afx_msg void OnBtnUpButtonFdxStart();
 	afx_msg void OnBnClickedButtonFdxMute();
 	afx_msg void OnInvisibleResetintercomconnection();
+	afx_msg void OnConfigureCamera();
 	CButton m_btnTestAudio;
 	BOOL	m_bTestAudio;
 	afx_msg void OnBnClickedButtonTestAudio();
@@ -885,7 +897,6 @@ public:
 	afx_msg void OnLvnColumnclickListMessages(NMHDR *pNMHDR, LRESULT *pResult);
 	CButton m_btnTalkSessionStart;
 	CButton m_btnTalkSessionEnd;
-	CButton m_btnDeleteMe;
 	afx_msg void OnBnClickedButtonSessionStart();
 	afx_msg void OnBnClickedButtonSessionEnd();
 	void doRing(BOOL bStart);
@@ -894,7 +905,14 @@ public:
 	// for GDI
 	GdiplusStartupInput gdiplusStartupInput;
 	ULONG_PTR gdiplusToken;
-	afx_msg void OnBnClickedDeleteme();
+	void showCameraStream();
+
+	// For Multithreading:
+
+	void doRender();
+	static UINT run(LPVOID p);
+	void run();
+	volatile BOOL running;
 };
 
 LRESULT CALLBACK KeyboardProc(int nCode, WPARAM wParam, LPARAM lParam);

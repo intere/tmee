@@ -31,6 +31,10 @@
 #include "ControlThread.h"
 #include "VideoFeedThread.h"
 
+#include "CameraData.h"
+#include "CameraIntercomDlg.h"
+#include "CameraDataManager.h"
+
 #include <iostream>
 
 #ifdef _DEBUG
@@ -167,15 +171,13 @@ CTalkMasterConsoleDlg::CTalkMasterConsoleDlg(CWnd* pParent /*=NULL*/)
 	m_DAMinor = 0;
 	m_DARelease = 0;
 
-	m_uFlags = 0;					// Default this to ZERO so we don't do something strange in the DAOpen call
+	m_uFlags = DA_REMOTE;	// Default this to REMOTE so we force a logon in the DAOpen call
 
-	m_DAOpen = NULL;
-	m_DAClose = NULL;
-	m_DAStart = NULL;
-	m_DAStop = NULL;
 	m_DADllVersion = NULL;
 	m_DASetDebug = NULL;
 	m_Thumbnail = NULL;
+	m_ThumbWidth = -1;
+	m_ThumbHeight = -1;
 
 	m_selectedRow = -1;				// None of the list is selected
 	m_selectedCQRow = -1;			// None of the call queue list is selected (yet)
@@ -291,7 +293,9 @@ CTalkMasterConsoleDlg::CTalkMasterConsoleDlg(CWnd* pParent /*=NULL*/)
 	// GDI+ is used to show the thumbnail previews.
 	GdiplusStartup(&gdiplusToken, &gdiplusStartupInput, NULL);
 
-	// loadImage("C:\\tmp\\mjpeg_file1.jpg");
+	// The Camera Thread - null initially.
+	thread = NULL;
+	m_lastSelectedItem = NULL;
 }
 
 CTalkMasterConsoleDlg::~CTalkMasterConsoleDlg(/*=NULL*/)
@@ -411,7 +415,6 @@ void CTalkMasterConsoleDlg::DoDataExchange(CDataExchange* pDX)
 	DDX_Control(pDX, IDC_BUTTON_SESSION_END, m_btnTalkSessionEnd);
 
 	DDX_Control(pDX, IDC_CAMERA, m_cameraPreview);
-	DDX_Control(pDX, IDC_DELETEME, m_btnDeleteMe);
 }
 
 BEGIN_MESSAGE_MAP(CTalkMasterConsoleDlg, CDialog)
@@ -497,6 +500,7 @@ BEGIN_MESSAGE_MAP(CTalkMasterConsoleDlg, CDialog)
 	ON_BN_CLICKED(IDC_BUTTON_TEST_VOLUME, OnBnClickedButtonTestVolume)
 	ON_BN_CLICKED(IDC_BUTTON_FDX_MUTE, OnBnClickedButtonFdxMute)
 	ON_COMMAND(ID_INVISIBLE_RESETINTERCOMCONNECTION, OnInvisibleResetintercomconnection)
+	ON_COMMAND(ID_INTERCOM_CONFIG_CAMERA, OnConfigureCamera)
 	ON_BN_CLICKED(IDC_BUTTON_TEST_AUDIO, OnBnClickedButtonTestAudio)
 	ON_NOTIFY(TCN_SELCHANGE, IDC_TAB_MAIN, OnTcnSelchangeTabMain)
 	ON_NOTIFY(NM_CLICK, IDC_LIST_GROUPS, OnNMClickListGroups)
@@ -507,7 +511,6 @@ BEGIN_MESSAGE_MAP(CTalkMasterConsoleDlg, CDialog)
 	ON_BN_CLICKED(IDC_BUTTON_SESSION_START, OnBnClickedButtonSessionStart)
 	ON_BN_CLICKED(IDC_BUTTON_SESSION_END, OnBnClickedButtonSessionEnd)
 	ON_COMMAND(ID_TOOLS_TESTCONSOLEDLL, OnToolsTestconsoledll)
-	ON_BN_CLICKED(IDC_DELETEME, OnBnClickedDeleteme)
 END_MESSAGE_MAP()
 
 // CTalkMasterConsoleDlg message handlers
@@ -1071,6 +1074,8 @@ void CTalkMasterConsoleDlg::doLogon()
 		doCancel();
 		return;
 	}
+
+//	m_hDA = GetSafeHwnd();
 
 	if( ++guard == 1 && !bLoggedOn && (m_uFlags & DA_REMOTE) )
 	{
@@ -1736,9 +1741,6 @@ void CTalkMasterConsoleDlg::doSize()
 // Move the Camera Preview:
 		m_cameraPreview.SetWindowPos(NULL, cx, 0, 480, 320,
 			SWP_SHOWWINDOW | SWP_FRAMECHANGED | SWP_NOZORDER );
-
-		m_btnDeleteMe.SetWindowPos(NULL, cx, cy-28, 0, 0,
-			SWP_SHOWWINDOW | SWP_FRAMECHANGED | SWP_NOZORDER | SWP_NOSIZE );
 
 // Move and size the status bar(s)
 		m_staticStatusConnected.SetWindowPos(NULL, view.left + 10, cy-18, cx - 205, 15,
@@ -3258,6 +3260,8 @@ void CTalkMasterConsoleDlg::OnBnClickedButtonHold()
 	if( !m_btnSessionHold.IsWindowEnabled() || !m_pSelectedItem )
 		return;
 
+	showCameraStream();
+
 	resetFocus();
 //	m_listCallsWaiting.SetFocus();
 
@@ -3792,6 +3796,24 @@ void CTalkMasterConsoleDlg::OnNMClickListIcoms(NMHDR *pNMHDR, LRESULT *pResult)
 	setResetFocus(&m_listIcoms);
 	m_listIcoms.SetFocus();
 //	m_listCallsWaiting.SetFocus();
+
+	showCameraStream();
+}
+
+void CTalkMasterConsoleDlg::showCameraStream()
+{
+	if(m_pSelectedItem && m_pSelectedItem != m_lastSelectedItem)
+	{
+		ostringstream sstream;
+		sstream << m_pSelectedItem->iCom.name;
+		CameraData *data = CameraDataManager::getInstance().getCameraData(sstream.str());
+		if(data)
+		{
+			VideoFeed::registerVideoFeed(this, data);
+		}
+
+		m_lastSelectedItem = m_pSelectedItem;
+	}
 }
 
 void CTalkMasterConsoleDlg::OnLvnItemchangingListIcoms(NMHDR *pNMHDR, LRESULT *pResult)
@@ -3877,6 +3899,7 @@ void CTalkMasterConsoleDlg::loadIcomList(NMHDR *pNMHDR)
 	m_btnTestVolume.EnableWindow(m_pSelectedItem != NULL && GetFileAttributes(theApp.UserOptions.testVolumeFile)!=INVALID_FILE_ATTRIBUTES);
 
 	m_ctrlVolumeSetting.SetPos(0);
+	showCameraStream();
 }
 
 void CTalkMasterConsoleDlg::OnLvnItemchangingListCallsWaiting(NMHDR *pNMHDR, LRESULT *pResult)
@@ -4494,6 +4517,27 @@ void CTalkMasterConsoleDlg::OnInvisibleResetintercomconnection()
 	m_DAResetConnection(m_hDA, m_pSelectedItem->socket);
 }
 
+void CTalkMasterConsoleDlg::OnConfigureCamera()
+{
+	if(m_pSelectedItem)
+	{
+		CameraIntercomDlg ciDlg(this);
+		ostringstream sstream;
+		sstream << m_pSelectedItem->iCom.name;
+		CameraData *data = CameraDataManager::getInstance().getCameraData(sstream.str());
+
+		if(!data)
+		{
+			data = new CameraData(sstream.str());	
+			CameraDataManager::getInstance().addCameraData(data);
+		}
+    
+		ciDlg.getController().setModel(data);
+		ciDlg.DoModal();
+		//ciDlg.DestroyWindow();
+	}
+}
+
 void CTalkMasterConsoleDlg::OnBnClickedButtonTestAudio()
 {
 	if( m_bTestAudio )
@@ -4701,6 +4745,11 @@ void CTalkMasterConsoleDlg::OnToolsTestconsoledll()
 
 void CTalkMasterConsoleDlg::loadImage(const std::string &jpeg)
 {
+	if(m_bAbortControl)
+	{
+		return;
+	}
+
 	USES_CONVERSION;
 
 	CString cstrWidth, cstrHeight, cstrType;
@@ -4739,93 +4788,109 @@ void CTalkMasterConsoleDlg::loadImage(const std::string &jpeg)
 		// given the image size ratio and the preview window size ratio.
 		uiWidth = image.GetWidth();
 		uiHeight = image.GetHeight();
-		dRatio = ((double)uiWidth)/((double)uiHeight);
-
-		// If the width is larger than the height of the image, 
-		// set the width of the thumbnail to the width of the preview area
-		// and calculate the thumbnail height by using the ratios.
-		// If the height is larger than the width of the image, 
-		// set the height of the thumbnail to the height of the preview area
-		// and calculate the thumbnail width by using the ratios.
-		if (uiWidth > uiHeight)
+		if(uiWidth!=0 && uiHeight!=0)
 		{
-			thumbWidth = rect.right - rect.left;
-			thumbHeight = (UINT)(thumbWidth/dRatio);
+			dRatio = ((double)uiWidth)/((double)uiHeight);
 
-			if (thumbHeight == 0) thumbHeight = 1;
-			if (thumbHeight > (UINT)(rect.bottom - rect.top)) thumbHeight = rect.bottom - rect.top;
+			// If the width is larger than the height of the image, 
+			// set the width of the thumbnail to the width of the preview area
+			// and calculate the thumbnail height by using the ratios.
+			// If the height is larger than the width of the image, 
+			// set the height of the thumbnail to the height of the preview area
+			// and calculate the thumbnail width by using the ratios.
+			if (uiWidth > uiHeight)
+			{
+				thumbWidth = rect.right - rect.left;
+				thumbHeight = (UINT)(thumbWidth/dRatio);
+
+				if (thumbHeight == 0) thumbHeight = 1;
+				if (thumbHeight > (UINT)(rect.bottom - rect.top)) thumbHeight = rect.bottom - rect.top;
+			}
+			else
+			{
+				thumbHeight = rect.bottom - rect.top;
+				thumbWidth = (UINT)(uiWidth*thumbHeight/uiHeight);
+
+				if (thumbWidth == 0) thumbWidth = 1;
+				if (thumbWidth > (UINT)(rect.right - rect.left)) thumbWidth = rect.right - rect.left;
+			}
+			
+			if(m_Thumbnail)
+			{
+				try
+				{
+					delete m_Thumbnail;
+				} catch( ... )
+				{
+					cerr << "Error cleaning up thumbnail image" << endl;
+				}
+			}
+
+			// Get the thumbnail and display it in the preview control.
+			m_Thumbnail = image.GetThumbnailImage(thumbWidth, thumbHeight, NULL, NULL);
+
+			// Display the image bits per pixel (color depth).
+			switch (image.GetPixelFormat())
+			{
+			case PixelFormat1bppIndexed:
+				cstrType = "Type: 1bpp";
+				break;
+
+			case PixelFormat4bppIndexed:
+				cstrType = "Type: 4bpp";
+				break;
+
+			case PixelFormat8bppIndexed:
+				cstrType = "Type: 8bpp";
+				break;
+
+			case PixelFormat16bppARGB1555: 
+			case PixelFormat16bppGrayScale: 
+			case PixelFormat16bppRGB555: 
+			case PixelFormat16bppRGB565:
+				cstrType = "Type: 16bpp";
+				break;
+
+			case PixelFormat24bppRGB:
+				cstrType = "Type: 24bpp";
+				break;
+
+			case PixelFormat32bppARGB: 
+			case PixelFormat32bppPARGB: 
+			case PixelFormat32bppRGB: 
+				cstrType = "Type: 32bpp";
+				break;
+
+			case PixelFormat48bppRGB:
+				cstrType = "Type: 48bpp";
+				break;
+
+			case PixelFormat64bppARGB: 
+			case PixelFormat64bppPARGB:
+				cstrType = "Type: 64bpp";
+				break;
+
+			default:
+				cstrType = "Type: Unknown";
+				break;
+			}
+			//m_stType.SetWindowText(cstrType);
 		}
-		else
-		{
-			thumbHeight = rect.bottom - rect.top;
-			thumbWidth = (UINT)(uiWidth*thumbHeight/uiHeight);
-
-			if (thumbWidth == 0) thumbWidth = 1;
-			if (thumbWidth > (UINT)(rect.right - rect.left)) thumbWidth = rect.right - rect.left;
-		}
-		
-
-		// Get the thumbnail and display it in the preview control.
-		m_Thumbnail = image.GetThumbnailImage(thumbWidth, thumbHeight, NULL, NULL);
-
-		// Display the image bits per pixel (color depth).
-		switch (image.GetPixelFormat())
-		{
-		case PixelFormat1bppIndexed:
-			cstrType = "Type: 1bpp";
-			break;
-
-		case PixelFormat4bppIndexed:
-			cstrType = "Type: 4bpp";
-			break;
-
-		case PixelFormat8bppIndexed:
-			cstrType = "Type: 8bpp";
-			break;
-
-		case PixelFormat16bppARGB1555: 
-		case PixelFormat16bppGrayScale: 
-		case PixelFormat16bppRGB555: 
-		case PixelFormat16bppRGB565:
-			cstrType = "Type: 16bpp";
-			break;
-
-		case PixelFormat24bppRGB:
-			cstrType = "Type: 24bpp";
-			break;
-
-		case PixelFormat32bppARGB: 
-		case PixelFormat32bppPARGB: 
-		case PixelFormat32bppRGB: 
-			cstrType = "Type: 32bpp";
-			break;
-
-		case PixelFormat48bppRGB:
-			cstrType = "Type: 48bpp";
-			break;
-
-		case PixelFormat64bppARGB: 
-		case PixelFormat64bppPARGB:
-			cstrType = "Type: 64bpp";
-			break;
-
-		default:
-			cstrType = "Type: Unknown";
-			break;
-		}
-		//m_stType.SetWindowText(cstrType);
 	}
 }
 
 void CTalkMasterConsoleDlg::setImage(const std::string &jpeg)
 {
 	this->jpeg = jpeg;
-	loadImage(jpeg);
-	drawPreview();
 }
 
 void CTalkMasterConsoleDlg::drawPreview()
 {
+	if(m_bAbortControl)
+	{
+		return;
+	}
+
 	USES_CONVERSION;
 
 	CDC dcMemory, *pDC;
@@ -4837,46 +4902,67 @@ void CTalkMasterConsoleDlg::drawPreview()
 	// Initialize the Graphics class in GDI+.
 	pDC = m_cameraPreview.GetWindowDC();
 
-	// Fill the preview ara with a WHITE background.
-	m_cameraPreview.GetClientRect(&rect);
-	rect.left += 1;
-	rect.top += 1;
-	rect.right -= 1;
-	rect.bottom -= 1;
-	pDC->FillSolidRect(&rect, RGB(255,255,255));
-
-	if(m_Thumbnail)
+	if(pDC)
 	{
-		Graphics graphics(pDC->m_hDC);
+		// Fill the preview area with a WHITE background.
+		m_cameraPreview.GetClientRect(&rect);
+		rect.left += 1;
+		rect.top += 1;
+		rect.right -= 1;
+		rect.bottom -= 1;
+		pDC->FillSolidRect(&rect, RGB(255,255,255));
 
-		if(m_Thumbnail!=NULL)
+		if(m_Thumbnail)
 		{
-			graphics.DrawImage(m_Thumbnail, 1, 1, m_Thumbnail->GetWidth(), m_Thumbnail->GetHeight());
+			Graphics graphics(pDC->m_hDC);
+			graphics.Clear(Color::White);
+
+			if(m_ThumbWidth==-1)
+			{
+				m_ThumbWidth = m_Thumbnail->GetWidth();
+				m_ThumbHeight = m_Thumbnail->GetHeight();
+			}
+
+			if(m_Thumbnail!=NULL)
+			{
+				try
+				{
+					graphics.DrawImage(m_Thumbnail, 1, 1, m_ThumbWidth, m_ThumbHeight);
+				} catch( ... ) 
+				{
+					cerr << "Error drawing image" << endl;
+				}
+			}
+		} else
+		{
+			TRACE("NO thumbnail image to render\n");
 		}
-	} else
-	{
-		TRACE("NO thumbnail image to render");
+
+
+		if (pDC) ReleaseDC(pDC);  // Release the device context retrieved earlier.
 	}
-
-
-	if (pDC) ReleaseDC(pDC);  // Release the device context retrieved earlier.
 }
 
-void CTalkMasterConsoleDlg::OnBnClickedDeleteme()
+void CTalkMasterConsoleDlg::doRender()
 {
-	VideoFeed::registerVideoFeed(this, 
-		"http://137.89.235.200/axis-cgi/mjpg/video.cgi?resolution=320x240",
-		"root", "pass");
-
-	/*
-	VideoFeedThread* thread = new VideoFeedThread();
-	thread->CreateThread(CREATE_SUSPENDED);
-	thread->setPreviewWindow(&m_cameraPreview);
-	thread->setUsername("root");
-	thread->setPassword("pass");
-	thread->setUrl("http://137.89.235.200/axis-cgi/mjpg/video.cgi?resolution=320x240");
-	thread->registerVideoFeed();
-	*/
-	
-	//thread->ResumeThread();
+	running = TRUE;
+	AfxBeginThread(run, this);
 }
+
+UINT CTalkMasterConsoleDlg::run(LPVOID p)
+{
+	CTalkMasterConsoleDlg * me = (CTalkMasterConsoleDlg *)p;
+    me->run();
+    return 0;
+}
+
+void CTalkMasterConsoleDlg::run()
+{
+	loadImage(jpeg);
+	drawPreview();
+    running = FALSE;
+}
+
+
+
+

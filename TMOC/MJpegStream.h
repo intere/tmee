@@ -1,7 +1,6 @@
 #pragma once
 
 #include <iostream>
-#include <vector>
 #include <string>
 #include <sstream>
 #include <fstream>
@@ -14,31 +13,14 @@
 
 using namespace std;
 
-namespace mjpeg
-{
-	namespace stream
-	{
-		static const string BOUNDARY = "--myboundary\r\n";
-		static const string CONTENT_TYPE = "Content-Type: ";
-		static const string CONTENT_LEN = "Content-Length: ";
-		static const string CR_LF = "\r\n";
-		static const char CR = '\r';
-		static const char LF = '\n';
-	}
+class JpegCameraThread;
 
-	namespace file
-	{
-		static const string TEMP_DIR = "C:\\tmp";
-		static const string SEPARATOR = "\\";
-		static const string BASE_NAME = "mjpeg_file";
-		static const string SUFFIX = ".jpg";
-	}
-};
+
 
 /**
  * The purpose of this class is to extend the ostream object.
  */
-class MJpegStream : public ostream, public Observable
+class MJpegStream : public Observable
 {
 public:
 
@@ -60,14 +42,17 @@ public:
 		CrLf
 	};
 
+	/** Constructor that sets the JpegCamerThread.  */
+	MJpegStream(JpegCameraThread* thread);
+
 	/** Default Constructor */
 	MJpegStream(VideoFeedThread* thread);
 
 	/** Destructor.  */
-	~MJpegStream(void);
+	virtual ~MJpegStream(void);
 
 	/** Overloaded put function.  */
-	virtual ostream& put(char c);
+	virtual MJpegStream& put(char c);
 
 protected:
 
@@ -92,13 +77,16 @@ protected:
 	/** Setter for the Header State. */
 	void setHeaderState(HeaderState hState);
 
+	/** Sends the MJpegEvent out for you.  */
+	void sendMJpegEvent(MJpegEvent *evt);
+
 private:
 
 	/** The VideoFeedThread to be notified.  */
-	VideoFeedThread *thread;
+	VideoFeedThread *vThread;
 
-	/** The vector of files that we're creating.  */
-	vector<string> jpegs;
+	/** The JpegCamerThread to be notified.  */
+	JpegCameraThread *jThread;
 
 	/** The content length of the current JPEG from the M-JPEG stream.  */
 	long contentLength;

@@ -18,9 +18,9 @@
 #include "TalkMasterConsole.h"
 #include "TalkMasterConsoleDlg.h"
 #include "DAPreferencesDlg.h"
+#include "CameraDataManager.h"
 #include "direct.h"
-#include ".\talkmasterconsole.h"
-//#include "DATimer.h"
+
 
 #include "shlobj.h"
 
@@ -100,6 +100,7 @@ BOOL CTalkMasterConsoleApp::InitInstance()
 //	tic2 = getTimer();
 
 	ReadRegistry();
+
 //	UpdateMenu();
 
 	EnableHtmlHelp();
@@ -132,6 +133,7 @@ BOOL CTalkMasterConsoleApp::InitInstance()
 	else
 		OutputDebugString("Memory Failed");
 #endif
+
 	return FALSE;
 }
 
@@ -414,6 +416,8 @@ void CTalkMasterConsoleApp::ReadRegistry()
 
 	UserOptions.forceHdx = GetProfileInt("settings", "forceHdx", FALSE);
 	UserOptions.noiseFilter = GetProfileInt("settings", "filterNoise", FALSE);
+
+	CameraDataManager::getInstance().ReadRegistry(this, UserOptions);
 }
 
 void CTalkMasterConsoleApp::WriteRegistry()
@@ -469,6 +473,8 @@ void CTalkMasterConsoleApp::WriteRegistry()
 
 	WriteProfileInt("settings", "forceHdx", UserOptions.forceHdx);
 	WriteProfileInt("settings", "filterNoise", UserOptions.noiseFilter);
+
+	CameraDataManager::getInstance().WriteRegistry();
 }
 
 void CTalkMasterConsoleApp::UpdateMenu()
@@ -591,7 +597,10 @@ void CTalkMasterConsoleApp::OnFileLogoff()
 	dlg->m_csLoginName = "";
 	dlg->m_csLoginPassword = "";
 	
-	dlg->m_DAStop( dlg->m_hDA );
+	if(dlg->m_hDA)
+	{
+		dlg->m_DAStop( dlg->m_hDA );
+	}
 
 //	dlg->doLogon();
 }

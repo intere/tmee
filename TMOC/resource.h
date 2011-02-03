@@ -205,6 +205,7 @@
 #define IDS_STRING_NO_MESSAGES_SELECTED 194
 #define IDS_STRING_SELECT_MESSAGE       195
 #define IDS_STRING_SERVER_FILE_NOT_FOUND 196
+#define IDD_DIALOG_CAMERA               196
 #define IDS_STRING_STATUS_FDX           197
 #define IDS_STRING_GROUP_NO_GROUP_SELECTED 198
 #define IDS_STRING_GROUP_NO_INTERCOMS_IN_GROUP 199
@@ -270,6 +271,7 @@
 #define IDC_BUTTON_HOLD                 1039
 #define IDC_BUTTON2                     1040
 #define IDC_BUTTON_END                  1040
+#define IDC_BTN_TEST                    1040
 #define IDC_STATIC_ABOUT_VERSION        1041
 #define IDC_STATIC_ABOUT_PICTURE        1042
 #define IDC_LIST1                       1043
@@ -338,7 +340,15 @@
 #define IDC_EDIT_TEST_LOGON_PASSWORD    1095
 #define IDC_CAMERA                      1095
 #define IDC_DELETEME                    1096
-#define IDC_BUTTON5                     1097
+#define IDC_TXT_URL                     1100
+#define IDC_EDIT_URL                    1100
+#define IDC_TXT_USERNAME                1101
+#define IDC_EDIT_USERNAME               1101
+#define IDC_TXT_PASSWORD                1102
+#define IDC_EDIT_PASSWORD               1102
+#define IDC_TXT_INTERCOM                1103
+#define IDC_EDIT_INTERCOM               1103
+#define IDC_IMG_TEST                    1104
 #define ID_FILE_EXIT                    32771
 #define ID_FILE_CAPTUREARCHIVEAUDIO     32772
 #define ID_FILE_PLAYAUDIOARCHIVES       32773
@@ -367,18 +377,20 @@
 #define ID_FILE_LOGOFF                  32799
 #define ID_TOOLS_OPENSUPPORTFOLDER      32800
 #define ID_INVISIBLE_OPTIONS            32801
-#define ID_INVISIBLE_RESETINTERCOMCONNECTION 32802
 #define ID_TOOLS_SENDTEXTMESSAGE        32803
 #define ID_INVISIBLEGROUPMENU_INTERCOMSINGROUP 32804
 #define ID_TOOLS_TESTCONSOLEDLL         32805
+#define ID_Menu                         32806
+#define ID_INTERCOM_CONFIG_CAMERA       32810
+#define ID_INVISIBLE_RESETINTERCOMCONNECTION 32811
 
 // Next default values for new objects
 // 
 #ifdef APSTUDIO_INVOKED
 #ifndef APSTUDIO_READONLY_SYMBOLS
-#define _APS_NEXT_RESOURCE_VALUE        192
-#define _APS_NEXT_COMMAND_VALUE         32806
-#define _APS_NEXT_CONTROL_VALUE         1098
-#define _APS_NEXT_SYMED_VALUE           104
+#define _APS_NEXT_RESOURCE_VALUE        197
+#define _APS_NEXT_COMMAND_VALUE         32812
+#define _APS_NEXT_CONTROL_VALUE         1106
+#define _APS_NEXT_SYMED_VALUE           221
 #endif
 #endif

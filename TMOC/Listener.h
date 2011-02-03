@@ -14,7 +14,7 @@ public:
 	 * Callback function that notifies the listener that an
 	 * event has occurred.  
 	 */
-	virtual void eventOccurred(MJpegEvent* event) const
+	virtual void eventOccurred(MJpegEvent* event)
 	{
 		ostringstream buff;
 		buff << "Listener::eventOccurred(MJPegEvent*) - should not be called" << endl;
