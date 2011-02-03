@@ -77,6 +77,8 @@
 			CharacterSet="2">
 			<Tool
 				Name="VCCLCompilerTool"
+				AdditionalIncludeDirectories="&quot;$(SolutionDir)\curl-7.21.1\include&quot;"
+				AdditionalUsingDirectories="&quot;$(SolutionDir)\curl-7.21.1\lib\DLL-Debug&quot;"
 				PreprocessorDefinitions="WIN32;_WINDOWS;NDEBUG"
 				MinimalRebuild="FALSE"
 				RuntimeLibrary="0"
@@ -89,8 +91,9 @@
 				Name="VCCustomBuildTool"/>
 			<Tool
 				Name="VCLinkerTool"
-				AdditionalDependencies="winmm.lib version.lib htmlhelp.lib"
+				AdditionalDependencies="winmm.lib version.lib htmlhelp.lib gdiplus.lib shell32.lib libcurl_imp.lib"
 				LinkIncremental="1"
+				AdditionalLibraryDirectories="&quot;$(SolutionDir)\curl-7.21.1\lib\DLL-Release&quot;"
 				GenerateDebugInformation="TRUE"
 				SubSystem="2"
 				OptimizeReferences="2"
@@ -132,6 +135,8 @@
 			CharacterSet="2">
 			<Tool
 				Name="VCCLCompilerTool"
+				AdditionalIncludeDirectories="&quot;$(SolutionDir)\curl-7.21.1\include&quot;"
+				AdditionalUsingDirectories="&quot;$(SolutionDir)\curl-7.21.1\lib\DLL-Debug&quot;"
 				PreprocessorDefinitions="WIN32;_WINDOWS;NDEBUG;PRIMEX_BUILD"
 				MinimalRebuild="FALSE"
 				RuntimeLibrary="0"
@@ -144,9 +149,10 @@
 				Name="VCCustomBuildTool"/>
 			<Tool
 				Name="VCLinkerTool"
-				AdditionalDependencies="winmm.lib version.lib htmlhelp.lib"
+				AdditionalDependencies="winmm.lib version.lib htmlhelp.lib gdiplus.lib shell32.lib libcurl_imp.lib"
 				OutputFile="$(OutDir)/IPIOperatorConsole.exe"
 				LinkIncremental="1"
+				AdditionalLibraryDirectories="&quot;$(SolutionDir)\curl-7.21.1\lib\DLL-Release&quot;"
 				GenerateDebugInformation="TRUE"
 				SubSystem="2"
 				OptimizeReferences="2"
@@ -194,6 +200,18 @@
 				RelativePath=".\AnnounceDlg.cpp">
 			</File>
 			<File
+				RelativePath=".\CameraData.cpp">
+			</File>
+			<File
+				RelativePath=".\CameraDataManager.cpp">
+			</File>
+			<File
+				RelativePath=".\CameraDialogController.cpp">
+			</File>
+			<File
+				RelativePath=".\CameraIntercomDlg.cpp">
+			</File>
+			<File
 				RelativePath=".\ControlThread.cpp">
 			</File>
 			<File
@@ -228,6 +246,9 @@
 			</File>
 			<File
 				RelativePath=".\DebugThread.cpp">
+			</File>
+			<File
+				RelativePath=".\JpegCameraThread.cpp">
 			</File>
 			<File
 				RelativePath=".\Localization.cpp">
@@ -292,6 +313,18 @@
 				RelativePath=".\AnnounceDlg.h">
 			</File>
 			<File
+				RelativePath=".\CameraData.h">
+			</File>
+			<File
+				RelativePath=".\CameraDataManager.h">
+			</File>
+			<File
+				RelativePath=".\CameraDialogController.h">
+			</File>
+			<File
+				RelativePath=".\CameraIntercomDlg.h">
+			</File>
+			<File
 				RelativePath=".\DAAudioArchive.h">
 			</File>
 			<File
@@ -317,6 +350,9 @@
 			</File>
 			<File
 				RelativePath=".\DAUnattendedDlg.h">
+			</File>
+			<File
+				RelativePath=".\JpegCameraThread.h">
 			</File>
 			<File
 				RelativePath=".\Listener.h">

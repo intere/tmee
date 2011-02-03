@@ -12,6 +12,7 @@
 #include <string>
 #include <iostream>
 
+using namespace VideoFeed;
 
 /** 
  * The namespace that is used to manage the C-Style handling of the 
@@ -21,6 +22,7 @@ namespace VideoFeed
 {
 	static VideoFeedThread *thread = NULL;
 	static CURL *curl = NULL;
+	static int count;
 
 	size_t write_data(void *ptr, size_t size, size_t nmemb, FILE *stream) {
 
@@ -42,7 +44,7 @@ namespace VideoFeed
 	* the provided VideoFeedThread with this namespace.  Then it will
 	* ask the new feed thread to resume.
 	*/
-	void registerVideoFeed(CTalkMasterConsoleDlg *m_cameraPreview, string url, string username, string password)
+	void registerVideoFeed(CTalkMasterConsoleDlg *m_cameraPreview, CameraData* data)
 	{
 		// Cleanup old CURL object:
 		if(curl)
@@ -61,43 +63,13 @@ namespace VideoFeed
 		thread = new VideoFeedThread();
 		thread->CreateThread(CREATE_SUSPENDED);
 		thread->setPreviewWindow(m_cameraPreview);
-		thread->setUsername(username);
-		thread->setPassword(password);
-		thread->setUrl(url);
-
-		curl = curl_easy_init();
-		CURLcode res;
-
-		// Configure CURL from the thread:
-		if(curl)
-		{
-			if(thread->getUsername().size()>0)
-			{
-				curl_easy_setopt(curl, CURLOPT_USERNAME, 
-					thread->getUsername().c_str());
-
-				if(thread->getPassword().size()>0)
-				{
-					curl_easy_setopt(curl, CURLOPT_PASSWORD,
-						thread->getPassword().c_str());
-				}
-			}
-
-			curl_easy_setopt(curl, CURLOPT_URL, 
-				thread->getUrl().c_str());
-
-			curl_easy_setopt(curl, CURLOPT_WRITEFUNCTION, VideoFeed::write_data);
-			res = curl_easy_perform(curl);
-			
-			/* always cleanup */
-			curl_easy_cleanup(curl);
-		}
-
+		thread->setUsername(data->getUsername());
+		thread->setPassword(data->getPassword());
+		thread->setUrl(data->getUrl());
 		thread->ResumeThread();
 	}
 };
 
-using namespace VideoFeed;
 
 // VideoFeedThread
 
@@ -107,6 +79,7 @@ VideoFeedThread::VideoFeedThread()
 {
 	stream = new MJpegStream(this);
 	stream->addListener(static_cast<Listener>(*this));
+	thread = this;
 }
 
 VideoFeedThread::~VideoFeedThread()
@@ -131,7 +104,34 @@ int VideoFeedThread::ExitInstance()
 
 int VideoFeedThread::Run()
 {
-	// Worker function
+	curl = curl_easy_init();
+	CURLcode res;
+
+	// Configure CURL from the thread:
+	if(curl)
+	{
+		if(thread->getUsername().size()>0)
+		{
+			curl_easy_setopt(curl, CURLOPT_USERNAME, 
+				thread->getUsername().c_str());
+
+			if(thread->getPassword().size()>0)
+			{
+				curl_easy_setopt(curl, CURLOPT_PASSWORD,
+					thread->getPassword().c_str());
+			}
+		}
+
+		curl_easy_setopt(curl, CURLOPT_URL, 
+			thread->getUrl().c_str());
+
+		curl_easy_setopt(curl, CURLOPT_WRITEFUNCTION, VideoFeed::write_data);
+		res = curl_easy_perform(curl);
+		
+		/* always cleanup */
+		curl_easy_cleanup(curl);
+	}
+
 	return 0;
 }
 
@@ -185,10 +185,25 @@ MJpegStream *VideoFeedThread::getStream()
 	return this->stream;
 }
 
-void VideoFeedThread::eventOccurred(MJpegEvent *event) const
+void VideoFeedThread::eventOccurred(MJpegEvent *event)
 {
 	m_cameraPreview->setImage(event->getFilename());
+	m_cameraPreview->doRender();
+
+	if(lastImage.size()>0)
+	{
+		try
+		{
+			CFile::Remove(lastImage.c_str());	
+		} catch(CFileException* ex)
+		{
+			cerr << "Unable to remove file: " << lastImage.c_str() << endl;
+		}
+	}
+
+	this->lastImage = event->getFilename().c_str();
 }
+
 
 BEGIN_MESSAGE_MAP(VideoFeedThread, CWinThread)
 END_MESSAGE_MAP()

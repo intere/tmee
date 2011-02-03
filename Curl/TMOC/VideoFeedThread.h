@@ -3,6 +3,7 @@
 #include "curl/curl.h"
 #include "Listener.h"
 #include "MJpegEvent.h"
+#include "CameraData.h"
 #include <string>
 
 using namespace std;
@@ -13,7 +14,7 @@ class CTalkMasterConsoleDlg;
 namespace VideoFeed
 {
 	size_t write_data(void *ptr, size_t size, size_t nmemb, FILE *stream);
-	void registerVideoFeed(CTalkMasterConsoleDlg *m_cameraPreview, string url, string username, string password);
+	void registerVideoFeed(CTalkMasterConsoleDlg *m_cameraPreview, CameraData* data);
 };
 
 // VideoFeedThread
@@ -31,13 +32,10 @@ public:
 	virtual int ExitInstance();
 	virtual int Run();
 
-	void eventOccurred(MJpegEvent *event) const;
+	void eventOccurred(MJpegEvent *event);
 
 	/** Call to terminate early.  */
 	void Finish();
-
-	/** Registers this feed for you.  */
-	//void registerVideoFeed();
 
 	/** Setter for the Camera Preview Window.  */
 	void setPreviewWindow(CTalkMasterConsoleDlg *m_cameraPreview);
@@ -61,6 +59,7 @@ protected:
 	string username;
 	string password;
 	string url;
+	string lastImage;
 	CTalkMasterConsoleDlg *m_cameraPreview;
 	MJpegStream *stream;
 };

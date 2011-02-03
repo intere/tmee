@@ -126,7 +126,7 @@ void CDALoginDlg::OnBnClickedOk()
 	m_sockaddr_in.sin_family = AF_INET;
 	m_sockaddr_in.sin_port = htons(atoi(m_csLogonIPPort));
 	m_sockaddr_in.sin_addr.S_un.S_addr = inet_addr(m_csLogonIpAddress);
-
+ 
 // Start and log into the server - this call does not return until it fails or connects
 
 	if( (error=dlg->m_DAStart( dlg->m_hDA, &m_sockaddr_in, dlg->m_threadPriority, m_csLoginName.GetBuffer(), m_csLoginPassword.GetBuffer(), m_szUserName, &m_uRights)) == ERROR_SUCCESS )

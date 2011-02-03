@@ -2,11 +2,52 @@
 #include "MJpegStream.h"
 #include "Observable.h"
 #include "MJpegEvent.h"
-#include "VideoFeedThread.h"
+#include "JpegCameraThread.h"
+#include "CameraDataManager.h"
 
-MJpegStream::MJpegStream(VideoFeedThread* thread) : ostream(_Noinit), Observable()
+namespace mjpeg
 {
-	this->thread = thread;
+	namespace stream
+	{
+		static const string BOUNDARY = "--myboundary\r\n";
+		static const string CONTENT_TYPE = "Content-Type: ";
+		static const string CONTENT_LEN = "Content-Length: ";
+		static const string CR_LF = "\r\n";
+		static const char CR = '\r';
+		static const char LF = '\n';
+	}
+
+	namespace file
+	{
+		//static const string TEMP_DIR = "C:\\tmp";
+		//static const string TEMP_DIR = CameraDataManager::getInstance().getOptions()->pathTemp;
+		static const string SEPARATOR = "\\";
+		static const string BASE_NAME = "mjpeg_file";
+		static const string SUFFIX = ".jpg";
+	}
+};
+
+MJpegStream::MJpegStream(JpegCameraThread* thread) : Observable()
+{	
+	this->vThread = NULL;
+	this->jThread = thread;
+	contentLength = 0;
+	bytesRead = 0;
+	setState(ReadingHeader);
+	setHeaderState(Boundary);
+	lastIsCr = false;
+	headerStringIndex = 0;
+	fileIndex = 1;
+
+#if CURL_DEBUG==1
+	resetCount=0;
+#endif
+}
+
+MJpegStream::MJpegStream(VideoFeedThread* thread) : Observable()
+{
+	this->vThread = thread;
+	this->jThread = NULL;
 	contentLength = 0;
 	bytesRead = 0;
 	setState(ReadingHeader);
@@ -22,14 +63,19 @@ MJpegStream::MJpegStream(VideoFeedThread* thread) : ostream(_Noinit), Observable
 
 MJpegStream::~MJpegStream(void)
 {
-	// TODO
+	if(jpegstream.is_open())
+	{
+		jpegstream.close();
+		CFile::Remove(filename.c_str());
+	}
+
 }
 
 /**
  * This is where the finite state machine begins.  We look at the state
  * of the MJpegStream before we determine where to delegate to...
  */
-ostream& MJpegStream::put(char c)
+MJpegStream& MJpegStream::put(char c)
 {
 	switch(state)
 	{
@@ -64,6 +110,12 @@ ostream& MJpegStream::put(char c)
 				setState(ReadingHeader);
 				resetHeaderState();
 			}
+			break;
+		}
+
+	default:
+		{
+			TRACE("Unknown State");
 			break;
 		}
 	}
@@ -154,7 +206,7 @@ void MJpegStream::parseHeaderField(char &c)
 #if CURL_DEBUG==1
 		if(resetCount>10)
 		{
-			exit(-1);
+			cerr << "problems" << endl;
 		}
 #endif
 	}
@@ -235,7 +287,7 @@ void MJpegStream::createNewFile(char &c)
 	ostringstream fbuilder;
 
 	// Build the string that contains the filename:
-	fbuilder << mjpeg::file::TEMP_DIR 
+	fbuilder << CameraDataManager::getInstance().getOptions()->pathTemp
 		<< mjpeg::file::SEPARATOR 
 		<< mjpeg::file::BASE_NAME
 		<< fileIndex 
@@ -244,8 +296,13 @@ void MJpegStream::createNewFile(char &c)
 	filename = fbuilder.str();
 
 #if CURL_DEBUG==1
-	cout << "Writing to file: " << filename << " - " 
+
+	ostringstream out;
+	out << "Writing to file: " << filename.c_str() << " - " 
 		<< contentLength << " bytes" << endl;
+
+	TRACE(out.str().c_str());
+
 #endif
 
 	jpegstream.open(filename.c_str(), std::ios_base::binary);
@@ -271,12 +328,25 @@ void MJpegStream::readContent(char &c)
 		resetHeaderState();
 
 #if CURL_DEBUG==1
-		cout << "Read " << bytesRead << " bytes" << endl;
+		ostringstream oss;
+		oss << "Read " << bytesRead << " bytes" << endl;
+
+		TRACE(oss.str().c_str());
 #endif
 
 		MJpegEvent *evt = new MJpegEvent(bytesRead, filename);
+		// Alert Listeners always delegates to the base implementation of the
+		// listener interface for some reason...
         //alertListeners(evt);
-		thread->eventOccurred(evt);
+		if(NULL!=vThread)
+		{
+			vThread->eventOccurred(evt);
+		}
+		if(NULL!=jThread)
+		{
+			jThread->eventOccurred(evt);
+		}
+
 		delete evt;
 	}
 }
@@ -290,35 +360,35 @@ void MJpegStream::setState(State state)
 
 #if CURL_DEBUG==1
 	// Debug Printing:
-	cout << "Set State to: ";
+	TRACE("Set State to: ");
 	switch(state)
 	{
 	case ReadingHeader:
 		{
-			cout << "ReadingHeader";
+			TRACE("ReadingHeader");
 			break;
 		}
 
 	case CreatingFile:
 		{
-			cout << "CreatingFile";
+			TRACE("CreatingFile");
 			break;
 		}
 
 	case ReadingContent:
 		{
-			cout << "ReadingContent";
+			TRACE("ReadingContent");
 			break;
 		}
 
 	case PostContent:
 		{
-			cout << "PostContent";
+			TRACE("PostContent");
 			break;
 		}
 	}
 
-	cout << endl;
+	TRACE("\n");
 #endif
 
 }
@@ -332,35 +402,35 @@ void MJpegStream::setHeaderState(HeaderState hState)
 
 #if CURL_DEBUG==1
 	// Debugging output:
-	cout << "Set Header State to: ";
+	TRACE("Set Header State to: ");
 	
 	switch(hState)
 	{
 	case Boundary:
 		{
-			cout << "Boundary";
+			TRACE("Boundary");
 			break;
 		}
 
 	case ContentType:
 		{
-			cout << "ContentType";
+			TRACE("ContentType");
 			break;
 		}
 
 	case ContentLength:
 		{
-			cout << "ContentLength";
+			TRACE("ContentLength");
 			break;
 		}
 
 	case CrLf:
 		{
-			cout << "CrLf";
+			TRACE("CrLf");
 			break;
 		}
 	}
 
-	cout << endl;
+	TRACE("\n");
 #endif
 }
