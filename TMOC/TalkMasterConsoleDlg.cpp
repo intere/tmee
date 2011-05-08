@@ -41,6 +41,9 @@
 #define new DEBUG_NEW
 #endif
 
+
+#define synchronized(M)  for(Lock M##_lock = M; M##_lock; M##_lock.setUnlock())
+
 // CAboutDlg dialog used for App About
 
 class CAboutDlg : public CDialog
@@ -276,7 +279,6 @@ CTalkMasterConsoleDlg::CTalkMasterConsoleDlg(CWnd* pParent /*=NULL*/)
 
 //	m_CWItemDataCount = 0;
 //	m_CWItemData = NULL;
-
 	callsWaiting.data = NULL;
 	callsWaiting.dataSize = 0;
 
@@ -4750,131 +4752,138 @@ void CTalkMasterConsoleDlg::loadImage(const std::string &jpeg)
 		return;
 	}
 
-	USES_CONVERSION;
-
-	CString cstrWidth, cstrHeight, cstrType;
-	UINT uiWidth, uiHeight;
-	UINT thumbWidth, thumbHeight;
-	int iCount = 0;
-	double dRatio;
-
-	RECT rect;
-	BOOL bExists = TRUE;
-
-	std::basic_string<TCHAR> buff = jpeg.c_str();
-
-	// Make sure the image exists
-	CFile file;
-	if (file.Open(buff.c_str(), CFile::modeRead))
+	synchronized(mutex)
 	{
-		file.Close();				
-	} else
-	{
-		bExists = FALSE;
-	}
+		USES_CONVERSION;
 
-	m_cameraPreview.GetClientRect(&rect);
-	rect.left += 1;
-	rect.top += 1;
-	rect.right -= 1;
-	rect.bottom -= 1;
+		CString cstrWidth, cstrHeight, cstrType;
+		UINT uiWidth, uiHeight;
+		UINT thumbWidth, thumbHeight;
+		int iCount = 0;
+		double dRatio;
 
-	if (bExists)
-	{
-		// Use the Image class to display a thumbnail of the image.
-	    Image image(T2CW(buff.c_str()));
+		RECT rect;
+		BOOL bExists = TRUE;
 
-		// Determine the appropriate size of the thumbnail preview
-		// given the image size ratio and the preview window size ratio.
-		uiWidth = image.GetWidth();
-		uiHeight = image.GetHeight();
-		if(uiWidth!=0 && uiHeight!=0)
+		std::basic_string<TCHAR> buff = jpeg.c_str();
+
+		// Make sure the image exists
+		CFile file;
+		if (file.Open(buff.c_str(), CFile::modeRead))
 		{
-			dRatio = ((double)uiWidth)/((double)uiHeight);
+			file.Close();				
+		} else
+		{
+			bExists = FALSE;
+		}
 
-			// If the width is larger than the height of the image, 
-			// set the width of the thumbnail to the width of the preview area
-			// and calculate the thumbnail height by using the ratios.
-			// If the height is larger than the width of the image, 
-			// set the height of the thumbnail to the height of the preview area
-			// and calculate the thumbnail width by using the ratios.
-			if (uiWidth > uiHeight)
-			{
-				thumbWidth = rect.right - rect.left;
-				thumbHeight = (UINT)(thumbWidth/dRatio);
+		m_cameraPreview.GetClientRect(&rect);
+		rect.left += 1;
+		rect.top += 1;
+		rect.right -= 1;
+		rect.bottom -= 1;
 
-				if (thumbHeight == 0) thumbHeight = 1;
-				if (thumbHeight > (UINT)(rect.bottom - rect.top)) thumbHeight = rect.bottom - rect.top;
-			}
-			else
-			{
-				thumbHeight = rect.bottom - rect.top;
-				thumbWidth = (UINT)(uiWidth*thumbHeight/uiHeight);
+		if (bExists)
+		{
+			// Use the Image class to display a thumbnail of the image.
+			Image image(T2CW(buff.c_str()));
 
-				if (thumbWidth == 0) thumbWidth = 1;
-				if (thumbWidth > (UINT)(rect.right - rect.left)) thumbWidth = rect.right - rect.left;
-			}
-			
-			if(m_Thumbnail)
+			Status status = image.GetLastStatus();
+			if(Ok == status)
 			{
-				try
+				// Determine the appropriate size of the thumbnail preview
+				// given the image size ratio and the preview window size ratio.
+				uiWidth = image.GetWidth();
+				uiHeight = image.GetHeight();
+				if(uiWidth!=0 && uiHeight!=0)
 				{
-					delete m_Thumbnail;
-				} catch( ... )
-				{
-					cerr << "Error cleaning up thumbnail image" << endl;
+					dRatio = ((double)uiWidth)/((double)uiHeight);
+
+					// If the width is larger than the height of the image, 
+					// set the width of the thumbnail to the width of the preview area
+					// and calculate the thumbnail height by using the ratios.
+					// If the height is larger than the width of the image, 
+					// set the height of the thumbnail to the height of the preview area
+					// and calculate the thumbnail width by using the ratios.
+					if (uiWidth > uiHeight)
+					{
+						thumbWidth = rect.right - rect.left;
+						thumbHeight = (UINT)(thumbWidth/dRatio);
+
+						if (thumbHeight == 0) thumbHeight = 1;
+						if (thumbHeight > (UINT)(rect.bottom - rect.top)) thumbHeight = rect.bottom - rect.top;
+					}
+					else
+					{
+						thumbHeight = rect.bottom - rect.top;
+						thumbWidth = (UINT)(uiWidth*thumbHeight/uiHeight);
+
+						if (thumbWidth == 0) thumbWidth = 1;
+						if (thumbWidth > (UINT)(rect.right - rect.left)) thumbWidth = rect.right - rect.left;
+					}
+					
+					if(m_Thumbnail)
+					{
+						try
+						{
+							delete m_Thumbnail;
+						} catch( ... )
+						{
+							cerr << "Error cleaning up thumbnail image" << endl;
+						}
+					}
+
+					// Get the thumbnail and display it in the preview control.
+					m_Thumbnail = image.GetThumbnailImage(thumbWidth, thumbHeight, NULL, NULL);
+
+					// Display the image bits per pixel (color depth).
+					switch (image.GetPixelFormat())
+					{
+					case PixelFormat1bppIndexed:
+						cstrType = "Type: 1bpp";
+						break;
+
+					case PixelFormat4bppIndexed:
+						cstrType = "Type: 4bpp";
+						break;
+
+					case PixelFormat8bppIndexed:
+						cstrType = "Type: 8bpp";
+						break;
+
+					case PixelFormat16bppARGB1555: 
+					case PixelFormat16bppGrayScale: 
+					case PixelFormat16bppRGB555: 
+					case PixelFormat16bppRGB565:
+						cstrType = "Type: 16bpp";
+						break;
+
+					case PixelFormat24bppRGB:
+						cstrType = "Type: 24bpp";
+						break;
+
+					case PixelFormat32bppARGB: 
+					case PixelFormat32bppPARGB: 
+					case PixelFormat32bppRGB: 
+						cstrType = "Type: 32bpp";
+						break;
+
+					case PixelFormat48bppRGB:
+						cstrType = "Type: 48bpp";
+						break;
+
+					case PixelFormat64bppARGB: 
+					case PixelFormat64bppPARGB:
+						cstrType = "Type: 64bpp";
+						break;
+
+					default:
+						cstrType = "Type: Unknown";
+						break;
+					}
+					//m_stType.SetWindowText(cstrType);
 				}
 			}
-
-			// Get the thumbnail and display it in the preview control.
-			m_Thumbnail = image.GetThumbnailImage(thumbWidth, thumbHeight, NULL, NULL);
-
-			// Display the image bits per pixel (color depth).
-			switch (image.GetPixelFormat())
-			{
-			case PixelFormat1bppIndexed:
-				cstrType = "Type: 1bpp";
-				break;
-
-			case PixelFormat4bppIndexed:
-				cstrType = "Type: 4bpp";
-				break;
-
-			case PixelFormat8bppIndexed:
-				cstrType = "Type: 8bpp";
-				break;
-
-			case PixelFormat16bppARGB1555: 
-			case PixelFormat16bppGrayScale: 
-			case PixelFormat16bppRGB555: 
-			case PixelFormat16bppRGB565:
-				cstrType = "Type: 16bpp";
-				break;
-
-			case PixelFormat24bppRGB:
-				cstrType = "Type: 24bpp";
-				break;
-
-			case PixelFormat32bppARGB: 
-			case PixelFormat32bppPARGB: 
-			case PixelFormat32bppRGB: 
-				cstrType = "Type: 32bpp";
-				break;
-
-			case PixelFormat48bppRGB:
-				cstrType = "Type: 48bpp";
-				break;
-
-			case PixelFormat64bppARGB: 
-			case PixelFormat64bppPARGB:
-				cstrType = "Type: 64bpp";
-				break;
-
-			default:
-				cstrType = "Type: Unknown";
-				break;
-			}
-			//m_stType.SetWindowText(cstrType);
 		}
 	}
 }
@@ -4891,55 +4900,59 @@ void CTalkMasterConsoleDlg::drawPreview()
 		return;
 	}
 
-	USES_CONVERSION;
-
-	CDC dcMemory, *pDC;
-	RECT rect;
-	BITMAP bm;
-
-	mBitMapBlank.GetBitmap(&bm);
-
-	// Initialize the Graphics class in GDI+.
-	pDC = m_cameraPreview.GetWindowDC();
-
-	if(pDC)
+	synchronized(mutex)
 	{
-		// Fill the preview area with a WHITE background.
-		m_cameraPreview.GetClientRect(&rect);
-		rect.left += 1;
-		rect.top += 1;
-		rect.right -= 1;
-		rect.bottom -= 1;
-		pDC->FillSolidRect(&rect, RGB(255,255,255));
+		USES_CONVERSION;
 
-		if(m_Thumbnail)
+		CDC dcMemory, *pDC;
+		RECT rect;
+		BITMAP bm;
+
+		mBitMapBlank.GetBitmap(&bm);
+
+		// Initialize the Graphics class in GDI+.
+		pDC = m_cameraPreview.GetWindowDC();
+
+		if(pDC)
 		{
-			Graphics graphics(pDC->m_hDC);
-			graphics.Clear(Color::White);
+			// Fill the preview area with a WHITE background.
+			m_cameraPreview.GetClientRect(&rect);
+			rect.left += 1;
+			rect.top += 1;
+			rect.right -= 1;
+			rect.bottom -= 1;
+			pDC->FillSolidRect(&rect, RGB(255,255,255));
 
-			if(m_ThumbWidth==-1)
+			if(m_Thumbnail)
 			{
-				m_ThumbWidth = m_Thumbnail->GetWidth();
-				m_ThumbHeight = m_Thumbnail->GetHeight();
-			}
+				Graphics graphics(pDC->m_hDC);
+				graphics.Clear(Color::White);
 
-			if(m_Thumbnail!=NULL)
-			{
 				try
-				{
-					graphics.DrawImage(m_Thumbnail, 1, 1, m_ThumbWidth, m_ThumbHeight);
+				{				
+					{
+							if(m_ThumbWidth==-1)
+							{
+								m_ThumbWidth = m_Thumbnail->GetWidth();
+								m_ThumbHeight = m_Thumbnail->GetHeight();
+							}
+							if(m_ThumbWidth!=-1)
+							{
+								graphics.DrawImage(m_Thumbnail, 1, 1, m_ThumbWidth, m_ThumbHeight);
+							}
+					}
 				} catch( ... ) 
 				{
 					cerr << "Error drawing image" << endl;
 				}
+			} else
+			{
+				TRACE("NO thumbnail image to render\n");
 			}
-		} else
-		{
-			TRACE("NO thumbnail image to render\n");
+
+
+			if (pDC) ReleaseDC(pDC);  // Release the device context retrieved earlier.
 		}
-
-
-		if (pDC) ReleaseDC(pDC);  // Release the device context retrieved earlier.
 	}
 }
 
@@ -4958,9 +4971,15 @@ UINT CTalkMasterConsoleDlg::run(LPVOID p)
 
 void CTalkMasterConsoleDlg::run()
 {
-	loadImage(jpeg);
-	drawPreview();
-    running = FALSE;
+	try
+	{
+		loadImage(jpeg);
+		drawPreview();
+		running = FALSE;
+	} catch( ... )
+	{
+		TRACE("CTalkMasterConsoleDlg::run() - Caught an exception...");
+	}
 }
 
 
