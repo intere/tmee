@@ -41,9 +41,6 @@
 #define new DEBUG_NEW
 #endif
 
-
-#define synchronized(M)  for(Lock M##_lock = M; M##_lock; M##_lock.setUnlock())
-
 // CAboutDlg dialog used for App About
 
 class CAboutDlg : public CDialog

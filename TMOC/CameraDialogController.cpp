@@ -13,8 +13,6 @@ CameraDialogController::CameraDialogController()
 
 CameraDialogController::~CameraDialogController(void)
 {
-	// TODO - we don't need to destroy the reference to the
-	// Dialog; it's managed outside of this class.
 	if(JpegCameraThread::getThread())
 	{
 		JpegCameraThread::getThread()->KillThread();
@@ -87,7 +85,7 @@ void CameraDialogController::testButtonClicked()
 		thread->KillThread();
 		
 		// 2.  Blank out image
-		// TODO
+		dlg->SetRedraw(TRUE);
 
 		if(!isClosing)
 		{
