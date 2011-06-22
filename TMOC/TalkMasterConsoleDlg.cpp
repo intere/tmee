@@ -1193,7 +1193,7 @@ void CTalkMasterConsoleDlg::OnPaint()
 		{
 			bOnce = TRUE;
 			readTransparent(&mBitMapBlank, (pDC=m_staticLogo.GetDC()));
-			m_staticLogo.ReleaseDC(pDC);
+			m_staticLogo.ReleaseDC(pDC);	
 		}
 
 		drawBitmaps();
@@ -1201,6 +1201,7 @@ void CTalkMasterConsoleDlg::OnPaint()
 		doLogon();
 	}
 }
+
 
 int CTalkMasterConsoleDlg::MessageBox(LPCTSTR lpszText, LPCTSTR lpszCaption, UINT nType)
 {
@@ -4892,11 +4893,13 @@ void CTalkMasterConsoleDlg::setImage(const std::string &jpeg)
 
 void CTalkMasterConsoleDlg::drawPreview()
 {
+	// Don't bother trying to draw if we're exiting...
 	if(m_bAbortControl)
 	{
 		return;
 	}
 
+	// critical area - reading from the image data:
 	synchronized(mutex)
 	{
 		USES_CONVERSION;
@@ -4907,36 +4910,29 @@ void CTalkMasterConsoleDlg::drawPreview()
 
 		mBitMapBlank.GetBitmap(&bm);
 
-		// Initialize the Graphics class in GDI+.
 		pDC = m_cameraPreview.GetWindowDC();
 
 		if(pDC)
 		{
-			// Fill the preview area with a WHITE background.
 			m_cameraPreview.GetClientRect(&rect);
 			rect.left += 1;
 			rect.top += 1;
 			rect.right -= 1;
 			rect.bottom -= 1;
-			pDC->FillSolidRect(&rect, RGB(255,255,255));
 
 			if(m_Thumbnail)
 			{
 				Graphics graphics(pDC->m_hDC);
-				graphics.Clear(Color::White);
-
 				try
 				{				
+					if(m_ThumbWidth==-1)
 					{
-							if(m_ThumbWidth==-1)
-							{
-								m_ThumbWidth = m_Thumbnail->GetWidth();
-								m_ThumbHeight = m_Thumbnail->GetHeight();
-							}
-							if(m_ThumbWidth!=-1)
-							{
-								graphics.DrawImage(m_Thumbnail, 1, 1, m_ThumbWidth, m_ThumbHeight);
-							}
+						m_ThumbWidth = m_Thumbnail->GetWidth();
+						m_ThumbHeight = m_Thumbnail->GetHeight();
+					}
+					if(m_ThumbWidth!=-1)
+					{
+						graphics.DrawImage(m_Thumbnail, 1, 1, m_ThumbWidth, m_ThumbHeight);
 					}
 				} catch( ... ) 
 				{
@@ -4949,6 +4945,9 @@ void CTalkMasterConsoleDlg::drawPreview()
 
 
 			if (pDC) ReleaseDC(pDC);  // Release the device context retrieved earlier.
+		} else
+		{
+			TRACE("pDC was NULL");
 		}
 	}
 }

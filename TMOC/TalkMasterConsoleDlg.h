@@ -35,6 +35,7 @@
 #include <sys/stat.h>
 #include "CameraDataManager.h"
 #include "Mutex.h"
+#include "DoubleBuffer.h"
 
 #include <objidl.h>
 #include <gdiplus.h>

@@ -248,6 +248,9 @@
 				RelativePath=".\DebugThread.cpp">
 			</File>
 			<File
+				RelativePath=".\DoubleBuffer.cpp">
+			</File>
+			<File
 				RelativePath=".\JpegCameraThread.cpp">
 			</File>
 			<File
@@ -353,6 +356,9 @@
 			</File>
 			<File
 				RelativePath=".\DAUnattendedDlg.h">
+			</File>
+			<File
+				RelativePath=".\DoubleBuffer.h">
 			</File>
 			<File
 				RelativePath=".\JpegCameraThread.h">

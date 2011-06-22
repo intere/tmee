@@ -195,7 +195,8 @@ void VideoFeedThread::eventOccurred(MJpegEvent *event)
 		try
 		{
 			CFile::Remove(lastImage.c_str());	
-		} catch(CFileException* ex)
+		//} catch(CFileException* ex)
+		}catch(...)
 		{
 			cerr << "Unable to remove file: " << lastImage.c_str() << endl;
 		}
