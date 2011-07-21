@@ -34,14 +34,13 @@
 #include "SendTextMessage.h"
 #include <sys/stat.h>
 #include "CameraDataManager.h"
+#include "Mutex.h"
 
 #include <objidl.h>
 #include <gdiplus.h>
 #include <string>
 using namespace Gdiplus;
 #pragma comment (lib,"Gdiplus.lib")
-
-
 
 #define	USE_GLOBAL_MEMORY 0
 
@@ -161,6 +160,9 @@ struct _listData
 
 void CallBack( int event, int socket, struct _iComStructure *pIcom, void *eventData, void *myData );
 int findIntercom(struct _iComStructure *pIcom);
+
+
+
 
 // CTalkMasterConsoleDlg dialog
 class CTalkMasterConsoleDlg : public CDialog
@@ -367,6 +369,8 @@ protected:
 
 	CWnd m_cameraPreview;			/* Preview window. */
 	Image* m_Thumbnail;				/* Thumbnail Image.  */
+	bool imageLoading;
+	Mutex mutex;
 	int m_ThumbWidth;	// width of the thumbnail image
 	int m_ThumbHeight;	// height of the thumbnail image.
 

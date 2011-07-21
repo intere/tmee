@@ -9,7 +9,7 @@
 #include "Observable.h"
 #include "VideoFeedThread.h"
 
-#define CURL_DEBUG 1
+#define CURL_DEBUG 0
 
 using namespace std;
 

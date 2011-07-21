@@ -260,6 +260,9 @@
 				RelativePath=".\MJpegStream.cpp">
 			</File>
 			<File
+				RelativePath=".\Mutex.cpp">
+			</File>
+			<File
 				RelativePath=".\PleaseWaitDlg.cpp">
 			</File>
 			<File
@@ -352,6 +355,9 @@
 				RelativePath=".\DAUnattendedDlg.h">
 			</File>
 			<File
+				RelativePath=".\DoubleBuffer.h">
+			</File>
+			<File
 				RelativePath=".\JpegCameraThread.h">
 			</File>
 			<File
@@ -362,6 +368,9 @@
 			</File>
 			<File
 				RelativePath=".\MJpegStream.h">
+			</File>
+			<File
+				RelativePath=".\Mutex.h">
 			</File>
 			<File
 				RelativePath=".\Observable.h">
