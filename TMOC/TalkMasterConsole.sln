@@ -1,0 +1,104 @@
+Microsoft Visual Studio Solution File, Format Version 8.00
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "TalkMasterConsole", "TalkMasterConsole.vcproj", "{426C9BB1-6C37-4E71-86C6-91680857BB48}"
+	ProjectSection(ProjectDependencies) = postProject
+	EndProjectSection
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "LOCTest", "LOCTest\LOCTest.vcproj", "{8468990D-E5DA-448E-B9E3-805FF685DD9F}"
+	ProjectSection(ProjectDependencies) = postProject
+	EndProjectSection
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "French", "French\French.vcproj", "{8F240ACE-E6D9-4BC9-8C99-70C0DAE889DB}"
+	ProjectSection(ProjectDependencies) = postProject
+	EndProjectSection
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Italian", "Italian\Italian.vcproj", "{D2486590-BFBA-4702-8B93-C68210A60848}"
+	ProjectSection(ProjectDependencies) = postProject
+	EndProjectSection
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "German", "German\German.vcproj", "{9BDC7558-4FCD-4B2A-A392-066B977D8A63}"
+	ProjectSection(ProjectDependencies) = postProject
+	EndProjectSection
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Spanish", "Spanish\Spanish.vcproj", "{45AFD04B-0E2F-4107-9B1C-DCEEE714A6F9}"
+	ProjectSection(ProjectDependencies) = postProject
+	EndProjectSection
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Portuguese", "Portuguese\Portuguese.vcproj", "{F8EB53D3-001D-436C-8BBB-C32691BDA1FF}"
+	ProjectSection(ProjectDependencies) = postProject
+	EndProjectSection
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Dutch", "Dutch\Dutch.vcproj", "{08331B05-FCBD-42BB-B03C-133C553942BC}"
+	ProjectSection(ProjectDependencies) = postProject
+	EndProjectSection
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Testlanguage", "Testlanguage\Testlanguage.vcproj", "{5B44FF34-7A7C-49FE-A077-C4437C925D15}"
+	ProjectSection(ProjectDependencies) = postProject
+	EndProjectSection
+EndProject
+Global
+	GlobalSection(SolutionConfiguration) = preSolution
+		Debug = Debug
+		Primex Release = Primex Release
+		Release = Release
+	EndGlobalSection
+	GlobalSection(ProjectConfiguration) = postSolution
+		{426C9BB1-6C37-4E71-86C6-91680857BB48}.Debug.ActiveCfg = Debug|Win32
+		{426C9BB1-6C37-4E71-86C6-91680857BB48}.Debug.Build.0 = Debug|Win32
+		{426C9BB1-6C37-4E71-86C6-91680857BB48}.Primex Release.ActiveCfg = Primex Release|Win32
+		{426C9BB1-6C37-4E71-86C6-91680857BB48}.Primex Release.Build.0 = Primex Release|Win32
+		{426C9BB1-6C37-4E71-86C6-91680857BB48}.Release.ActiveCfg = Release|Win32
+		{426C9BB1-6C37-4E71-86C6-91680857BB48}.Release.Build.0 = Release|Win32
+		{8468990D-E5DA-448E-B9E3-805FF685DD9F}.Debug.ActiveCfg = Debug|Win32
+		{8468990D-E5DA-448E-B9E3-805FF685DD9F}.Debug.Build.0 = Debug|Win32
+		{8468990D-E5DA-448E-B9E3-805FF685DD9F}.Primex Release.ActiveCfg = Release|Win32
+		{8468990D-E5DA-448E-B9E3-805FF685DD9F}.Primex Release.Build.0 = Release|Win32
+		{8468990D-E5DA-448E-B9E3-805FF685DD9F}.Release.ActiveCfg = Release|Win32
+		{8468990D-E5DA-448E-B9E3-805FF685DD9F}.Release.Build.0 = Release|Win32
+		{8F240ACE-E6D9-4BC9-8C99-70C0DAE889DB}.Debug.ActiveCfg = Debug|Win32
+		{8F240ACE-E6D9-4BC9-8C99-70C0DAE889DB}.Debug.Build.0 = Debug|Win32
+		{8F240ACE-E6D9-4BC9-8C99-70C0DAE889DB}.Primex Release.ActiveCfg = Release|Win32
+		{8F240ACE-E6D9-4BC9-8C99-70C0DAE889DB}.Primex Release.Build.0 = Release|Win32
+		{8F240ACE-E6D9-4BC9-8C99-70C0DAE889DB}.Release.ActiveCfg = Release|Win32
+		{8F240ACE-E6D9-4BC9-8C99-70C0DAE889DB}.Release.Build.0 = Release|Win32
+		{D2486590-BFBA-4702-8B93-C68210A60848}.Debug.ActiveCfg = Debug|Win32
+		{D2486590-BFBA-4702-8B93-C68210A60848}.Debug.Build.0 = Debug|Win32
+		{D2486590-BFBA-4702-8B93-C68210A60848}.Primex Release.ActiveCfg = Release|Win32
+		{D2486590-BFBA-4702-8B93-C68210A60848}.Primex Release.Build.0 = Release|Win32
+		{D2486590-BFBA-4702-8B93-C68210A60848}.Release.ActiveCfg = Release|Win32
+		{D2486590-BFBA-4702-8B93-C68210A60848}.Release.Build.0 = Release|Win32
+		{9BDC7558-4FCD-4B2A-A392-066B977D8A63}.Debug.ActiveCfg = Debug|Win32
+		{9BDC7558-4FCD-4B2A-A392-066B977D8A63}.Debug.Build.0 = Debug|Win32
+		{9BDC7558-4FCD-4B2A-A392-066B977D8A63}.Primex Release.ActiveCfg = Release|Win32
+		{9BDC7558-4FCD-4B2A-A392-066B977D8A63}.Primex Release.Build.0 = Release|Win32
+		{9BDC7558-4FCD-4B2A-A392-066B977D8A63}.Release.ActiveCfg = Release|Win32
+		{9BDC7558-4FCD-4B2A-A392-066B977D8A63}.Release.Build.0 = Release|Win32
+		{45AFD04B-0E2F-4107-9B1C-DCEEE714A6F9}.Debug.ActiveCfg = Debug|Win32
+		{45AFD04B-0E2F-4107-9B1C-DCEEE714A6F9}.Debug.Build.0 = Debug|Win32
+		{45AFD04B-0E2F-4107-9B1C-DCEEE714A6F9}.Primex Release.ActiveCfg = Release|Win32
+		{45AFD04B-0E2F-4107-9B1C-DCEEE714A6F9}.Primex Release.Build.0 = Release|Win32
+		{45AFD04B-0E2F-4107-9B1C-DCEEE714A6F9}.Release.ActiveCfg = Release|Win32
+		{45AFD04B-0E2F-4107-9B1C-DCEEE714A6F9}.Release.Build.0 = Release|Win32
+		{F8EB53D3-001D-436C-8BBB-C32691BDA1FF}.Debug.ActiveCfg = Debug|Win32
+		{F8EB53D3-001D-436C-8BBB-C32691BDA1FF}.Debug.Build.0 = Debug|Win32
+		{F8EB53D3-001D-436C-8BBB-C32691BDA1FF}.Primex Release.ActiveCfg = Release|Win32
+		{F8EB53D3-001D-436C-8BBB-C32691BDA1FF}.Primex Release.Build.0 = Release|Win32
+		{F8EB53D3-001D-436C-8BBB-C32691BDA1FF}.Release.ActiveCfg = Release|Win32
+		{F8EB53D3-001D-436C-8BBB-C32691BDA1FF}.Release.Build.0 = Release|Win32
+		{08331B05-FCBD-42BB-B03C-133C553942BC}.Debug.ActiveCfg = Debug|Win32
+		{08331B05-FCBD-42BB-B03C-133C553942BC}.Debug.Build.0 = Debug|Win32
+		{08331B05-FCBD-42BB-B03C-133C553942BC}.Primex Release.ActiveCfg = Release|Win32
+		{08331B05-FCBD-42BB-B03C-133C553942BC}.Primex Release.Build.0 = Release|Win32
+		{08331B05-FCBD-42BB-B03C-133C553942BC}.Release.ActiveCfg = Release|Win32
+		{08331B05-FCBD-42BB-B03C-133C553942BC}.Release.Build.0 = Release|Win32
+		{5B44FF34-7A7C-49FE-A077-C4437C925D15}.Debug.ActiveCfg = Debug|Win32
+		{5B44FF34-7A7C-49FE-A077-C4437C925D15}.Debug.Build.0 = Debug|Win32
+		{5B44FF34-7A7C-49FE-A077-C4437C925D15}.Primex Release.ActiveCfg = Release|Win32
+		{5B44FF34-7A7C-49FE-A077-C4437C925D15}.Primex Release.Build.0 = Release|Win32
+		{5B44FF34-7A7C-49FE-A077-C4437C925D15}.Release.ActiveCfg = Release|Win32
+		{5B44FF34-7A7C-49FE-A077-C4437C925D15}.Release.Build.0 = Release|Win32
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+	EndGlobalSection
+	GlobalSection(ExtensibilityAddIns) = postSolution
+	EndGlobalSection
+EndGlobal
