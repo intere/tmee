@@ -591,7 +591,7 @@ int CTalkMasterConsoleDlg::selectCQRow(int row, BOOL bSetItemState)
 					if( bTalking )						// Stop it!
 					{
 						bTalkRequest = FALSE;
-						while(bTalking)
+						while(bTalking || inCommandCount)
 						{
 							bTalkRequest = FALSE;
 							bListenRequest = FALSE;
@@ -610,7 +610,7 @@ int CTalkMasterConsoleDlg::selectCQRow(int row, BOOL bSetItemState)
 					if( bListening )
 					{
 						bListenRequest = FALSE;
-						while(bListening)
+						while(bListening || inCommandCount)
 						{
 							bTalkRequest = FALSE;
 							bListenRequest = FALSE;
@@ -626,7 +626,7 @@ int CTalkMasterConsoleDlg::selectCQRow(int row, BOOL bSetItemState)
 					if( bSessionRequest )						// Trying to start a sessoin
 					{
 						bSession = TRUE;
-						while(bSession)
+						while(bSession||inCommandCount)
 						{
 							bTalkRequest = FALSE;
 							bListenRequest = FALSE;

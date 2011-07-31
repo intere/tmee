@@ -570,7 +570,7 @@ void CTalkMasterConsoleApp::OnFileLogoff()
 		if( dlg->bTalking )
 		{
 			dlg->bTalkRequest = FALSE;
-			while( dlg->bTalking )
+			while( dlg->bTalking || dlg->inCommandCount )
 				dlg->DoEvents();
 
 	//		dlg->endTalk();
@@ -579,7 +579,7 @@ void CTalkMasterConsoleApp::OnFileLogoff()
 		if( dlg->bListening )
 		{
 			dlg->bListenRequest = FALSE;
-			while(dlg->bListening)
+			while(dlg->bListening || dlg->inCommandCount)
 				dlg->DoEvents();
 	//		dlg->endListen();
 		}

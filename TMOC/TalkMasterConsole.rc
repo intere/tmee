@@ -338,6 +338,21 @@ BEGIN
     EDITTEXT        IDC_EDIT_TEST_LOGON_PASSWORD,61,31,118,12,ES_AUTOHSCROLL
 END
 
+IDD_DIALOG_TEST_RTP DIALOGEX 0, 0, 186, 90
+STYLE DS_SETFONT | DS_MODALFRAME | DS_FIXEDSYS | WS_POPUP | WS_CAPTION | 
+    WS_SYSMENU
+CAPTION "Test RTP Speaker From"
+FONT 8, "MS Shell Dlg", 400, 0, 0x1
+BEGIN
+    DEFPUSHBUTTON   "Start",IDOK,64,69,50,14
+    PUSHBUTTON      "Cancel",IDCANCEL,129,69,50,14
+    RTEXT           "IP Address of Audio Source",IDC_STATIC,7,16,88,8
+    RTEXT           "Port of Audio Source",IDC_STATIC,7,31,88,8
+    EDITTEXT        IDC_EDIT_RTP_SPEAKER_FROM_IP,109,13,70,14,ES_AUTOHSCROLL
+    EDITTEXT        IDC_EDIT_RTP_SPEAKER_FROM_PORT,109,29,40,14,
+                    ES_AUTOHSCROLL
+END
+
 
 /////////////////////////////////////////////////////////////////////////////
 //
@@ -384,9 +399,18 @@ END
 
 
 
+
+
+
+
+
+
+
+
+
 VS_VERSION_INFO VERSIONINFO
-FILEVERSION 2,0,0,6
-PRODUCTVERSION 2,0,0,6
+FILEVERSION 2,0,2,1
+PRODUCTVERSION 2,0,2,1
 FILEFLAGSMASK 0x3FL
 FILEFLAGS 0x00L
 FILEOS 0x40004L
@@ -399,9 +423,9 @@ BEGIN
          BEGIN
               VALUE "CompanyName", "Digital Acoustics, LLC\0"
               VALUE "FileDescription", "TalkMaster EE\0"
-              VALUE "FileVersion", "2.0.0.6\0"
+              VALUE "FileVersion", "2.0.2.1\0"
               VALUE "InternalName", "TalkMaster.exe\0"
-              VALUE "LegalCopyright", "(c) Digital Acoustics, LLC 2004-2009.  All rights reserved.\0"
+              VALUE "LegalCopyright", "(c) Digital Acoustics, LLC 2004-2010.  All rights reserved.\0"
               VALUE "OriginalFilename", "TalkMaster.exe\0"
               VALUE "ProductName", "TalkMaster EE\0"
               VALUE "ProductVersion", "1.0.0.1\0"
@@ -493,6 +517,14 @@ BEGIN
         TOPMARGIN, 7
         BOTTOMMARGIN, 75
     END
+
+    IDD_DIALOG_TEST_RTP, DIALOG
+    BEGIN
+        LEFTMARGIN, 7
+        RIGHTMARGIN, 179
+        TOPMARGIN, 7
+        BOTTOMMARGIN, 83
+    END
 END
 #endif    // APSTUDIO_INVOKED
 
@@ -534,6 +566,7 @@ BEGIN
         MENUITEM SEPARATOR
         MENUITEM "Send Text &Message",          ID_TOOLS_SENDTEXTMESSAGE
         MENUITEM "Test Console DLL",            ID_TOOLS_TESTCONSOLEDLL
+        MENUITEM "Test RTP Speaker From",       ID_TOOLS_TESTRTPSPEAKERFROM
         MENUITEM SEPARATOR
         MENUITEM "Configure Intercoms",         ID_TOOLS_CONFIGUREINTERCOMS
         MENUITEM "Reset All Connections",       ID_TOOLS_RESETALLCONNECTIONS
@@ -720,11 +753,13 @@ BEGIN
     IDS_STRING112           "Intercom Currently Playing Audio"
     IDS_STRING113           "You must select a connected intercom"
     IDS_STRING114           "Intercom Not Connected"
-    IDS_STRING115           "You must select an idle intercom to Listen"
-    IDS_STRING116           "Intercom Busy"
+    IDS_STRING_MUST_SELECT_IDLE_ICOM 
+                            "You must select an idle intercom to Listen"
+    IDS_STRING_INTERCOM_BUSY "Intercom Busy"
     IDS_STRING117           "Could not get intercom session"
     IDS_STRING_SELECT_ICOM  "You must select an intercom first"
-    IDS_STRING119           "You must select an idle intercom to Talk"
+    IDS_STRING_MUST_SELECT_IDLE_TO_TALK 
+                            "You must select an idle intercom to Talk"
     IDS_STRING120           "No intercoms are currently selected in a group"
     IDS_STRING121           "Intercoms not selected"
     IDS_STRING122           "Intercom Currently Playing Audio"

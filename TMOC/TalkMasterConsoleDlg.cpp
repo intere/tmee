@@ -25,6 +25,7 @@
 #include "AnnounceDlg.h"
 #include "SendTextMessage.h"
 #include "TestLogonDlg.h"
+#include "TestRTPSpeakerFromDlg.h"
 
 #include "utility.h"
 #include "windows.h"
@@ -153,7 +154,7 @@ CTalkMasterConsoleDlg::CTalkMasterConsoleDlg(CWnd* pParent /*=NULL*/)
 // end code jock code
 #endif	// __SKINS
 
-	strcpy( m_UserData, _T("Jon") );
+	strcpy( m_UserData, _T("User1") );
 
 	InitializeCriticalSection(&CriticalSection);
 	InitializeCriticalSection(&CriticalSectionCallQueue);
@@ -192,6 +193,8 @@ CTalkMasterConsoleDlg::CTalkMasterConsoleDlg(CWnd* pParent /*=NULL*/)
 	m_mainMode = TALK_SELECTED;
 	m_ListenMode = 0;
 	m_TalkMode = 0;
+
+	inCommandCount = 0;
 
 	bTalking = FALSE;
 	bListening = FALSE;
@@ -492,6 +495,7 @@ BEGIN_MESSAGE_MAP(CTalkMasterConsoleDlg, CDialog)
 	ON_BN_CLICKED(IDC_BUTTON_SESSION_START, OnBnClickedButtonSessionStart)
 	ON_BN_CLICKED(IDC_BUTTON_SESSION_END, OnBnClickedButtonSessionEnd)
 	ON_COMMAND(ID_TOOLS_TESTCONSOLEDLL, OnToolsTestconsoledll)
+	ON_COMMAND(ID_TOOLS_TESTRTPSPEAKERFROM, OnToolsTestrtpspeakerfrom)
 END_MESSAGE_MAP()
 
 // CTalkMasterConsoleDlg message handlers
@@ -802,7 +806,7 @@ BOOL CTalkMasterConsoleDlg::OnInitDialog()
 
 	m_listCallsWaiting.SetImageList( &m_imageListCQ, LVSIL_SMALL );
 
-	m_listIcoms.SetItemCount(1024);
+	m_listIcoms.SetItemCount(1500);
 
 	m_hookKb = SetWindowsHookEx(WH_KEYBOARD, KeyboardProc, (HINSTANCE) NULL, GetCurrentThreadId()); 
 
@@ -919,15 +923,18 @@ void CTalkMasterConsoleDlg::doCancel()		// This is a public version that calls t
 			{
 				if( bTalking )
 				{
-					endTalk(m_sessionSocket);
-					bTalking = FALSE;
+					bTalkRequest = FALSE;
+					while( bTalking || inCommandCount )
+						DoEvents();
 
 					Sleep(500);
 				}
+
 				if( bListening )
 				{
-					endListen(m_sessionSocket);
-					bListening = FALSE;
+					bListenRequest = FALSE;
+					while(bListening || inCommandCount)
+						DoEvents();
 
 					Sleep(500);
 				}
@@ -1754,6 +1761,8 @@ void CTalkMasterConsoleDlg::OnTimer(UINT nIDEvent)
 		doPostInit();
 	else if( nIDEvent == TIMER_UPDATE_READY)
 		doGetSettingsUpdate();
+	else if( nIDEvent == TIMER_UPDATE_RELEASE )
+		doReleaseSettingsUpdate();
 	else if( nIDEvent == TIMER_WORK )
 		doWork();
 	else if( nIDEvent == TIMER_RING )
@@ -1993,7 +2002,7 @@ void CTalkMasterConsoleDlg::OnBtnUpButtonListen()
 
 		bListenRequest = FALSE;								// But Listen = YES
 
-		while( bListening )
+		while( bListening || inCommandCount )
 			DoEvents();
 	}
 	else
@@ -2015,7 +2024,7 @@ void CTalkMasterConsoleDlg::OnBtnUpButtonListen()
 				bSessionRequest = FALSE;
 				bSession = TRUE;
 
-				while( bSession )
+				while( bSession || inCommandCount )
 				{
 					bSessionRequest = FALSE;
 					DoEvents();
@@ -2026,7 +2035,7 @@ void CTalkMasterConsoleDlg::OnBtnUpButtonListen()
 
 		bListenRequest = TRUE;
 
-		while( !bListening && bListenRequest )
+		while( (!bListening && bListenRequest) || inCommandCount )
 		{
 			DoEvents();
 			Sleep(0);
@@ -2075,13 +2084,16 @@ void CTalkMasterConsoleDlg::OnBtnUpButtonTalk()
 		else
 			bListenRequest = FALSE;
 
-		while( bTalking )						// Seems to kee
+		while( bTalking || inCommandCount )						// Seems to kee
 			DoEvents();
 	}
 	else
 	{
 		if( bTalking )
 		{
+			if( m_tabMain.GetCurSel() == 1 )
+				m_tabMain.EnableWindow(TRUE);
+
 			bTalkRequest = FALSE;
 
 			if( m_TalkMode == TALK_SELECTED &&
@@ -2091,15 +2103,20 @@ void CTalkMasterConsoleDlg::OnBtnUpButtonTalk()
 			else
 				bListenRequest = FALSE;
 
-			while( bTalking )
+			while( bTalking || inCommandCount )
 				DoEvents();
 		}
 		else
 		{
+			if( m_tabMain.GetCurSel() == 1 )
+				m_tabMain.EnableWindow(FALSE);
+
 			bTalkRequest = TRUE;
 			bListenRequest = FALSE;
-			while( !bTalking )
+			while( (!bTalking && bTalkRequest) || inCommandCount )
+			{
 				DoEvents();
+			}
 		}
 
 		outputDebug(_T("OnBtnUpButtonTalk: noPTT, bTalkRequest %s"), (bTalkRequest)?_T("Set"):_T("Cleared"));
@@ -2152,8 +2169,10 @@ void CTalkMasterConsoleDlg::OnKeyDown(UINT nChar,UINT nRepCnt,UINT nFlags)
 		outputDebug(_T("OnKeyDown: bTalkRequest Set"));
 		bTalkRequest = TRUE;
 
-		while( !bTalking )
+		while( !bTalking || inCommandCount )
 			DoEvents();
+
+		outputDebug(_T("OnKeyDown: bTalking == TRUE"));
 #endif
 	}
 #endif
@@ -2234,7 +2253,7 @@ BOOL CTalkMasterConsoleDlg::waitClear(int socket, unsigned fromStatus)
 		return(TRUE);
 	}
 
-	outputDebug(_T("waitClear: Waiting for socket %d to clear from status %s (%d). Current status is %s (%d)"),
+	outputDebug(_T("waitClear: Waiting for socket %d to clear from status %s (%d). Current status is %s (0x%x)"),
 		socket, szStatus(fromStatus, buffer), fromStatus, szStatus(tItemData->iCom.status, buffer2), tItemData->iCom.status );
 
 	if( (tItemData->iCom.status&STATUS_MASK) == STATUS_IDLE )
@@ -2310,7 +2329,9 @@ BOOL CTalkMasterConsoleDlg::waitSet(int socket, unsigned toStatus)
 
 		if( count > ((bSlow)?400:200) )				// 1 seconds to wait???  too long
 		{
-			outputDebug(_T("waitSet: Timed out waiting - status = %s"), szStatus(tItemData->iCom.status, buffer));
+			outputDebug(_T("waitSet: Timed out waiting for status %s, status = %s"), 
+				szStatus(toStatus, buffer), 
+				szStatus(tItemData->iCom.status, buffer));
 
 //			else if( toStatus == STATUS_LISTENING || tItemData->iCom.status == STATUS_LISTENING )
 			{
@@ -2331,7 +2352,9 @@ BOOL CTalkMasterConsoleDlg::waitSet(int socket, unsigned toStatus)
 
 //			waitClear(socket);
 
-			outputDebug(_T("waitSet: Timeout waiting for set"));
+			outputDebug(_T("waitSet: Timeout waiting for set to status %s"), 
+				szStatus(toStatus, buffer));
+
 			return(FALSE);
 		}
 	}
@@ -2971,6 +2994,7 @@ void CTalkMasterConsoleDlg::resetDialog()
 	m_selectedRow = -1;				// None of the list is selected
 	m_pSelectedItem = NULL;
 	m_pReleasedItem = NULL;
+	m_bHeldSessionSocket = FALSE;
 	m_sessionSocket = 0;			// Not in a session with an intercom
 
 	m_ListenMode = 0;
@@ -2982,6 +3006,8 @@ void CTalkMasterConsoleDlg::resetDialog()
 	doSize();
 
 	m_bConsoleReady = FALSE;		// We have not connected yet
+
+	inCommandCount = 0;
 
 	bTalking = FALSE;
 	bTalkRequest = FALSE;
@@ -3064,6 +3090,8 @@ void CTalkMasterConsoleDlg::resetHoldEnd()
 	if( m_bHeldSessionSocket )
 		m_sessionSocket = m_holdSessionSocket;
 
+	m_bHeldSessionSocket = FALSE;
+
 	m_btnSessionEnd.EnableWindow(m_bSaveEnd);
 	m_btnSessionHold.EnableWindow(m_bSaveHold);
 }
@@ -3085,6 +3113,7 @@ void CTalkMasterConsoleDlg::doBnClickedButtonEnd(BOOL skipDeselect)
 		OnBnClickedButtonStop();
 
 	m_sessionDead = TRUE;
+	bNoRestart = TRUE;								// Don't let the received data restart the listen
 
 	if( m_sessionSocket )
 		tCQItemData = getCQItemDataFromSocket(m_sessionSocket);
@@ -3102,12 +3131,12 @@ void CTalkMasterConsoleDlg::doBnClickedButtonEnd(BOOL skipDeselect)
 		}
 		else									// Half Duplex Stopping
 		{
-			bTalkRequest = FALSE;
-			bListenRequest = FALSE;
+//			bTalkRequest = FALSE;
+//			bListenRequest = FALSE;
 
-			if( bTalking )
+			if( bTalking || inCommandCount )
 			{
-				while( bTalking )
+				while( bTalking || bListening || inCommandCount )		// While any state or in the command, wait for no state and not in a change command
 				{
 					bTalkRequest = FALSE;
 					bListenRequest = FALSE;
@@ -3117,9 +3146,10 @@ void CTalkMasterConsoleDlg::doBnClickedButtonEnd(BOOL skipDeselect)
 
 				lockControls(FALSE, FALSE, FALSE, FALSE, FALSE, FALSE, FALSE, FALSE);		// LOCK Talk, Listen, Chime, PlayFile, Radio Buttons
 			}
-			if( bListening )
+
+			if( bListening || inCommandCount )
 			{
-				while(bListening)					// This is the loop where we die.  jdnjdnjdn
+				while(bListening || bTalking || inCommandCount)					// This is the loop where we die.  jdnjdnjdn
 				{
 					bTalkRequest = FALSE;
 					bListenRequest = FALSE;
@@ -3143,7 +3173,7 @@ void CTalkMasterConsoleDlg::doBnClickedButtonEnd(BOOL skipDeselect)
 				bSessionRequest = FALSE;
 				bSession = TRUE;
 
-				while( bSession )
+				while( bSession || inCommandCount )
 				{
 					bTalkRequest = FALSE;
 					bListenRequest = FALSE;
@@ -3252,6 +3282,8 @@ void CTalkMasterConsoleDlg::OnBnClickedButtonHold()
 	}
 	else
 	{
+		bNoRestart = TRUE;									// Put us into the special "HOLD" where we Don't go into LISTEN on an auto-listen from TALK if we are HOLDing
+
 		tItemData = findItemData(m_sessionSocket);
 
 		if( tItemData && tItemData->bLocalRecord )
@@ -3269,7 +3301,7 @@ void CTalkMasterConsoleDlg::OnBnClickedButtonHold()
 
 				if( bTalking )
 				{
-					while( bTalking )
+					while( bTalking || inCommandCount )
 					{
 						bTalkRequest = FALSE;
 						bListenRequest = FALSE;
@@ -3281,7 +3313,7 @@ void CTalkMasterConsoleDlg::OnBnClickedButtonHold()
 				}
 				else if (bListening)
 				{
-					while( bListening )
+					while( bListening || inCommandCount )
 					{
 						bTalkRequest = FALSE;
 						bListenRequest = FALSE;
@@ -3373,11 +3405,11 @@ void CTalkMasterConsoleDlg::updateMenus(UINT flags)
 			sub->RemoveMenu(0, MF_BYPOSITION);
 
 			sub = menu->GetSubMenu(2);
-			sub->RemoveMenu(6, MF_BYPOSITION);			// 5 now that there is a send text menu item
-			sub->RemoveMenu(6, MF_BYPOSITION);
-			sub->RemoveMenu(6, MF_BYPOSITION);
-			sub->RemoveMenu(6, MF_BYPOSITION);
-			sub->RemoveMenu(6, MF_BYPOSITION);
+			sub->RemoveMenu(7, MF_BYPOSITION);			// 5 now that there is a send text menu item
+			sub->RemoveMenu(7, MF_BYPOSITION);
+			sub->RemoveMenu(7, MF_BYPOSITION);
+			sub->RemoveMenu(7, MF_BYPOSITION);
+			sub->RemoveMenu(7, MF_BYPOSITION);
 
 			sub = menu->GetSubMenu(4);
 			sub->RemoveMenu(5, MF_BYPOSITION);
@@ -3402,6 +3434,7 @@ void CTalkMasterConsoleDlg::updateMenus(UINT flags)
 	if( _stat("c:\\DATestFile.txt", &fileStat) != 0 )
 	{
 		sub = menu->GetSubMenu(2);			// Tools menu
+		sub->RemoveMenu(3, MF_BYPOSITION);
 		sub->RemoveMenu(3, MF_BYPOSITION);
 		sub->RemoveMenu(3, MF_BYPOSITION);
 		sub->RemoveMenu(3, MF_BYPOSITION);
@@ -3879,7 +3912,7 @@ void CTalkMasterConsoleDlg::OnNMClickListCallsWaiting(NMHDR *pNMHDR, LRESULT *pR
 
 	if( m_tabMain.GetCurSel() == 1 )
 	{
-		if( m_playFileSocket == 0 )
+		if( m_playFileSocket == 0 && bTalking == FALSE )
 		{
 			m_tabMain.SetCurSel(0);
 			displayTabMain();
@@ -3930,8 +3963,9 @@ void CTalkMasterConsoleDlg::shutDownIcomAndHold()
 
 				bTalkRequest = FALSE;
 				bListenRequest = FALSE;
+				bNoRestart = TRUE;						// Don't allow a Listen Restart to occur
 
-				while(bTalking)
+				while(bTalking || inCommandCount)
 				{
 					bTalkRequest = FALSE;
 					bListenRequest = FALSE;
@@ -3958,7 +3992,7 @@ void CTalkMasterConsoleDlg::shutDownIcomAndHold()
 					if( bReleaseRequest )
 						outputDebug("shutDownIcomAndHold: Releasing session %d", m_nReleaseSocket);
 
-					while( bReleaseRequest )
+					while( bReleaseRequest || inCommandCount )
 					{
 						bTalkRequest = FALSE;
 						bListenRequest = FALSE;
@@ -3977,7 +4011,7 @@ void CTalkMasterConsoleDlg::shutDownIcomAndHold()
 				DoEvents();
 				Sleep(0);
 
-				while(bListening)
+				while(bListening||inCommandCount)
 				{
 					bTalkRequest = FALSE;
 					bListenRequest = FALSE;
@@ -4002,7 +4036,7 @@ void CTalkMasterConsoleDlg::shutDownIcomAndHold()
 				bSession = TRUE;
 				bSessionRequest = FALSE;
 
-				while( bSession )
+				while( bSession || inCommandCount )
 				{
 					bSessionRequest = FALSE;
 
@@ -4039,7 +4073,7 @@ void CTalkMasterConsoleDlg::shutDownIcomAndHold()
 				bListenRequest = FALSE;
 				bTalkRequest = FALSE;			// Shut this down
 
-				while( m_sessionSocket )
+				while( m_sessionSocket || inCommandCount )
 					DoEvents();
 
 //				m_DASelectIntercom( m_hDA, m_sessionSocket, FALSE, NULL );
@@ -4331,7 +4365,7 @@ void CTalkMasterConsoleDlg::doFdxStartStop()
 		bListenRequest = FALSE;								// The way the control thread works is we "request" it to do stuff for us
 		bTalkRequest = FALSE;								// and then we wait for it to be done
 
-		while( bTalking || bListening )						// While we are still waiting for both Talk and Listen to end
+		while( bTalking || bListening || inCommandCount )	// While we are still waiting for both Talk and Listen to end
 		{
 			DoEvents();										// Allow other messages to be processed
 			Sleep(1);										// Allow other threads to be run
@@ -4344,7 +4378,7 @@ void CTalkMasterConsoleDlg::doFdxStartStop()
 		{
 			bReleaseRequest = TRUE;							// Ask the release control thread code to release this socket (set above)
 
-			while( bReleaseRequest )						// While we are waiting for the release to complete
+			while( bReleaseRequest || inCommandCount )		// While we are waiting for the release to complete
 			{
 				DoEvents();									// Allow other messages to be processed
 				Sleep(1);									// Allow the control thread to finish
@@ -4368,7 +4402,7 @@ void CTalkMasterConsoleDlg::doFdxStartStop()
 
 		if( (m_pSelectedItem->iCom.status&STATUS_MASK) != STATUS_IDLE )
 		{
-			MessageBox(_T(getResourceString(IDS_STRING115)), _T(getResourceString(IDS_STRING116)));
+			MessageBox(_T(getResourceString(IDS_STRING_MUST_SELECT_IDLE_ICOM)), _T(getResourceString(IDS_STRING_INTERCOM_BUSY)));
 			return;
 		}
 
@@ -4414,7 +4448,7 @@ void CTalkMasterConsoleDlg::doFdxStartStop()
 		bTalkRequest = TRUE;									// We are trying to start the Talk and the Listen (FDX)
 		bListenRequest = TRUE;									// Setting these requests causes the control thread to start up both talk and listen
 
-		while( !bTalking || !bListening )						// Wait for both the Talk and the Listen to start
+		while( !bTalking || !bListening || inCommandCount )		// Wait for both the Talk and the Listen to start
 		{
 			DoEvents();											// While waiting, process other messages
 			Sleep(1);											// Allow the control thread to run
@@ -4665,6 +4699,13 @@ void CTalkMasterConsoleDlg::OnBnClickedButtonSessionEnd()
 void CTalkMasterConsoleDlg::OnToolsTestconsoledll()
 {
 	CTestLogonDlg dlg;
+
+	dlg.DoModal();
+}
+
+void CTalkMasterConsoleDlg::OnToolsTestrtpspeakerfrom()
+{
+	CTestRTPSpeakerFromDlg dlg;
 
 	dlg.DoModal();
 }

@@ -573,14 +573,15 @@ void CTalkMasterConsoleDlg::updateGroupIcons()
 
 void CTalkMasterConsoleDlg::doGetSettingsUpdate()
 {
-	CPleaseWaitDlg dlg;
-
-	if( !bTalking && !bListening && !m_sessionSocket && !m_playFileSocket && !sendTextDlg.m_bDialogInUse )
+	if( !bTalking && !bListening && !m_sessionSocket && !m_playFileSocket && !sendTextDlg.m_bDialogInUse && !m_bHeldSessionSocket )
 	{
 		KillTimer(TIMER_UPDATE_READY);
 
-		dlg.Create(IDD_DIALOG_PLEASE_WAIT);
-		dlg.ShowWindow(SW_SHOWNORMAL);
+		saveControls( &m_bTalkFlag, &m_bListenFlag, &m_bChimeFlag, &m_bPlayFileFlag, &m_bRadioFlag, &m_bTestVolumeFlag, &m_bVolumeControlsFlag, &m_bGroupControlsFlag );
+		lockControls( TRUE, TRUE, TRUE, TRUE, TRUE, TRUE, TRUE, TRUE );
+
+		m_dlgPleaseWait.Create(IDD_DIALOG_PLEASE_WAIT);
+		m_dlgPleaseWait.ShowWindow(SW_SHOWNORMAL);
 
 		m_bConsoleReady = FALSE;					// We are going to re-request all of the settings and then wait
 		
@@ -588,13 +589,21 @@ void CTalkMasterConsoleDlg::doGetSettingsUpdate()
 
 		m_DAResendSettings( m_hDA );
 
-		while( bLoggedOn && !bShuttingDown && !m_bConsoleReady )
-		{
-			DoEvents();
-			Sleep(1);
-		}
+		SetTimer(TIMER_UPDATE_RELEASE, 100, NULL);
+	}
+}
 
-		dlg.DestroyWindow();
+void CTalkMasterConsoleDlg::doReleaseSettingsUpdate()
+{
+	if( !bLoggedOn || bShuttingDown || m_bConsoleReady )
+	{
+		KillTimer(TIMER_UPDATE_RELEASE);
+
+		m_dlgPleaseWait.DestroyWindow();
+
+		lockControls( !m_bTalkFlag, !m_bListenFlag, !m_bChimeFlag, !m_bPlayFileFlag, !m_bRadioFlag, !m_bTestVolumeFlag, !m_bVolumeControlsFlag, !m_bGroupControlsFlag );
+
+		return;
 	}
 }
 
@@ -732,7 +741,16 @@ void CTalkMasterConsoleDlg::doWorkCommand(int socket, int command)
 		break;
 
 	case WORK_DELETE_GROUP:
+		m_btnPlayFile.SetWindowText(_T(getResourceString(IDS_STRING_PLAY_FILE)));
+
+		lockControls(FALSE, FALSE, FALSE, FALSE, FALSE, FALSE, FALSE, FALSE);
+
 		m_DADeleteGroup(m_hDA, socket);	
+
+		m_playFileSocket = 0;
+		bPlayFileLocal = TRUE;
+		m_tabMain.EnableWindow(TRUE);
+
 		break;
 	}
 }

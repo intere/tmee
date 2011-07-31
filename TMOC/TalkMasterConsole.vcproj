@@ -266,6 +266,9 @@
 				RelativePath=".\TestLogonDlg.cpp">
 			</File>
 			<File
+				RelativePath=".\TestRTPSpeakerFromDlg.cpp">
+			</File>
+			<File
 				RelativePath=".\utility.cpp">
 			</File>
 		</Filter>
@@ -326,6 +329,9 @@
 			</File>
 			<File
 				RelativePath=".\TestLogonDlg.h">
+			</File>
+			<File
+				RelativePath=".\TestRTPSpeakerFromDlg.h">
 			</File>
 			<File
 				RelativePath=".\utility.h">
@@ -511,11 +517,11 @@
 			</File>
 		</Filter>
 		<File
-			RelativePath=".\DAPreferencesDlg.htm"
+			RelativePath=".\res\DAPreferencesDlg.htm"
 			DeploymentContent="TRUE">
 		</File>
 		<File
-			RelativePath=".\res\DAPreferencesDlg.htm"
+			RelativePath=".\DAPreferencesDlg.htm"
 			DeploymentContent="TRUE">
 		</File>
 		<File

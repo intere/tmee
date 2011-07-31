@@ -26,11 +26,14 @@
 #define IDS_STRING113                   113
 #define IDS_STRING114                   114
 #define IDS_STRING115                   115
+#define IDS_STRING_MUST_SELECT_IDLE_ICOM 115
 #define IDS_STRING116                   116
+#define IDS_STRING_INTERCOM_BUSY        116
 #define IDS_STRING117                   117
 #define IDS_STRING118                   118
 #define IDS_STRING_SELECT_ICOM          118
 #define IDS_STRING119                   119
+#define IDS_STRING_MUST_SELECT_IDLE_TO_TALK 119
 #define IDS_STRING120                   120
 #define IDS_STRING121                   121
 #define IDS_STRING122                   122
@@ -201,6 +204,7 @@
 #define IDS_STRING_GLOBAL_GROUP         191
 #define IDD_DIALOG_TEST_LOGON           191
 #define IDS_STRING_COL_MSG_PRIORITY     192
+#define IDD_DIALOG_TEST_RTP             192
 #define IDS_STRING_COL_MSG_TITLE        193
 #define IDS_STRING_NO_MESSAGES_SELECTED 194
 #define IDS_STRING_SELECT_MESSAGE       195
@@ -336,6 +340,9 @@
 #define IDC_BUTTON_SESSION_END          1093
 #define IDC_EDIT_TEST_LOGON_NAME        1094
 #define IDC_EDIT_TEST_LOGON_PASSWORD    1095
+#define IDC_EDIT_RTP_SPEAKER_FROM_IP    1095
+#define IDC_EDIT2                       1096
+#define IDC_EDIT_RTP_SPEAKER_FROM_PORT  1096
 #define ID_FILE_EXIT                    32771
 #define ID_FILE_CAPTUREARCHIVEAUDIO     32772
 #define ID_FILE_PLAYAUDIOARCHIVES       32773
@@ -368,14 +375,15 @@
 #define ID_TOOLS_SENDTEXTMESSAGE        32803
 #define ID_INVISIBLEGROUPMENU_INTERCOMSINGROUP 32804
 #define ID_TOOLS_TESTCONSOLEDLL         32805
+#define ID_TOOLS_TESTRTPSPEAKERFROM     32806
 
 // Next default values for new objects
 // 
 #ifdef APSTUDIO_INVOKED
 #ifndef APSTUDIO_READONLY_SYMBOLS
-#define _APS_NEXT_RESOURCE_VALUE        192
-#define _APS_NEXT_COMMAND_VALUE         32806
-#define _APS_NEXT_CONTROL_VALUE         1095
+#define _APS_NEXT_RESOURCE_VALUE        193
+#define _APS_NEXT_COMMAND_VALUE         32807
+#define _APS_NEXT_CONTROL_VALUE         1097
 #define _APS_NEXT_SYMED_VALUE           104
 #endif
 #endif

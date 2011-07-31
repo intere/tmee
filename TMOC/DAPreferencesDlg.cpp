@@ -581,6 +581,8 @@ void DAPreferencesDlg::OnBnClickedButtonBrowseTestVolumeFile()
 {
 	CTalkMasterConsoleDlg *dlg = (CTalkMasterConsoleDlg*)theApp.m_pMainWnd;
 
+	UpdateData(TRUE);
+
 //_T("Chart Files (*.xlc)|*.xlc|Worksheet Files (*.xls)|*.xls|Data Files (*.xlc;*.xls)|*.xlc; *.xls|All Files (*.*)|*.*||");
 	
 	CFileDialog pFD(	TRUE, 

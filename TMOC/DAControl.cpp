@@ -379,6 +379,8 @@ void CallBack( int event, int socket, struct _iComStructure *pIcom, void *eventD
 		dlg->bListenRequest = FALSE;
 		dlg->bMuting = FALSE;
 
+		dlg->inCommandCount = 0;
+
 		dlg->bNoRestart = FALSE;							// Allow restarts
 
 		if( dlg->m_playFileSocket )							// If we are shut down and we are playing something
@@ -410,7 +412,7 @@ void CallBack( int event, int socket, struct _iComStructure *pIcom, void *eventD
 
 	case EVENT_INTERCOM_STATUS:
 
-		dlg->outputDebug(_T("EVENT:STATUS = %s(%d).  Socket = %d"), dlg->szStatus(pIcom->status, buffer), pIcom->status, socket);
+		dlg->outputDebug(_T("EVENT:STATUS = %s(0x%x).  Socket = %d"), dlg->szStatus(pIcom->status, buffer), pIcom->status, socket);
 
 		tItemData = (struct _itemData *)dlg->findItemData(socket);
 
@@ -655,13 +657,20 @@ void CTalkMasterConsoleDlg::doListen()
 	{
 		bListenRequest = FALSE;
 		bTalkRequest = FALSE;
-		MessageBox(_T(getResourceString(IDS_STRING115)), _T(getResourceString(IDS_STRING116)));
+		MessageBox(_T(getResourceString(IDS_STRING_MUST_SELECT_IDLE_ICOM)), _T(getResourceString(IDS_STRING_INTERCOM_BUSY)));
 
 		clearTestMode();
 
 		return;
 	}
 
+	if( inCommandCount )											// Oops - how can we be in two calls????
+	{
+		outputDebug("doListen: In %d calls", inCommandCount);
+		return;
+	}
+
+	inCommandCount++;
 
 // 1st, check to see if we are currently in a session
 // This is the same check for doTalk and doHold
@@ -681,6 +690,9 @@ void CTalkMasterConsoleDlg::doListen()
 
 			m_pSelectedItem->bSelected = FALSE;				// Track whether this item is selected
 			bListenRequest = FALSE;
+
+			inCommandCount--;
+
 			return;
 		}
 
@@ -726,6 +738,7 @@ void CTalkMasterConsoleDlg::doListen()
 				if( ++clearCount > 5 )
 				{
 					outputDebug(_T("doListen: Could not clear Talk after %d attempts"), clearCount);
+					inCommandCount--;
 					return;
 				}
 			}
@@ -768,6 +781,7 @@ void CTalkMasterConsoleDlg::doListen()
 				bNoRestart = FALSE;								// Allow restarts again
 
 				outputDebug(_T("doListen: Could not clear Listen after %d attempts"), clearCount);
+				inCommandCount--;
 				return;
 			}
 		}
@@ -818,6 +832,7 @@ void CTalkMasterConsoleDlg::doListen()
 		lockControls(FALSE, FALSE, TRUE, TRUE, TRUE, TRUE, TRUE, FALSE);		// LOCK Talk, Listen, Chime, PlayFile, Radio Buttons
 	}
 
+	inCommandCount--;
 	outputDebug(_T("doListen: Done"));
 }
 
@@ -885,7 +900,7 @@ void CTalkMasterConsoleDlg::doTalk()
 	{
 		bTalkRequest = FALSE;
 
-		MessageBox(_T(getResourceString(IDS_STRING119)), _T(getResourceString(IDS_STRING116)));
+		MessageBox(_T(getResourceString(IDS_STRING_MUST_SELECT_IDLE_TO_TALK)), _T(getResourceString(IDS_STRING_INTERCOM_BUSY)));
 
 		clearTestMode();
 
@@ -911,6 +926,15 @@ void CTalkMasterConsoleDlg::doTalk()
 
 		return;
 	}
+
+	if( inCommandCount )
+	{
+		outputDebug("doTalk: In command %d times", inCommandCount);
+		return;
+	}
+
+	inCommandCount++;
+
 
 	if( !m_sessionSocket || (!bTalking && m_TalkMode != TALK_SELECTED) )
 	{
@@ -945,6 +969,8 @@ void CTalkMasterConsoleDlg::doTalk()
 			m_oldSessionSocket = 0;
 
 			bTalkRequest = FALSE;
+
+			inCommandCount--;
 
 			return;
 		}
@@ -1035,6 +1061,7 @@ void CTalkMasterConsoleDlg::doTalk()
 					if( ++clearCount > 2 )
 					{
 						outputDebug(_T("doTalk: Could not clear Talk after %d attempts"), clearCount);
+						inCommandCount--;
 						return;
 					}
 				}
@@ -1044,6 +1071,7 @@ void CTalkMasterConsoleDlg::doTalk()
 			if( m_sessionSocket == 0 || !m_pSelectedItem || m_pSelectedItem->iCom.status == STATUS_DISCONNECTED )							// Disconnected while waiting for the Listen to stop
 			{
 				outputDebug("doTalk: Done(3) - Session ended - Talk not started");
+				inCommandCount--;
 				return;
 			}
 
@@ -1106,6 +1134,7 @@ void CTalkMasterConsoleDlg::doTalk()
 				}
 				else
 				{
+					inCommandCount--;
 					return;
 				}
 			}
@@ -1130,6 +1159,7 @@ void CTalkMasterConsoleDlg::doTalk()
 				bNoRestart = FALSE;							// Allow restarts again
 
 				outputDebug(_T("doTalk: Could not clear Listen after %d attempts"), clearCount);
+				inCommandCount--;
 				return;
 			}
 		}
@@ -1146,6 +1176,7 @@ void CTalkMasterConsoleDlg::doTalk()
 		if( m_sessionSocket == 0 || !m_pSelectedItem || m_pSelectedItem->iCom.status == STATUS_DISCONNECTED )							// Disconnected while waiting for the Listen to stop
 		{
 			outputDebug("doTalk: Done - Session ended - Talk not started");
+			inCommandCount--;
 			return;
 		}
 
@@ -1178,6 +1209,7 @@ void CTalkMasterConsoleDlg::doTalk()
 					bTalkRequest = FALSE;
 
 					outputDebug(_T("doTalk: Could not clear Command after %d attempts"), clearCount);
+					inCommandCount--;
 					return;
 				}
 			}
@@ -1196,6 +1228,7 @@ void CTalkMasterConsoleDlg::doTalk()
 		if( m_sessionSocket == 0 || !m_pSelectedItem || m_pSelectedItem->iCom.status == STATUS_DISCONNECTED )							// Disconnected while waiting for the Listen to stop
 		{
 			outputDebug("doTalk: Done(2) - Session ended - Talk not started");
+			inCommandCount--;
 			return;
 		}
 
@@ -1215,6 +1248,7 @@ void CTalkMasterConsoleDlg::doTalk()
 		lockControls(FALSE, FALSE, TRUE, TRUE, TRUE, TRUE, TRUE, TRUE);		// LOCK Talk, Listen, Chime, PlayFile, Radio Buttons
 	}
 
+	inCommandCount--;
 	outputDebug(_T("doTalk: Done"));
 }
 
@@ -2126,6 +2160,12 @@ BOOL CTalkMasterConsoleDlg::LoadProcs()
 	if( !(m_DARingIntercom = (DARingIntercom)GetProcAddress(m_hLib, "DARingIntercom")) )
 		bRet = FALSE;
 
+	if( !(m_DARTPStartSpeakerFrom = (DARTPStartSpeakerFrom)GetProcAddress(m_hLib, "DARTPStartSpeakerFrom")) )
+		bRet = FALSE;
+
+	if( !(m_DARTPStopSpeaker = (DARTPStopSpeaker)GetProcAddress(m_hLib, "DARTPStopSpeaker")) )
+		bRet = FALSE;
+
 	return(bRet);
 }
 
@@ -2303,18 +2343,22 @@ void CTalkMasterConsoleDlg::doneAudioFile( int socket )
 		}
 		else	// if( m_TalkMode != TALK_SELECTED )
 		{
-			m_btnPlayFile.SetWindowText(_T(getResourceString(IDS_STRING_PLAY_FILE)));
-
-			lockControls(FALSE, FALSE, FALSE, FALSE, FALSE, FALSE, FALSE, FALSE);
-
 			if( m_playFileSocket < 0 )						// Is it a group?
 			{
 				addWork( m_playFileSocket, WORK_DELETE_GROUP, time(NULL)+1 );
-//				m_DADeleteGroup(m_hDA, m_playFileSocket);	// Really can not do this since it														// will wait for the thread to end
+//				m_DADeleteGroup(m_hDA, m_playFileSocket);	// Really can not do this since it
+															// will wait for the thread to end
 			}
-			m_playFileSocket = 0;
-			bPlayFileLocal = TRUE;
-			m_tabMain.EnableWindow(TRUE);
+			else
+			{
+				m_btnPlayFile.SetWindowText(_T(getResourceString(IDS_STRING_PLAY_FILE)));
+
+				lockControls(FALSE, FALSE, FALSE, FALSE, FALSE, FALSE, FALSE, FALSE);
+
+				m_playFileSocket = 0;							// These lines moved to the work area too
+				bPlayFileLocal = TRUE;
+				m_tabMain.EnableWindow(TRUE);
+			}
 		}
 	}
 }
@@ -2820,6 +2864,33 @@ void CTalkMasterConsoleDlg::lockControls(BOOL talk, BOOL listen, BOOL chime, BOO
 	m_listMessages.EnableWindow( !groupControls );
 }
 
+void CTalkMasterConsoleDlg::saveControls( BOOL *talk, BOOL *listen, BOOL *chime, BOOL *playFile, BOOL *radio, BOOL *testVolume, BOOL *volumeControls, BOOL *groupControls )
+{
+	if( talk )
+		*talk = m_btnTalk.IsWindowEnabled();
+
+	if( listen )
+		*listen = m_btnListen.IsWindowEnabled();
+
+	if( chime )
+		*chime = m_btnChime.IsWindowEnabled();
+
+	if( playFile )
+		*playFile = m_btnPlayFile.IsWindowEnabled();
+
+	if( radio )
+		*radio = m_btnGroup.IsWindowEnabled();
+
+	if( testVolume )
+		*testVolume = m_btnTestVolume.IsWindowEnabled();
+
+	if( volumeControls )
+		*volumeControls = m_btnSetVolume.IsWindowEnabled();
+
+	if( groupControls )
+		*groupControls = m_listGroups.IsWindowEnabled();
+}
+
 char *CTalkMasterConsoleDlg::szStatus( unsigned statusCode, char *szRetBuffer )
 {
 	CString status;
@@ -3121,7 +3192,7 @@ void CTalkMasterConsoleDlg::doSessionStartStop()
 	{
 		bTalkRequest = FALSE;
 
-		MessageBox(_T(getResourceString(IDS_STRING119)), _T(getResourceString(IDS_STRING116)));
+		MessageBox(_T(getResourceString(IDS_STRING_MUST_SELECT_IDLE_TO_TALK)), _T(getResourceString(IDS_STRING_INTERCOM_BUSY)));
 
 		clearTestMode();
 

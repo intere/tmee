@@ -327,8 +327,8 @@ struct _workData
 	time_t when;
 };
 
-typedef int (__stdcall *DAInit)(
-		void *stuff);		// The Init returns a handle to theData
+//typedef int (__stdcall *DAInit)(
+//		void *stuff);		// The Init returns a handle to theData
 
 typedef BOOL (__stdcall *DAOpen)
 	(	HANDLE *hOpen,
@@ -345,32 +345,51 @@ typedef BOOL (__stdcall *DAStart)
 		char *username,
 		UINT *rights);
 
+typedef BOOL (__stdcall *DAStartAtAddress)
+	(	HANDLE hInfo,
+		char *IPAddress,
+		int IPPort,
+		int threadPriority,
+		char *name,
+		char *password,
+		char *userName,
+		UINT *info);
+
 typedef BOOL (__stdcall *DAStop)
 	(	HANDLE hOpen );
 
 typedef BOOL (__stdcall *DAClose)
 	(	HANDLE hOpen );
 
-typedef BOOL (__stdcall *DADllVersion)
-	(	int *major, int *minor, int *version );
-
 typedef BOOL (__stdcall *DASetDebug )
 	( int level );
+
+typedef BOOL (__stdcall *DADllVersion)
+	(	int *major, int *minor, int *version );
 
 typedef BOOL (__stdcall *DADisconnect )
 	( HANDLE hInfo, int iCom );
 
+typedef BOOL (__stdcall *DASelectIntercom )
+	( HANDLE hInfo, int iCom, int bSelect, unsigned bOptions );
+
 typedef BOOL (__stdcall *DACreateGroup )
 	( HANDLE hInfo, int *gId, int *idList, int count, BOOL bCreateOnly );
+
+typedef	BOOL (__stdcall *DAGetGroup )
+	( HANDLE hInfo, int gId, int *idList, int count );
+
+typedef	BOOL (__stdcall *DAAddToGroup )
+	( HANDLE hInfo, int gId, int iCom );
+
+typedef	BOOL (__stdcall *DARemoveFromGroup )
+	( HANDLE hInfo, int gId, int iCom );
 
 typedef BOOL (__stdcall *DADeleteGroup )
 	( HANDLE hInfo, int gId );
 
 typedef BOOL (__stdcall *DAGetGroupMembers )
 	( HANDLE hInfo, int gId );
-
-typedef BOOL (__stdcall *DASelectIntercom )
-	( HANDLE hInfo, int iCom, int bSelect, unsigned bOptions );
 
 typedef BOOL (__stdcall *DAStartAudio )
 	( HANDLE hInfo, int iCom, int type );
@@ -380,9 +399,6 @@ typedef BOOL (__stdcall *DASendAudio )
 
 typedef BOOL (__stdcall *DAEndAudio )
 	( HANDLE hInfo, int iCom, BOOL immediately );
-
-typedef int (__stdcall *DAPlayServerAudio)
-	( HANDLE hInfo, int iCom, char *fileKey, int type );
 
 typedef BOOL (__stdcall *DAGetGPIOValues )
 	( HANDLE hInfo, int iCom, unsigned *values );
@@ -420,14 +436,38 @@ typedef BOOL (__stdcall *DARetrieveIcom )
 typedef BOOL (__stdcall *DAListenIcom )
 	( HANDLE hInfo, int iCom, short audioFormat, int onOff );
 
+typedef int (__stdcall *DAGetMicType)
+	( HANDLE hInfo, int iCom );
+
 typedef BOOL (__stdcall *DADeleteServerCQ )
 	( HANDLE hInfo, int iCom );
 
 typedef BOOL (__stdcall *DATransferAudio )
 	( HANDLE hInfo, int iCom );
 
+typedef BOOL (__stdcall *DAFindIntercom )
+	( HANDLE hInfo, struct _MAC *mac, BOOL bBroadcastOnly );
+
+typedef BOOL (__stdcall *DASetIntercom )
+	( HANDLE hInfo, int iCom, struct _configuration34b *pC34b, int len, BOOL bBroadcastOnly );
+
+typedef int (__stdcall *DARingIntercom)
+	( HANDLE hInfo, int iCom, BOOL bStartRing );
+
 typedef BOOL (__stdcall *DAPlayTones )
 	( HANDLE hInfo, int iCom, char *tones, int len );
+
+typedef BOOL (__stdcall *DAResendSettings )
+	( HANDLE hInfo );
+
+typedef BOOL (__stdcall *DARefreshSettings )
+	( HANDLE hInfo );
+
+typedef int (__stdcall *DASetMulticastFeatures)
+	( HANDLE hInfo, char *address, int TTL, unsigned featureBits );
+
+typedef BOOL (__stdcall *DAGetServerTime )
+	( HANDLE hInfo, int iCom );
 
 typedef BOOL (__stdcall *DAResetConnection )
 	( HANDLE hInfo, int iCom );
@@ -435,10 +475,31 @@ typedef BOOL (__stdcall *DAResetConnection )
 typedef int (__stdcall *DASayText)
 	( HANDLE hInfo, int iCom, char *text );
 
-typedef BOOL (__stdcall *DAResendSettings )
-	( HANDLE hInfo );
+typedef int (__stdcall *DAPlayServerAudio)
+	( HANDLE hInfo, int iCom, char *fileKey, int type );
 
-typedef int (__stdcall *DARingIntercom)
-	( HANDLE hInfo, int iCom, BOOL bStartRing );
+typedef int (__stdcall *DARTPConfig)
+	( HANDLE hInfo, int mediaPort, BOOL bShared );
+
+typedef int (__stdcall *DARTPIcomConfig)
+	( HANDLE hInfo, int socket, int mediaPort, BOOL bSet );
+
+typedef int (__stdcall *DARTPStart)
+	( HANDLE hInfo, int iCom, int type, short localRecvPort, char *toAddress, short toPort, char *fromAddress, short fromPort, BOOL bRTCP, unsigned SSRC );
+
+typedef int (__stdcall *DARTPStartMicTo)
+	( HANDLE hInfo, int iCom, int type, short localSendPort, char *toAddress, short toPort );
+
+typedef int (__stdcall *DARTPStartSpeakerFrom)
+	( HANDLE hInfo, int iCom, int type, int localRecvPort, char *fromAddress, int fromPort );
+
+typedef int (__stdcall *DARTPStop)
+	( HANDLE hInfo, int iCom );
+
+typedef int (__stdcall *DARTPStopMic)
+	( HANDLE hInfo, int iCom );
+
+typedef int (__stdcall *DARTPStopSpeaker)
+	( HANDLE hInfo, int iCom );
 
 #endif

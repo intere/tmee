@@ -34,6 +34,8 @@
 #include "SendTextMessage.h"
 #include <sys/stat.h>
 
+#include "PleaseWaitDlg.h"
+
 #define	USE_GLOBAL_MEMORY 0
 
 #ifndef	APP_MAJOR						// Compiler overrides possible
@@ -69,20 +71,21 @@
 #define	GROUP_IMAGE_PARTIAL	1
 #define	GROUP_IMAGE_FULL	2
 
-#define	TIMER_WAIT			1
-#define	TIMER_DOOR			2
-#define	TIMER_CQPLAY		3
-#define	TIMER_ANNOUNCE		4
-#define	TIMER_ALERT			5
-#define	TIMER_TALK			6
-#define	TIMER_TEST			7
-#define	TIMER_CHECK_LOGON	8
-#define	TIMER_TEST_AUDIO	9
-#define	TIMER_REPEAT		10
-#define	TIMER_INIT_DONE		11
-#define	TIMER_UPDATE_READY	12
-#define	TIMER_WORK			13
-#define	TIMER_RING			14
+#define	TIMER_WAIT				1
+#define	TIMER_DOOR				2
+#define	TIMER_CQPLAY			3
+#define	TIMER_ANNOUNCE			4
+#define	TIMER_ALERT				5
+#define	TIMER_TALK				6
+#define	TIMER_TEST				7
+#define	TIMER_CHECK_LOGON		8
+#define	TIMER_TEST_AUDIO		9
+#define	TIMER_REPEAT			10
+#define	TIMER_INIT_DONE			11
+#define	TIMER_UPDATE_READY		12
+#define	TIMER_WORK				13
+#define	TIMER_RING				14
+#define	TIMER_UPDATE_RELEASE	15
 
 #define TALK_SELECTED	0
 #define TALK_GROUP		1
@@ -358,6 +361,8 @@ public:
 	BOOL	bNoRestart;
 	BOOL	bSession;
 
+	int		inCommandCount;
+
 	int		nTalkingLevel;
 	int		nListeningLevel;
 
@@ -495,6 +500,9 @@ public:
 	DAResendSettings	m_DAResendSettings;
 	DARingIntercom		m_DARingIntercom;
 
+	DARTPStartSpeakerFrom	m_DARTPStartSpeakerFrom;
+	DARTPStopSpeaker		m_DARTPStopSpeaker;
+
 	HANDLE m_hDA;
 	UINT m_uFlags;
 
@@ -564,6 +572,7 @@ public:
 	void CTalkMasterConsoleDlg::clearIcomItemData();
 
 	void CTalkMasterConsoleDlg::lockControls(BOOL talk, BOOL listen, BOOL chime, BOOL playFile, BOOL radio, BOOL testVolume, BOOL volumeControls, BOOL groupControls);
+	void CTalkMasterConsoleDlg::saveControls( BOOL *talk, BOOL *listen, BOOL *chime, BOOL *playFile, BOOL *radio, BOOL *testVolume, BOOL *volumeControls, BOOL *groupControls );
 
 	char *CTalkMasterConsoleDlg::szStatus( unsigned statusCode, char *szRetBuffer );
 
@@ -816,6 +825,12 @@ public:
 	void doRepeatAudio();
 	void doPostInit();
 	void doGetSettingsUpdate();
+	void doReleaseSettingsUpdate();
+
+	CPleaseWaitDlg m_dlgPleaseWait;
+
+	BOOL m_bTalkFlag, m_bListenFlag, m_bChimeFlag, m_bPlayFileFlag, m_bRadioFlag, m_bTestVolumeFlag, m_bVolumeControlsFlag, m_bGroupControlsFlag;
+
 	void releaseCurrentSettings();
 
 	void CTalkMasterConsoleDlg::updateGroupIcons();
@@ -867,6 +882,7 @@ public:
 	afx_msg void OnBnClickedButtonSessionEnd();
 	void doRing(BOOL bStart);
 	afx_msg void OnToolsTestconsoledll();
+	afx_msg void OnToolsTestrtpspeakerfrom();
 };
 
 LRESULT CALLBACK KeyboardProc(int nCode, WPARAM wParam, LPARAM lParam);

@@ -33,7 +33,9 @@ void CTalkMasterConsoleDlg::OnTcnSelchangeTabMain(NMHDR *pNMHDR, LRESULT *pResul
 {
 	if( m_tabMain.GetCurSel() == 1 )
 	{
-		m_bHeldSessionSocket = TRUE;
+		if( m_sessionSocket )
+			m_bHeldSessionSocket = TRUE;
+
 		m_holdSessionSocket = m_sessionSocket;
 
 		shutDownIcomAndHold();
@@ -346,6 +348,8 @@ void CTalkMasterConsoleDlg::doMessagePlaying( struct _messagePlayingData *pMessa
 
 	if( m_playFileSocket )
 		m_tabMain.EnableWindow(FALSE);
+
+	m_DAPlayServerAudio( m_hDA, m_playFileSocket, pMessagePlayingData->key, 0 );				// The type of ZERO will cause the audio started flag to be set so we can end audio it
 
 // Now create a _fileList entry for this playing audio file
 
