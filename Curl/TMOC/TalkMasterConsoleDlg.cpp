@@ -292,8 +292,6 @@ CTalkMasterConsoleDlg::CTalkMasterConsoleDlg(CWnd* pParent /*=NULL*/)
 	// GDI+ is used to show the thumbnail previews.
 	GdiplusStartup(&gdiplusToken, &gdiplusStartupInput, NULL);
 
-	// The Camera Thread - null initially.
-	thread = NULL;
 	m_lastSelectedItem = NULL;
 }
 
@@ -3807,9 +3805,14 @@ void CTalkMasterConsoleDlg::showCameraStream()
 		ostringstream sstream;
 		sstream << m_pSelectedItem->iCom.name;
 		CameraData *data = CameraDataManager::getInstance().getCameraData(sstream.str());
-		if(data)
+		if(data && !data->getUrl().empty())
 		{
 			VideoFeed::registerVideoFeed(this, data);
+		} else
+		{
+			VideoFeed::stopVideoFeed();
+			m_Thumbnail = NULL;
+			drawPreview();
 		}
 
 		m_lastSelectedItem = m_pSelectedItem;
@@ -4896,6 +4899,7 @@ void CTalkMasterConsoleDlg::drawPreview()
 	// Don't bother trying to draw if we're exiting...
 	if(m_bAbortControl)
 	{
+		TRACE("aborting drawPreview() (via m_bAbortControl)\n");
 		return;
 	}
 
@@ -4941,8 +4945,9 @@ void CTalkMasterConsoleDlg::drawPreview()
 			} else
 			{
 				TRACE("NO thumbnail image to render\n");
+				Graphics graphics(pDC->m_hDC);
+				graphics.Clear(Color::Black);
 			}
-
 
 			if (pDC) ReleaseDC(pDC);  // Release the device context retrieved earlier.
 		} else
@@ -4952,10 +4957,20 @@ void CTalkMasterConsoleDlg::drawPreview()
 	}
 }
 
+void CTalkMasterConsoleDlg::stopRender()
+{
+	if(running && threadHandle)
+	{
+//		TerminateThread(threadHandle);
+		threadHandle = NULL;
+		running = FALSE;
+	}
+}
+
 void CTalkMasterConsoleDlg::doRender()
 {
 	running = TRUE;
-	AfxBeginThread(run, this);
+	threadHandle = AfxBeginThread(run, this);
 }
 
 UINT CTalkMasterConsoleDlg::run(LPVOID p)

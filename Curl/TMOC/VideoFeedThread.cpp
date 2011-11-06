@@ -20,23 +20,44 @@ using namespace VideoFeed;
  */
 namespace VideoFeed
 {
-	static VideoFeedThread *thread = NULL;
+	//static VideoFeedThread *thread = NULL;
 	static CURL *curl = NULL;
 	static int count;
+	static Mutex mutex;
 
 	size_t write_data(void *ptr, size_t size, size_t nmemb, FILE *stream) {
 
-		ostringstream buff;
-		buff << "read (" << size << ", " << nmemb << ") bytes" << std::endl;
-		std::basic_string<TCHAR> out = buff.str().c_str();
-		TRACE(out.c_str());
-		
-		for(size_t i=0; i<nmemb; ++i)
+			ostringstream buff;
+			buff << "read (" << size << ", " << nmemb << ") bytes" << std::endl;
+			std::basic_string<TCHAR> out = buff.str().c_str();
+			TRACE(out.c_str());
+			
+			for(size_t i=0; i<nmemb; ++i)
+			{
+				if(VideoFeedThread::getThread()->isStopReading())
+				{
+					break;
+				}
+				VideoFeedThread::getThread()->getStream()->put(((char*)ptr)[i]);
+			}
+
+		if(VideoFeedThread::getThread()->isStopReading())
 		{
-			VideoFeedThread::getThread()->getStream()->put(((char*)ptr)[i]);
+			return -1;
 		}
-    
+		
 		return nmemb;
+	}
+
+	/**
+	 * Stops the reading of the video feed.
+	 */
+	void stopVideoFeed()
+	{
+		if(VideoFeedThread::getThread())
+		{
+			VideoFeedThread::getThread()->Finish();
+		}
 	}
 
 	/**
@@ -51,16 +72,17 @@ namespace VideoFeed
 		{
 			curl_easy_pause(curl, CURLPAUSE_ALL);
 			curl_easy_cleanup(curl);
+			curl = NULL;
 		}
-
+		
 		// Cleanup old Thread
-		if(thread)
+		if(VideoFeedThread::getThread())
 		{
-			thread->Finish();
+			VideoFeedThread::getThread()->Finish();
 		}
 
 		// Set the new references
-		thread = new VideoFeedThread();
+		VideoFeedThread* thread = new VideoFeedThread();
 		thread->CreateThread(CREATE_SUSPENDED);
 		thread->setPreviewWindow(m_cameraPreview);
 		thread->setUsername(data->getUsername());
@@ -75,11 +97,14 @@ namespace VideoFeed
 
 IMPLEMENT_DYNCREATE(VideoFeedThread, CWinThread)
 
-VideoFeedThread::VideoFeedThread()
+/** Static in itialization of the singleton reference.  */
+VideoFeedThread* VideoFeedThread::thread = NULL;
+
+VideoFeedThread::VideoFeedThread() : stopReading(false)
 {
+	VideoFeedThread::thread = this;
 	stream = new MJpegStream(this);
 	stream->addListener(static_cast<Listener>(*this));
-	thread = this;
 }
 
 VideoFeedThread::~VideoFeedThread()
@@ -88,22 +113,25 @@ VideoFeedThread::~VideoFeedThread()
 	{
 		delete stream;
 	}
+	if(VideoFeedThread::thread == this)
+	{
+		VideoFeedThread::thread = NULL;
+	}
 }
 
 BOOL VideoFeedThread::InitInstance()
 {
-	// TODO:  perform and per-thread initialization here
 	return TRUE;
 }
 
 int VideoFeedThread::ExitInstance()
 {
-	// TODO:  perform any per-thread cleanup here
 	return CWinThread::ExitInstance();
 }
 
 int VideoFeedThread::Run()
 {
+	
 	curl = curl_easy_init();
 	CURLcode res;
 
@@ -130,6 +158,7 @@ int VideoFeedThread::Run()
 		
 		/* always cleanup */
 		curl_easy_cleanup(curl);
+		curl = NULL;
 	}
 
 	return 0;
@@ -137,7 +166,12 @@ int VideoFeedThread::Run()
 
 void VideoFeedThread::Finish()
 {
-	AfxEndThread(0, TRUE);
+	this->stopReading = true;
+}
+
+bool VideoFeedThread::isStopReading()
+{
+	return this->stopReading;
 }
 
 string VideoFeedThread::getUsername()
@@ -177,7 +211,7 @@ void VideoFeedThread::setPreviewWindow(CTalkMasterConsoleDlg *m_cameraPreview)
 
 VideoFeedThread *VideoFeedThread::getThread()
 {
-	return VideoFeed::thread;
+	return VideoFeedThread::thread;
 }
 
 MJpegStream *VideoFeedThread::getStream()
@@ -187,22 +221,24 @@ MJpegStream *VideoFeedThread::getStream()
 
 void VideoFeedThread::eventOccurred(MJpegEvent *event)
 {
-	m_cameraPreview->setImage(event->getFilename());
-	m_cameraPreview->doRender();
-
-	if(lastImage.size()>0)
+	if(!isStopReading())
 	{
-		try
-		{
-			CFile::Remove(lastImage.c_str());	
-		//} catch(CFileException* ex)
-		}catch(...)
-		{
-			cerr << "Unable to remove file: " << lastImage.c_str() << endl;
-		}
-	}
+		m_cameraPreview->setImage(event->getFilename());
+		m_cameraPreview->doRender();
 
-	this->lastImage = event->getFilename().c_str();
+		if(lastImage.size()>0)
+		{
+			try
+			{
+				CFile::Remove(lastImage.c_str());
+			}catch(...)
+			{
+				cerr << "Unable to remove file: " << lastImage.c_str() << endl;
+			}
+		}
+
+		this->lastImage = event->getFilename().c_str();
+	}
 }
 
 

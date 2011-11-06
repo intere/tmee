@@ -487,7 +487,7 @@ public:
 	struct _itemData *m_lastSelectedItem;
 	struct _itemData *m_pSelectedItem;
 	struct _itemData *m_pReleasedItem;
-	VideoFeedThread* thread;
+	//VideoFeedThread* thread;
 
 	struct _messageData *m_pCurrentMessage;
 
@@ -912,8 +912,9 @@ public:
 	void showCameraStream();
 
 	// For Multithreading:
-
+	CWinThread* threadHandle;
 	void doRender();
+	void stopRender();
 	static UINT run(LPVOID p);
 	void run();
 	volatile BOOL running;

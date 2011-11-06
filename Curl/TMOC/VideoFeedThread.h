@@ -15,6 +15,7 @@ namespace VideoFeed
 {
 	size_t write_data(void *ptr, size_t size, size_t nmemb, FILE *stream);
 	void registerVideoFeed(CTalkMasterConsoleDlg *m_cameraPreview, CameraData* data);
+	void stopVideoFeed();
 };
 
 // VideoFeedThread
@@ -52,10 +53,13 @@ public:
 	MJpegStream *getStream();
 
 	static VideoFeedThread *getThread();
+	bool isStopReading();
 	
 protected:
 	DECLARE_MESSAGE_MAP()
-	
+	/** Static thread instance.  */
+	static VideoFeedThread *thread;
+	bool stopReading;
 	string username;
 	string password;
 	string url;
