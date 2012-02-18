@@ -3816,6 +3816,11 @@ void CTalkMasterConsoleDlg::showCameraStream()
 		}
 
 		m_lastSelectedItem = m_pSelectedItem;
+	} else if(m_pSelectedItem == NULL)
+	{
+		VideoFeed::stopVideoFeed();
+		m_Thumbnail = NULL;
+		drawPreview();
 	}
 }
 
@@ -3863,6 +3868,10 @@ void CTalkMasterConsoleDlg::OnLvnItemchangingListIcoms(NMHDR *pNMHDR, LRESULT *p
 	if( bNewState && !bSelItem )
 	{
 		loadIcomList(pNMHDR);
+	} else
+	{
+		m_pSelectedItem = NULL;
+		showCameraStream();
 	}
 
 	*pResult = 0;
