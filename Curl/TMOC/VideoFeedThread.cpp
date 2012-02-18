@@ -70,16 +70,15 @@ namespace VideoFeed
 		// Cleanup old CURL object:
 		if(curl)
 		{
-			curl_easy_pause(curl, CURLPAUSE_ALL);
-			curl_easy_cleanup(curl);
-			curl = NULL;
-		}
-		
-		// Cleanup old Thread
-		if(VideoFeedThread::getThread())
-		{
 			VideoFeedThread::getThread()->Finish();
 		}
+
+		// To prevent reading bad memory - we need to wait for the curl object to become NULL:
+		while(curl != NULL)
+		{
+			Sleep(50);
+			TRACE("Sleeping for 50ms - waiting for curl to be NULL");
+		}			
 
 		// Set the new references
 		VideoFeedThread* thread = new VideoFeedThread();
@@ -154,11 +153,18 @@ int VideoFeedThread::Run()
 			thread->getUrl().c_str());
 
 		curl_easy_setopt(curl, CURLOPT_WRITEFUNCTION, VideoFeed::write_data);
+
 		res = curl_easy_perform(curl);
 		
-		/* always cleanup */
-		curl_easy_cleanup(curl);
-		curl = NULL;
+		TRACE("VideoFeedThread::Run() (pre-synchronized block)\n");
+		synchronized(mutex)
+		{
+			TRACE("VideoFeedThread::Run() (inside synchronized block)\n");
+			/* always cleanup */
+			curl_easy_cleanup(curl);
+			curl = NULL;
+			TRACE("VideoFeedThread::Run() (easy cleanup complete)\n");			
+		}
 	}
 
 	return 0;
