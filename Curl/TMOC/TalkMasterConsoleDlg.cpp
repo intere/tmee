@@ -21,7 +21,7 @@
 #include "direct.h"
 #include "DALoginDlg.h"
 #include "afxwin.h"
-#include ".\talkmasterconsoledlg.h"
+#include "TalkMasterConsoleDlg.h"
 #include "AnnounceDlg.h"
 #include "SendTextMessage.h"
 #include "TestLogonDlg.h"
@@ -3798,12 +3798,20 @@ void CTalkMasterConsoleDlg::OnNMClickListIcoms(NMHDR *pNMHDR, LRESULT *pResult)
 	showCameraStream();
 }
 
+/**
+ * EGI: Delegates to the showCameraStream with the current selected item.
+ */
 void CTalkMasterConsoleDlg::showCameraStream()
 {
-	if(m_pSelectedItem && m_pSelectedItem != m_lastSelectedItem)
+	showCameraStream(m_pSelectedItem);
+}
+
+void CTalkMasterConsoleDlg::showCameraStream(struct _itemData *selectedItem)
+{
+	if(selectedItem)
 	{
 		ostringstream sstream;
-		sstream << m_pSelectedItem->iCom.name;
+		sstream << selectedItem->iCom.name;
 		CameraData *data = CameraDataManager::getInstance().getCameraData(sstream.str());
 		if(data && !data->getUrl().empty())
 		{
@@ -3815,8 +3823,8 @@ void CTalkMasterConsoleDlg::showCameraStream()
 			drawPreview();
 		}
 
-		m_lastSelectedItem = m_pSelectedItem;
-	} else if(m_pSelectedItem == NULL)
+		m_lastSelectedItem = selectedItem;
+	} else if(selectedItem == NULL)
 	{
 		VideoFeed::stopVideoFeed();
 		m_Thumbnail = NULL;
@@ -3870,8 +3878,7 @@ void CTalkMasterConsoleDlg::OnLvnItemchangingListIcoms(NMHDR *pNMHDR, LRESULT *p
 		loadIcomList(pNMHDR);
 	} else
 	{
-		m_pSelectedItem = NULL;
-		showCameraStream();
+		showCameraStream(NULL);
 	}
 
 	*pResult = 0;
@@ -4755,6 +4762,9 @@ void CTalkMasterConsoleDlg::OnToolsTestconsoledll()
 	dlg.DoModal();
 }
 
+/**
+ * EGI: This function is responsible for loading the provided jpeg image.
+ */
 void CTalkMasterConsoleDlg::loadImage(const std::string &jpeg)
 {
 	if(m_bAbortControl)
@@ -4897,12 +4907,17 @@ void CTalkMasterConsoleDlg::loadImage(const std::string &jpeg)
 		}
 	}
 }
-
+/**
+ * This function sets the current image name.
+ */
 void CTalkMasterConsoleDlg::setImage(const std::string &jpeg)
 {
 	this->jpeg = jpeg;
 }
 
+/**
+ * EGI: This function is responsible for drawaing the camera image (from the webcam).
+ */
 void CTalkMasterConsoleDlg::drawPreview()
 {
 	// Don't bother trying to draw if we're exiting...
@@ -4949,7 +4964,7 @@ void CTalkMasterConsoleDlg::drawPreview()
 					}
 				} catch( ... ) 
 				{
-					cerr << "Error drawing image" << endl;
+					TRACE("Error drawing image");
 				}
 			} else
 			{
@@ -4966,22 +4981,28 @@ void CTalkMasterConsoleDlg::drawPreview()
 	}
 }
 
+/**
+ * EGI: This function triggers the threads to stop.
+ */
 void CTalkMasterConsoleDlg::stopRender()
 {
 	if(running && threadHandle)
 	{
-//		TerminateThread(threadHandle);
 		threadHandle = NULL;
 		running = FALSE;
 	}
 }
-
+/**
+ * EGI: This function spawns a thread to render the image as it comes in.
+ */
 void CTalkMasterConsoleDlg::doRender()
 {
 	running = TRUE;
 	threadHandle = AfxBeginThread(run, this);
 }
-
+/**
+ * EGI: run function (thread runner).
+ */
 UINT CTalkMasterConsoleDlg::run(LPVOID p)
 {
 	CTalkMasterConsoleDlg * me = (CTalkMasterConsoleDlg *)p;
@@ -4989,6 +5010,9 @@ UINT CTalkMasterConsoleDlg::run(LPVOID p)
     return 0;
 }
 
+/**
+ * EGI: Run function - threaded run method (see the run(LPVOID) function).
+ */
 void CTalkMasterConsoleDlg::run()
 {
 	try

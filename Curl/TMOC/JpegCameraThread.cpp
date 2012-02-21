@@ -189,7 +189,7 @@ void JpegCameraThread::eventOccurred(MJpegEvent *event)
 		try
 		{
 			CFile::Remove(event->getFilename().c_str());
-		} catch(CFileException* ex)
+		} catch(...)
 		{
 			cerr << "Error removing file: " 
 				<< event->getFilename().c_str() << endl;

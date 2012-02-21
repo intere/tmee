@@ -910,6 +910,7 @@ public:
 	GdiplusStartupInput gdiplusStartupInput;
 	ULONG_PTR gdiplusToken;
 	void showCameraStream();
+	void showCameraStream(struct _itemData *selectedItem);
 
 	// For Multithreading:
 	CWinThread* threadHandle;
